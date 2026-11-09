@@ -92,12 +92,12 @@ GACH_API_BASE=https://api.your-domain.com/api/v1 \
 > 因为注入会往 HTML 里写 `<script>`，直接改 `apps/web/out` 会污染 Web 仓库产物；
 > 且 `cap sync` 需要一个稳定的、可清理的目录。`www` 每次同步都全量重建。
 
-### ⚠️ 当前 Web 端静态导出未通过
+### ⚠️ 当前 Web 端静态产物同步未完成
 
-`apps/web` 有 4 处需要修复（`sitemap.ts` 缺 `force-static`，3 个 `[param]` 路由缺
-`generateStaticParams`）。详见 `apps/desktop/README.md` 第 3 节的表格。
+Next.js 当前可以生成 53 个静态页面，但 `@gach/web` 的 `export:static` 脚本会继续调用缺失的
+`apps/web/scripts/export-static.mjs`，因此完整的 Web 产物同步仍未通过验证。
 
-修复前可用降级开关验证原生工具链：
+在真实 Web 产物可用前，可以使用降级开关验证原生工具链：
 
 ```bash
 node scripts/sync-web.mjs --allow-shell --no-build

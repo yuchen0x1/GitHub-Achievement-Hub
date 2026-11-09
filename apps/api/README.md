@@ -83,11 +83,11 @@ apps/api/
 - 越权（普通 USER 访问 `/admin/dashboard` → 403）
 - 敏感字段不泄露（`/auth/me` 不含 `passwordHash` / `refreshTokenHash` / bcrypt 哈希）
 
-## 已知问题（测试如实反映，未修改业务代码）
+## 安全回归验证
 
-- `POST /auth/login` 未调用 `CsrfService.verify`：携带 `gach_csrf` cookie 但不带 `x-csrf-token` 头时仍返回 200。
-  对应用例 `POST /auth/login 携带 csrf cookie 但不带 header 时被拒绝（401）` 当前为 **失败** 状态。
-  详见 `src/modules/auth/auth.controller.ts` 的 `login` 方法（`refresh` / `logout` 均已校验）。
+- e2e 已验证：`POST /auth/login` 携带 `gach_csrf` cookie 但不带 `x-csrf-token` 头时返回 401。
+- `POST /auth/refresh` 与 `POST /auth/logout` 同样覆盖 CSRF 双提交校验。
+- `/auth/me` 不返回 `passwordHash`、`refreshTokenHash` 或 bcrypt 哈希等敏感字段。
 
 ## 跳过说明
 
