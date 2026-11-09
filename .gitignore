@@ -22,6 +22,7 @@ node_modules/
 out/
 dist/
 coverage/
+*.tsbuildinfo
 apps/desktop/dist/
 apps/mobile/www/
 apps/mobile/dist/
