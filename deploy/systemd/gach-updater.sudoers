@@ -1,0 +1,8 @@
+# Allow the unprivileged updater to restart and inspect only its two services.
+Cmnd_Alias GACH_SERVICE_CONTROL = \
+  /usr/bin/systemctl restart gach-api.service, \
+  /usr/bin/systemctl restart gach-web.service, \
+  /usr/bin/systemctl is-active --quiet gach-api.service, \
+  /usr/bin/systemctl is-active --quiet gach-web.service
+
+gach ALL=(root) NOPASSWD: GACH_SERVICE_CONTROL

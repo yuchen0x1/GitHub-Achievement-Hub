@@ -1,0 +1,21 @@
+[Unit]
+Description=GitHub Achievement Hub Release Updater
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=gach
+Group=gach
+EnvironmentFile=-/etc/github-achievement-hub/updater.env
+WorkingDirectory=/srv/github-achievement-hub/current
+ExecStart=/srv/github-achievement-hub/current/deploy/scripts/deploy-release.sh
+NoNewPrivileges=false
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/srv/github-achievement-hub
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target
