@@ -1,0 +1,493 @@
+@import 'tailwindcss';
+
+/* Tailwind v4：暗色模式采用 class 策略（next-themes 在 <html> 上切换 .dark） */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   设计令牌
+   灵感来源：GitHub Primer + 现代 SaaS 控制台
+   ------------------------------------------------------------------ */
+@theme {
+  --color-surface: #ffffff;
+  --color-surface-raised: #f6f8fa;
+  --color-surface-sunken: #eef1f4;
+  --color-border: #d8dee4;
+  --color-border-strong: #b6bfc9;
+  --color-ink: #1f2328;
+  --color-ink-muted: #59636e;
+  --color-ink-subtle: #818b98;
+  --color-accent: #0969da;
+  --color-accent-hover: #0550ae;
+  --color-accent-soft: #ddf4ff;
+  --color-success: #1a7f37;
+  --color-warning: #9a6700;
+  --color-danger: #cf222e;
+  --color-info: #0969da;
+
+  --color-canvas: #ffffff;
+  --color-canvas-alt: #f6f8fa;
+  --color-nav: rgba(255, 255, 255, 0.82);
+  --color-card: rgba(255, 255, 255, 0.72);
+
+  --radius-card: 0.875rem;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 1px 2px rgba(31, 35, 40, 0.04), 0 8px 24px -12px rgba(31, 35, 40, 0.12);
+  --shadow-lift: 0 2px 4px rgba(31, 35, 40, 0.06), 0 18px 40px -18px rgba(31, 35, 40, 0.22);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', Roboto, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+}
+
+.dark {
+  --color-surface: #161b22;
+  --color-surface-raised: #1c2128;
+  --color-surface-sunken: #0d1117;
+  --color-border: #30363d;
+  --color-border-strong: #444c56;
+  --color-ink: #e6edf3;
+  --color-ink-muted: #9198a1;
+  --color-ink-subtle: #6e7681;
+  --color-accent: #4493f8;
+  --color-accent-hover: #58a6ff;
+  --color-accent-soft: #121d2f;
+  --color-success: #3fb950;
+  --color-warning: #d29922;
+  --color-danger: #f85149;
+  --color-info: #4493f8;
+
+  --color-canvas: #0d1117;
+  --color-canvas-alt: #161b22;
+  --color-nav: rgba(13, 17, 23, 0.82);
+  --color-card: rgba(22, 27, 34, 0.72);
+
+  --shadow-card: 0 1px 2px rgba(1, 4, 9, 0.4), 0 8px 24px -12px rgba(1, 4, 9, 0.6);
+  --shadow-lift: 0 2px 6px rgba(1, 4, 9, 0.5), 0 20px 48px -20px rgba(1, 4, 9, 0.8);
+}
+
+/* ------------------------------------------------------------------
+   基础样式
+   ------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 30%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* 滚动条 */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 999px;
+    border: 2px solid var(--color-canvas);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-subtle);
+  }
+}
+
+/* ------------------------------------------------------------------
+   组件工具类
+   ------------------------------------------------------------------ */
+@layer components {
+  .surface {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .surface-raised {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .glass-nav {
+    background-color: var(--color-nav);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface-raised);
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition:
+      background-color 0.16s ease,
+      border-color 0.16s ease,
+      color 0.16s ease,
+      transform 0.16s ease,
+      box-shadow 0.16s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #fff;
+    box-shadow: 0 1px 0 rgba(31, 35, 40, 0.1);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-accent-hover);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-border-strong);
+    color: var(--color-ink);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-surface-sunken);
+    border-color: var(--color-ink-subtle);
+  }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-ink-muted);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--color-surface-raised);
+    color: var(--color-ink);
+  }
+
+  .btn-sm {
+    height: 2rem;
+    padding: 0 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .field {
+    width: 100%;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    border-radius: 0.625rem;
+    border: 1px solid var(--color-border-strong);
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-size: 0.875rem;
+    transition:
+      border-color 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+  .field::placeholder {
+    color: var(--color-ink-subtle);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 22%, transparent);
+  }
+
+  .link {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .muted {
+    color: var(--color-ink-muted);
+  }
+
+  .hairline {
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* 徽章展示区域：突出图片本身 */
+  .badge-frame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-card);
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        color-mix(in oklab, var(--color-accent) 12%, transparent),
+        transparent 70%
+      ),
+      var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .badge-frame img {
+    filter: drop-shadow(0 6px 18px rgba(1, 4, 9, 0.35));
+  }
+
+  /* 网格背景纹理 */
+  .grid-texture {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-border) 55%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-border) 55%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Markdown 正文排版
+   ------------------------------------------------------------------ */
+@layer components {
+  .prose-gach {
+    color: var(--color-ink);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  .prose-gach > * + * {
+    margin-top: 1.1em;
+  }
+  .prose-gach h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-top: 2.2em;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 6rem;
+  }
+  .prose-gach h3 {
+    font-size: 1.2rem;
+    font-weight: 650;
+    margin-top: 1.8em;
+    scroll-margin-top: 6rem;
+  }
+  .prose-gach h4 {
+    font-size: 1.02rem;
+    font-weight: 650;
+    margin-top: 1.5em;
+    scroll-margin-top: 6rem;
+  }
+  .prose-gach p {
+    color: var(--color-ink);
+  }
+  .prose-gach a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-gach strong {
+    font-weight: 650;
+  }
+  .prose-gach ul,
+  .prose-gach ol {
+    padding-left: 1.4em;
+  }
+  .prose-gach ul {
+    list-style: disc;
+  }
+  .prose-gach ol {
+    list-style: decimal;
+  }
+  .prose-gach li {
+    margin-top: 0.4em;
+  }
+  .prose-gach li::marker {
+    color: var(--color-ink-subtle);
+  }
+  .prose-gach blockquote {
+    border-left: 3px solid var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 6%, transparent);
+    padding: 0.85em 1.1em;
+    border-radius: 0 0.5rem 0.5rem 0;
+    color: var(--color-ink-muted);
+  }
+  .prose-gach blockquote p:first-child {
+    margin-top: 0;
+  }
+  .prose-gach code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    padding: 0.12em 0.4em;
+    border-radius: 0.35rem;
+  }
+  .prose-gach pre {
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+  .prose-gach pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+  }
+  .prose-gach table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose-gach th,
+  .prose-gach td {
+    border: 1px solid var(--color-border);
+    padding: 0.55rem 0.8rem;
+    text-align: left;
+  }
+  .prose-gach th {
+    background: var(--color-surface-raised);
+    font-weight: 650;
+  }
+  .prose-gach hr {
+    border-top: 1px solid var(--color-border);
+    margin: 2.5em 0;
+  }
+  .prose-gach img {
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+  }
+}
+
+/* ------------------------------------------------------------------
+   动画
+   ------------------------------------------------------------------ */
+@keyframes gach-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gach-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gach-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.animate-fade-up {
+  animation: gach-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade {
+  animation: gach-fade 0.4s ease both;
+}
+.animate-pulse-ring {
+  animation: gach-pulse-ring 2.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 打印：勋章墙导出 PDF 友好 */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

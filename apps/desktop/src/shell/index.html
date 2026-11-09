@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <title>GitHub Achievement Hub</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --bg-elev: #161b22;
+        --border: #30363d;
+        --fg: #e6edf3;
+        --muted: #8b949e;
+        --accent: #3fb950;
+        --warn: #f0b72f;
+        --danger: #f85149;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        display: grid;
+        place-items: center;
+        padding: 32px 20px;
+        background: radial-gradient(1200px 600px at 50% -10%, #1b2430 0%, var(--bg) 60%);
+        color: var(--fg);
+        font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+      }
+      main {
+        width: min(720px, 100%);
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 28px 28px 24px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+      }
+      .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+      .mark {
+        width: 40px; height: 40px; border-radius: 10px;
+        background: linear-gradient(180deg, #161b22, #0d1117);
+        border: 1px solid var(--border);
+        display: grid; place-items: center;
+        font-weight: 700; letter-spacing: 0.5px; color: var(--fg);
+      }
+      h1 { font-size: 19px; margin: 0; font-weight: 600; }
+      .sub { color: var(--muted); font-size: 12.5px; }
+      .banner {
+        margin: 18px 0;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(240, 183, 47, 0.4);
+        background: rgba(240, 183, 47, 0.1);
+        color: var(--warn);
+        font-size: 13px;
+      }
+      dl { margin: 0; display: grid; grid-template-columns: 120px 1fr; gap: 8px 14px; font-size: 13px; }
+      dt { color: var(--muted); }
+      dd { margin: 0; word-break: break-all; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+      .row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+      button {
+        font: inherit; cursor: pointer;
+        padding: 8px 16px; border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #21262d; color: var(--fg);
+        transition: border-color 0.15s ease, background 0.15s ease;
+      }
+      button:hover { border-color: var(--accent); }
+      button.primary { background: #238636; border-color: #2ea043; }
+      button.primary:hover { background: #2ea043; }
+      footer { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+      code { background: #0d1117; border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="brand">
+        <div class="mark">G</div>
+        <div>
+          <h1>GitHub Achievement Hub</h1>
+          <div class="sub">桌面端本地壳页 · Local shell</div>
+        </div>
+      </div>
+
+      <div class="banner">
+        当前展示的是<b>本地壳页</b>，不是完整的 Web 界面。原因是 Web 端的
+        <code>output: 'export'</code> 静态导出尚未通过（详见 apps/desktop/README.md）。
+        导出可用后，运行 <code>npm run prepare:dist -w @gach/desktop</code> 即可替换。
+      </div>
+
+      <dl>
+        <dt>API 地址</dt>
+        <dd id="api-base">读取中…</dd>
+        <dt>缓存后端</dt>
+        <dd id="cache-backend">读取中…</dd>
+        <dt>网络状态</dt>
+        <dd id="network">读取中…</dd>
+        <dt>应用版本</dt>
+        <dd id="app-version">读取中…</dd>
+      </dl>
+
+      <div class="row">
+        <button class="primary" id="btn-reload" type="button">重新加载</button>
+        <button id="btn-api" type="button">设置 API 地址</button>
+        <button id="btn-cache" type="button">清空本地缓存</button>
+      </div>
+
+      <footer>
+        提示：API 地址也可通过环境变量 <code>GACH_API_BASE</code> 在构建时注入，
+        或由 <code>%APPDATA%\com.gach.hub\config.json</code> 覆盖。
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        'use strict';
+
+        function text(id, value) {
+          var el = document.getElementById(id);
+          if (el) el.textContent = value;
+        }
+
+        function render() {
+          text('api-base', window.__GACH_API_BASE__ || '(未配置)');
+          var cache = window.__GACH_CACHE__;
+          text('cache-backend', cache ? (cache.isTauri ? 'Rust 命令 (achievement-cache.json)' : 'localStorage 回退') : '不可用');
+          var net = window.__GACH_NETWORK__;
+          text('network', net ? (net.status.connected ? '在线' : '离线') : (navigator.onLine ? '在线' : '离线'));
+
+          var tauri = window.__TAURI__ && window.__TAURI__.core;
+          if (tauri && typeof tauri.invoke === 'function') {
+            tauri
+              .invoke('app_info')
+              .then(function (info) {
+                text('api-base', info.apiBase);
+                text('app-version', info.version + ' (' + info.platform + ')');
+              })
+              .catch(function () {
+                text('app-version', '命令不可用');
+              });
+          } else {
+            text('app-version', '非 Tauri 环境');
+          }
+        }
+
+        document.getElementById('btn-reload').addEventListener('click', function () {
+          location.reload();
+        });
+
+        document.getElementById('btn-api').addEventListener('click', function () {
+          var next = window.prompt('API 地址', window.__GACH_API_BASE__ || '');
+          if (next == null) return;
+          if (typeof window.__GACH_configureApiBase === 'function') {
+            window.__GACH_configureApiBase(next);
+          } else if (typeof window.__GACH_setApiBase === 'function') {
+            window.__GACH_setApiBase(next);
+          }
+          render();
+        });
+
+        document.getElementById('btn-cache').addEventListener('click', function () {
+          var cache = window.__GACH_CACHE__;
+          if (!cache) return;
+          Promise.resolve(cache.clear()).then(function () {
+            window.alert('本地缓存已清空');
+          });
+        });
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', render, { once: true });
+        } else {
+          render();
+        }
+        window.addEventListener('gach:network', render);
+        window.addEventListener('gach:api-base', render);
+      })();
+    </script>
+  </body>
+</html>

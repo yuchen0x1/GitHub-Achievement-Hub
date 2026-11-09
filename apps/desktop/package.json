@@ -1,0 +1,19 @@
+{
+  "name": "@gach/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Achievement Hub — Windows 桌面版 (Tauri v2)",
+  "scripts": {
+    "icons": "node scripts/gen-icons.mjs",
+    "prepare:dist": "node scripts/prepare-dist.mjs",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "check": "cargo check --manifest-path src-tauri/Cargo.toml",
+    "lint": "node --check scripts/gen-icons.mjs && node --check scripts/prepare-dist.mjs && node --check src/runtime/api-base.js && node --check src/runtime/offline-cache.js"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "github-achievement-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Achievement Hub — GitHub 个人成就勋章百科与获取指南平台",
+  "license": "MIT",
+  "workspaces": [
+    "apps/api",
+    "apps/web",
+    "apps/desktop",
+    "apps/mobile",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "npm run build -w @gach/shared && concurrently -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "npm run dev -w @gach/api",
+    "dev:web": "npm run dev -w @gach/web",
+    "build": "npm run build -w @gach/shared && npm run build -w @gach/api && npm run build -w @gach/web",
+    "build:api": "npm run build -w @gach/api",
+    "build:web": "npm run build -w @gach/web",
+    "start": "npm run start -w @gach/api",
+    "seed": "npm run seed -w @gach/api",
+    "db:push": "npm run db:push -w @gach/api",
+    "db:studio": "npm run db:studio -w @gach/api",
+    "test": "npm run test -w @gach/api",
+    "test:api": "npm run test -w @gach/api",
+    "test:e2e": "npm run test:e2e -w @gach/api",
+    "lint": "npm run lint -w @gach/api && npm run lint -w @gach/web",
+    "desktop:dev": "npm run tauri:dev -w @gach/desktop",
+    "desktop:build": "npm run tauri:build -w @gach/desktop",
+    "mobile:sync": "npm run sync -w @gach/mobile",
+    "mobile:android": "npm run android -w @gach/mobile",
+    "mobile:ios": "npm run ios -w @gach/mobile"
+  },
+  "devDependencies": {
+    "concurrently": "10.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "5.9.3"
+  }
+}

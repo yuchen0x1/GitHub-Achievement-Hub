@@ -1,0 +1,19 @@
+{
+  "name": "@gach/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Achievement Hub — 三端共享的数据结构与常量",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "lint": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

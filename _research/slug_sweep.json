@@ -1,0 +1,105 @@
+{
+ "starstruck": {
+  "name": "Starstruck",
+  "users": 54,
+  "tiers": [
+   "bronze",
+   "default",
+   "gold",
+   "silver"
+  ]
+ },
+ "pull-shark": {
+  "name": "Pull Shark",
+  "users": 54,
+  "tiers": [
+   "bronze",
+   "gold",
+   "silver"
+  ]
+ },
+ "pair-extraordinaire": {
+  "name": "Pair Extraordinaire",
+  "users": 52,
+  "tiers": [
+   "bronze",
+   "default",
+   "gold",
+   "silver"
+  ]
+ },
+ "galaxy-brain": {
+  "name": "Galaxy Brain",
+  "users": 21,
+  "tiers": [
+   "bronze",
+   "default",
+   "gold",
+   "silver"
+  ]
+ },
+ "quickdraw": {
+  "name": "Quickdraw",
+  "users": 41,
+  "tiers": [
+   "default",
+   "gold"
+  ]
+ },
+ "arctic-code-vault-contributor": {
+  "name": "Arctic Code Vault Contributor",
+  "users": 54,
+  "tiers": [
+   "default"
+  ]
+ },
+ "public-sponsor": {
+  "name": "Public Sponsor",
+  "users": 23,
+  "tiers": [
+   "default"
+  ]
+ },
+ "yolo": {
+  "name": "YOLO",
+  "users": 41,
+  "tiers": [
+   "default"
+  ]
+ },
+ "mars-2020-contributor": {
+  "name": "Mars 2020 Contributor",
+  "users": 6,
+  "tiers": [
+   "default"
+  ]
+ },
+ "proxima-staffshipper": {
+  "name": "Proxima Staffshipper",
+  "users": 1,
+  "tiers": [
+   "default"
+  ]
+ },
+ "proxima-pioneer": {
+  "name": "Proxima Pioneer",
+  "users": 1,
+  "tiers": [
+   "default"
+  ]
+ },
+ "finishing-touch": {
+  "name": "Finishing Touch",
+  "users": 1,
+  "tiers": [
+   "gold"
+  ]
+ },
+ "proxima-staffuser": {
+  "name": "Proxima Staffuser",
+  "users": 1,
+  "tiers": [
+   "default"
+  ]
+ }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@gach/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Achievement Hub — Android / iOS 移动版 (Capacitor)",
+  "scripts": {
+    "sync:web": "node scripts/sync-web.mjs",
+    "sync": "node scripts/sync-web.mjs && cap sync",
+    "add:android": "cap add android",
+    "add:ios": "cap add ios",
+    "android": "cap open android",
+    "ios": "cap open ios",
+    "build:android": "node scripts/build-android.mjs",
+    "lint": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.config.json --noEmit"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.0",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.6.0",
+    "@capacitor/ios": "8.6.0",
+    "@capacitor/keyboard": "8.0.6",
+    "@capacitor/network": "8.0.1",
+    "@capacitor/preferences": "8.0.1",
+    "@capacitor/status-bar": "8.0.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.0",
+    "typescript": "5.9.3"
+  }
+}

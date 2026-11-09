@@ -1,0 +1,10 @@
+# 依赖与构建产物
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# 本地配置（不要提交签名私钥 / 更新私钥）
+*.pem
+*.key
+src-tauri/tauri.conf.local.json

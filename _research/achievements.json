@@ -1,0 +1,1108 @@
+{
+  "achievements": [
+    {
+      "slug": "pull-shark",
+      "nameEn": "Pull Shark",
+      "nameZh": "拉取请求鲨鱼",
+      "officialImageUrl": "https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png",
+      "summaryEn": "Awarded when your opened pull requests get merged. Tiered by how many of your PRs have been merged: 2 (default), 16 (Bronze x2), 128 (Silver x3), 1024 (Gold x4).",
+      "summaryZh": "你发起的拉取请求被合并后即可获得。等级按已合并 PR 数量递增：2（默认）、16（青铜 x2）、128（白银 x3）、1024（黄金 x4）。",
+      "descriptionEn": "Pull Shark celebrates sustained contribution through pull requests. GitHub's own badge history on every profile lists the exact milestone pull request for each level, phrased as '2nd pull request merged', '16th pull request merged', '128th pull request merged' and '1024th pull request merged'. That is what makes the four thresholds directly verifiable from GitHub's own data rather than community guesswork. The badge artwork changes per level and the tier is shown as a small x2/x3/x4 label. Verified live on torvalds (Bronze), ljharb (Gold), timrogers (Gold), dylanatsmith (Gold), Schweinepriester (Silver), brannon (Silver) and Rongronggg9 (Silver). Note that merged PRs in private repositories and in your own repositories do count, contrary to a widely repeated belief that only public PRs count.",
+      "descriptionZh": "Pull Shark 用于表彰通过拉取请求持续贡献的行为。GitHub 自己会在每个用户档案的徽章历史中逐级列出触发该等级的 PR，文字形如「2nd pull request merged」「16th pull request merged」「128th pull request merged」「1024th pull request merged」——这正是四个门槛可以直接从 GitHub 官方数据中验证、而非社区猜测的原因。徽章图片随等级变化，等级以 x2/x3/x4 的小标签显示。已在 torvalds（青铜）、ljharb（黄金）、timrogers（黄金）、dylanatsmith（黄金）、Schweinepriester（白银）、brannon（白银）、Rongronggg9（白银）等真实账号上验证。注意：私有仓库以及你自己名下仓库中被合并的 PR 同样计入，这与「只有公开 PR 才算」这一流传很广的说法相反。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): \"@<user> opened pull requests that have been merged.\" Milestones named by GitHub in the badge history: the 2nd, 16th, 128th and 1024th merged pull request. Default threshold 2, Bronze 16, Silver 128, Gold 1024.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：「@<用户名> opened pull requests that have been merged.」GitHub 在徽章历史中明确标注触发各等级的里程碑：第 2、16、128、1024 个被合并的拉取请求。默认门槛 2，青铜 16，白银 128，黄金 1024。",
+      "availability": "AVAILABLE",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 2,
+          "sourceCredibility": "A",
+          "note": "Confirmed directly from GitHub's live badge history text '2nd pull request merged' (torvalds, ljharb, timrogers, dylanatsmith, brannon, Schweinepriester, Rongronggg9 and ~54 harvested profiles)."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 16,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history text '16th pull request merged'; GitHub labels the unlock 'Bronze' and the badge tier label reads x2."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 128,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history text '128th pull request merged'; tier label reads x3."
+        },
+        {
+          "level": "GOLD",
+          "threshold": 1024,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history text '1024th pull request merged' (ljharb, timrogers, dylanatsmith); tier label reads x4."
+        }
+      ],
+      "difficulty": 3,
+      "confidenceGrade": "A",
+      "confidenceNote": "Every threshold is quoted verbatim from GitHub's own live badge-history endpoint (/users/<user>/achievements/pull-shark/detail), which lists the triggering PR per tier. No community inference needed.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Pull Shark on @torvalds (shows '2nd/16th pull request merged', tier images, badge description)",
+          "url": "https://github.com/users/torvalds/achievements/pull-shark/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for Pull Shark on @ljharb (shows '2nd/16th/128th/1024th pull request merged', Gold x4)",
+          "url": "https://github.com/users/ljharb/achievements/pull-shark/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live achievements tab for @ljharb (Pull Shark Gold x4 badge image)",
+          "url": "https://github.com/ljharb?tab=achievements",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Profile reference (official 'Earning Achievements' section; does not enumerate individual achievements)",
+          "url": "https://docs.github.com/en/account-and-profile/reference/profile-reference",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Pull Shark tier table 2/16/128/1024",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Pull Shark tiers {2,16,128,1024}",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "starstruck",
+      "nameEn": "Starstruck",
+      "nameZh": "星星达人",
+      "officialImageUrl": "https://github.githubassets.com/assets/starstruck-default-b6610abad518.png",
+      "summaryEn": "Awarded when a repository you created reaches 16 stars. Tiers: 16 (default), 128 (Bronze x2), 512 (Silver x3), 4096 (Gold x4) stars on one repository.",
+      "summaryZh": "你创建的仓库获得 16 颗 star 时解锁。等级：16（默认）、128（青铜 x2）、512（白银 x3）、4096（黄金 x4）颗 star，且作用于同一个仓库。",
+      "descriptionEn": "Starstruck recognizes repositories you created that other developers find valuable enough to star. GitHub's live badge history names the star thresholds explicitly, showing rows like '16 stars', '128 stars', '512 stars' and '4096 stars', and each row links to the repository that reached that count. This confirms both the thresholds and an important mechanic: the star count applies to a single repository, not a sum across all your repositories. Because stars come from other people, this badge is the hardest to engineer deliberately. Verified live on torvalds (Gold, all four thresholds present), ljharb (Gold), Schweinepriester (Gold), octocat (Gold), Rongronggg9 (Silver) and brannon (Bronze).",
+      "descriptionZh": "Starstruck 表彰那些被其他开发者认为有价值、值得加 star 的、你亲手创建的仓库。GitHub 的实时徽章历史会明确列出 star 门槛，形式为「16 stars」「128 stars」「512 stars」「4096 stars」，每一条都链接到达到该数量的具体仓库。这同时确认了门槛数值和一个重要机制：star 数作用于单个仓库，而不是你所有仓库的 star 总和。由于 star 来自他人，这枚徽章最难刻意刷取。已在 torvalds（黄金，四个门槛齐全）、ljharb（黄金）、Schweinepriester（黄金）、octocat（黄金）、Rongronggg9（白银）、brannon（青铜）等账号上验证。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): \"@<user> created a repository that has many stars.\" Milestones named by GitHub in the badge history: 16, 128, 512 and 4096 stars, on one repository you created.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：「@<用户名> created a repository that has many stars.」GitHub 在徽章历史中标注的里程碑：16、128、512、4096 颗 star，作用于你创建的某一个仓库。",
+      "availability": "AVAILABLE",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 16,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '16 stars' linking to the qualifying repository (present on ~54 harvested profiles)."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 128,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '128 stars'; tier label reads x2."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 512,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '512 stars'; tier label reads x3."
+        },
+        {
+          "level": "GOLD",
+          "threshold": 4096,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '4096 stars' (torvalds, ljharb, Schweinepriester, octocat); tier label reads x4."
+        }
+      ],
+      "difficulty": 4,
+      "confidenceGrade": "A",
+      "confidenceNote": "All four thresholds appear verbatim as star counts in GitHub's own live badge history, with links to the qualifying repositories. The single-repository rule is stated in that same data.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Starstruck on @torvalds (rows '16/128/512/4096 stars')",
+          "url": "https://github.com/users/torvalds/achievements/starstruck/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for Starstruck on @ljharb (Gold x4)",
+          "url": "https://github.com/users/ljharb/achievements/starstruck/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live achievements tab for @torvalds (Starstruck Gold x4 badge image)",
+          "url": "https://github.com/torvalds?tab=achievements",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Starstruck tier table 16/128/512/4096",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Starstruck tiers {16,128,512,4096}",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "pair-extraordinaire",
+      "nameEn": "Pair Extraordinaire",
+      "nameZh": "搭档奇观",
+      "officialImageUrl": "https://github.githubassets.com/assets/pair-extraordinaire-default-579438a20e01.png",
+      "summaryEn": "Awarded for co-authoring commits on merged pull requests. Tiers: 1 (default), 10 (Bronze x2), 24 (Silver x3), 48 (Gold x4).",
+      "summaryZh": "在已合并的拉取请求中作为共同作者（co-author）时解锁。等级：1（默认）、10（青铜 x2）、24（白银 x3）、48（黄金 x4）。",
+      "descriptionEn": "Pair Extraordinaire rewards collaboration: commits that credit another person with a Co-authored-by trailer, inside pull requests that get merged. GitHub's own badge wording is '@<user> coauthored commits on merged pull requests.' Unlike Pull Shark, Starstruck, Galaxy Brain and Finishing Touch, GitHub does NOT publish numeric milestones for this badge — the live history rows read only 'Coauthored with an unknown user' and each links to a co-authored PR. So the four thresholds come from the community catalogs, not from GitHub's own text, and are marked credibility C accordingly. What IS confirmed by GitHub directly is that the badge has exactly four levels (the live detail markup exposes a tier-count of 4 and per-tier badge images), and that GitHub records unlocks as 'Bronze' / 'Bronze and Silver' / 'Bronze and Silver' / Gold depending on level. Verified live on ljharb (Gold), octocat (Gold), mojombo (Gold), timrogers (Gold), Rongronggg9 (Gold), brannon (Silver), Schweinepriester (Silver).",
+      "descriptionZh": "Pair Extraordinaire 奖励协作：在被合并的拉取请求中，使用 Co-authored-by 尾注把提交归属给另一位合作者。GitHub 官方措辞为「@<用户名> coauthored commits on merged pull requests.」与 Pull Shark、Starstruck、Galaxy Brain、Finishing Touch 不同，GitHub 并未为这枚徽章公布数字里程碑——实时历史行只显示「Coauthored with an unknown user」，并链接到相应的共同作者 PR。因此这四个门槛来自社区目录而非 GitHub 自身文本，故对应门槛的可信度标为 C。可以由 GitHub 直接确认的是：该徽章确实有且仅有四个等级（实时详情页标记中 tier-count 为 4，并提供各等级徽章图片），且 GitHub 会按等级记录解锁为「Bronze」「Bronze and Silver」或 Gold。已在 ljharb（黄金）、octocat（黄金）、mojombo（黄金）、timrogers（黄金）、Rongronggg9（黄金）、brannon（白银）、Schweinepriester（白银）上验证。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): \"@<user> coauthored commits on merged pull requests.\" GitHub publishes no numeric milestones for this badge; the badge history lists the co-authored pull requests instead. Thresholds 1 / 10 / 24 / 48 are community-sourced.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：「@<用户名> coauthored commits on merged pull requests.」GitHub 未为该徽章公布数字里程碑，徽章历史中列出的是各条共同作者 PR。门槛 1 / 10 / 24 / 48 来自社区来源。",
+      "availability": "AVAILABLE",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "C",
+          "note": "Community-sourced. GitHub confirms a base (unlabeled) tier exists and awards it, but does not print '1st co-authored PR merged' the way it prints milestone rows for the other four tiered badges."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 10,
+          "sourceCredibility": "C",
+          "note": "Community-sourced (Schweinepriester + nmloc catalogs, which agree). GitHub's live unlock label 'Bronze' confirms the tier exists and is awarded, but GitHub does not print the number 10."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 24,
+          "sourceCredibility": "C",
+          "note": "Community-sourced (Schweinepriester + nmloc catalogs, which agree). GitHub's live unlock label 'Bronze and Silver' confirms the tier exists and is awarded, but GitHub does not print the number 24."
+        },
+        {
+          "level": "GOLD",
+          "threshold": 48,
+          "sourceCredibility": "C",
+          "note": "Community-sourced (Schweinepriester + nmloc catalogs, which agree). GitHub's live tier label 'x4' confirms the tier exists and is awarded, but GitHub does not print the number 48."
+        }
+      ],
+      "difficulty": 3,
+      "confidenceGrade": "C",
+      "confidenceNote": "Availability and the four-level structure are confirmed by GitHub's own live pages (tier-count=4, per-tier badge art, unlock labels 'Bronze' / 'Bronze and Silver'). The specific numbers 10/24/48 are NOT printed anywhere by GitHub and are corroborated only by two independent community catalogs that agree with each other, hence grade C for the thresholds.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Pair Extraordinaire on @ljharb (Gold x4, tier-count=4, per-tier badge images)",
+          "url": "https://github.com/users/ljharb/achievements/pair-extraordinaire/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for Pair Extraordinaire on @brannon (Silver x3, unlock label 'Bronze and Silver')",
+          "url": "https://github.com/users/brannon/achievements/pair-extraordinaire/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Pair Extraordinaire tiers 1/10/24/48",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Pair Extraordinaire tiers {1,10,24,48}, explicitly noting GitHub's counting rule is not public",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        },
+        {
+          "title": "drknzz/GitHub-Achievements — Pair Extraordinaire tier table 1/10/24/48",
+          "url": "https://github.com/drknzz/GitHub-Achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "C"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "galaxy-brain",
+      "nameEn": "Galaxy Brain",
+      "nameZh": "银河大脑",
+      "officialImageUrl": "https://github.githubassets.com/assets/galaxy-brain-default-847262c21056.png",
+      "summaryEn": "Awarded when answers you write in GitHub Discussions are accepted. Tiers: 2 (default), 8 (Bronze x2), 16 (Silver x3), 32 (Gold x4) accepted answers.",
+      "summaryZh": "你在 GitHub Discussions 中写的回答被采纳时解锁。等级：2（默认）、8（青铜 x2）、16（白银 x3）、32（黄金 x4）个被采纳的回答。",
+      "descriptionEn": "Galaxy Brain celebrates helpful answers in GitHub Discussions. GitHub's live badge history names the milestones directly as '2nd accepted answer', '8th accepted answer', '16th accepted answer' and '32nd accepted answer', so the four thresholds are read directly from GitHub's own data. GitHub's official badge wording is '@<user> answered discussions.' One critical scope caveat: since 2024-02-06 GitHub has turned off the ability to earn Achievements inside GitHub's own Community Discussions (github.com/orgs/community) to counter spam; accepted answers in every other public repository's Discussions still count. Verified live on ljharb (Gold, all four thresholds), Schweinepriester (Bronze), timrogers (default), dylanatsmith (default), Rongronggg9 (default).",
+      "descriptionZh": "Galaxy Brain 表彰在 GitHub Discussions 中提供的有帮助的回答。GitHub 的实时徽章历史直接标明里程碑：「2nd accepted answer」「8th accepted answer」「16th accepted answer」「32nd accepted answer」，因此四个门槛是从 GitHub 自身数据中直接读出的。GitHub 官方徽章措辞为「@<用户名> answered discussions.」有一个关键的范围限制：自 2024-02-06 起，GitHub 为打击刷徽章而关闭了在 GitHub 自家 Community Discussions（github.com/orgs/community）中赚取成就的能力；在其他所有公开仓库的 Discussions 中被采纳的回答仍然计入。已在 ljharb（黄金，四个门槛齐全）、Schweinepriester（青铜）、timrogers（默认）、dylanatsmith（默认）、Rongronggg9（默认）上验证。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): \"@<user> answered discussions.\" Milestones named by GitHub in the badge history: the 2nd, 8th, 16th and 32nd accepted answer. NOTE: since 2024-02-06, accepted answers inside GitHub's own Community Discussions (github.com/orgs/community) do NOT count; answers in other public repositories' Discussions do.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：「@<用户名> answered discussions.」GitHub 在徽章历史中标注的里程碑：第 2、8、16、32 个被采纳的回答。注意：自 2024-02-06 起，GitHub 自家 Community Discussions（github.com/orgs/community）内的被采纳回答不再计入；其他公开仓库的 Discussions 中的回答仍然计入。",
+      "availability": "AVAILABLE",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 2,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '2nd accepted answer' (present on 21 harvested profiles)."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 8,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '8th accepted answer'; tier label reads x2."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 16,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '16th accepted answer'; tier label reads x3."
+        },
+        {
+          "level": "GOLD",
+          "threshold": 32,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '32nd accepted answer' (ljharb); tier label reads x4."
+        }
+      ],
+      "difficulty": 3,
+      "confidenceGrade": "A",
+      "confidenceNote": "Thresholds quoted verbatim from GitHub's live badge history. The 2024-02-06 Community Discussions restriction is confirmed by an official github-staff announcement (discussion #106536), not by community inference.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Galaxy Brain on @ljharb (rows '2nd/8th/16th/32nd accepted answer', Gold x4)",
+          "url": "https://github.com/users/ljharb/achievements/galaxy-brain/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Achievements will no longer be available in the Community (official github-staff announcement, 2024-02-06)",
+          "url": "https://github.com/orgs/community/discussions/106536",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "How to get the galaxy brain achievement in 2024? — github-staff confirms the change applies only to GitHub's Community Discussions",
+          "url": "https://github.com/orgs/community/discussions/143321",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Galaxy Brain tier table 2/8/16/32",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Galaxy Brain tiers {2,8,16,32} with the Community Discussions caveat",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "finishing-touch",
+      "nameEn": "Finishing Touch",
+      "nameZh": "收官之笔",
+      "officialImageUrl": "https://github.githubassets.com/assets/finishing-touch-default-764b3a996d62.png",
+      "summaryEn": "Awarded for pull requests that improve GitHub's own UI quality and get merged. Tiers: 1 (default), 4 (Bronze x2), 16 (Silver x3), 32 (Gold x4).",
+      "summaryZh": "改进 GitHub 自身界面质量且被合并的拉取请求。等级：1（默认）、4（青铜 x2）、16（白银 x3）、32（黄金 x4）。",
+      "descriptionEn": "Finishing Touch is the narrowest of the tiered achievements: it counts merged pull requests that GitHub itself classifies as improving the quality of GitHub's user interface. GitHub's live badge history names the milestones precisely — '1st UI quality pull request merged', '4th UI quality pull request merged', '16th UI quality pull request merged', '32nd UI quality pull request merged' — so the four thresholds are confirmed directly from GitHub's own data. GitHub's official badge wording is \"@<user> authored merged pull requests that improved GitHub's UI quality.\" Verified live on dylanatsmith (Gold x4, with all four thresholds present). IMPORTANT UNCERTAINTY: whether this badge can be earned by contributors outside GitHub is unresolved. An open GitHub Community question (2026-10-22) asks exactly this, and GitHub has published no eligibility statement naming qualifying repositories or PR classifications. Community reports mention Primer repositories as a possibility but that is not an official statement.",
+      "descriptionZh": "Finishing Touch 是所有带等级成就中最「窄」的一枚：它统计的是被 GitHub 自己判定为「提升了 GitHub 界面质量」的已合并拉取请求。GitHub 的实时徽章历史精确标注了里程碑——「1st UI quality pull request merged」「4th UI quality pull request merged」「16th UI quality pull request merged」「32nd UI quality pull request merged」——因此四个门槛可直接从 GitHub 自身数据确认。GitHub 官方徽章措辞为「@<用户名> authored merged pull requests that improved GitHub's UI quality.」已在 dylanatsmith（黄金 x4，四个门槛齐全）上验证。重要不确定点：本徽章能否由 GitHub 外部贡献者获得尚无定论。GitHub Community 上有一个开放提问（2026-10-22）正是在问这件事，而 GitHub 从未发布过说明哪些仓库或哪类 PR 算数的资格声明。社区报告中提到 Primer 仓库，但这并非官方说法。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): \"@<user> authored merged pull requests that improved GitHub's UI quality.\" Milestones named by GitHub in the badge history: the 1st, 4th, 16th and 32nd UI quality pull request merged. Whether non-GitHub contributors can qualify is NOT documented by GitHub.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：「@<用户名> authored merged pull requests that improved GitHub's UI quality.」GitHub 在徽章历史中标注的里程碑：第 1、4、16、32 个 UI quality 已合并 PR。GitHub 官方文档并未说明非 GitHub 贡献者是否具备获得资格。",
+      "availability": "AVAILABLE",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '1st UI quality pull request merged' (dylanatsmith)."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 4,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '4th UI quality pull request merged'; tier label reads x2."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 16,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '16th UI quality pull request merged'; tier label reads x3."
+        },
+        {
+          "level": "GOLD",
+          "threshold": 32,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '32nd UI quality pull request merged' (dylanatsmith Gold x4); tier label reads x4."
+        }
+      ],
+      "difficulty": 4,
+      "confidenceGrade": "B",
+      "confidenceNote": "The four thresholds and the condition wording are confirmed verbatim from GitHub's live badge history, so the numbers are grade A. However the badge is rare and GitHub has never documented which repositories or PR classifications qualify, nor whether external contributors are eligible, so overall confidence on the practical earnability is B.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Finishing Touch on @dylanatsmith (Gold x4, rows '1st/4th/16th/32nd UI quality pull request merged')",
+          "url": "https://github.com/users/dylanatsmith/achievements/finishing-touch/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live achievements tab for @dylanatsmith (Finishing Touch Gold x4 badge image)",
+          "url": "https://github.com/dylanatsmith?tab=achievements",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Is Finishing Touch available to external contributors? — open GitHub Community question, no official eligibility statement",
+          "url": "https://github.com/orgs/community/discussions/211041",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Finishing Touch tiers 1/4/16/32",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Finishing Touch tiers {1,4,16,32}",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": true,
+      "uncertaintyNote": "Whether this achievement can be earned by contributors outside GitHub is unresolved as of 2026-10-22. GitHub publishes no eligibility statement naming qualifying repositories or PR classifications; an open Community question (#211041) requests one. Community sources mention Primer repositories but no official source confirms that. The badge is also extremely rare in the wild — only one holder (dylanatsmith) was found across roughly 130 harvested profiles — so treat 'currently obtainable by outsiders' as unverified."
+    },
+    {
+      "slug": "quickdraw",
+      "nameEn": "Quickdraw",
+      "nameZh": "快枪手",
+      "officialImageUrl": "https://github.githubassets.com/assets/quickdraw-default-39c6aec8ff89.png",
+      "summaryEn": "Awarded for closing an issue or pull request within 5 minutes of opening it. Single tier, no Bronze/Silver/Gold levels.",
+      "summaryZh": "在发起 issue 或 pull request 后 5 分钟内将其关闭即可获得。仅一个等级，没有青铜/白银/黄金分级。",
+      "descriptionEn": "Quickdraw — GitHub's own badge tagline is literally 'Gitty up!' — is a single-tier achievement for closing an issue or pull request within five minutes of opening it. GitHub's live badge history confirms the exact event with the row 'Closed within 5 minutes of opening'. Because it has exactly one level, the badge artwork does not change with tier and no x2/x3/x4 label appears; only the default image is served. You may close your own issue or pull request. The badge artwork also ships in emoji skin-tone variants, chosen from the emoji skin-tone preference in Appearance Settings. Verified live on 41 harvested profiles including ljharb, Schweinepriester, egoist, shadcn, simonw, steipete and yyx990803.",
+      "descriptionZh": "Quickdraw 的 GitHub 官方徽章标语就是「Gitty up!」，这是一枚单等级成就：在发起 issue 或 pull request 后 5 分钟内关闭它。GitHub 的实时徽章历史用「Closed within 5 minutes of opening」这一行精确确认了触发事件。由于只有一个等级，徽章图片不随等级变化，也不会出现 x2/x3/x4 标签，官方只提供默认等级图片。你也可以关闭自己发起的 issue 或 pull request。徽章另有按肤色区分的变体，可在外观设置中的 emoji 肤色偏好里选择。已在 41 个采集到的账号上验证，包括 ljharb、Schweinepriester、egoist、shadcn、simonw、steipete、yyx990803。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): the badge tagline is \"Gitty up!\" and the history row reads \"Closed within 5 minutes of opening\". One event unlocks it; there are no higher tiers.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：徽章标语为「Gitty up!」，历史行显示「Closed within 5 minutes of opening」。完成一次即解锁，没有更高等级。",
+      "availability": "AVAILABLE",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row 'Closed within 5 minutes of opening' (21 harvested profiles show this exact row). Single tier only — GitHub serves no bronze/silver/gold artwork for this badge."
+        }
+      ],
+      "difficulty": 1,
+      "confidenceGrade": "A",
+      "confidenceNote": "Condition is quoted verbatim from GitHub's own live badge history and confirmed across 21 harvested profiles. Single-tier structure confirmed by the absence of tier labels and by the fact that only the default image is served on GitHub's CDN.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Quickdraw on @ljharb (tagline 'Gitty up!', row 'Closed within 5 minutes of opening')",
+          "url": "https://github.com/users/ljharb/achievements/quickdraw/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for Quickdraw on @Schweinepriester",
+          "url": "https://github.com/users/Schweinepriester/achievements/quickdraw/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Quickdraw listed as single tier, 'Closed an issue or a pull request within 5 min of opening'",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Quickdraw earnable with a single tier",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "yolo",
+      "nameEn": "YOLO",
+      "nameZh": "一把梭",
+      "officialImageUrl": "https://github.githubassets.com/assets/yolo-default-be0bbff04951.png",
+      "summaryEn": "Awarded for merging a pull request without a code review. Single tier, no Bronze/Silver/Gold levels.",
+      "summaryZh": "在没有代码评审的情况下合并拉取请求即可获得。仅一个等级，没有青铜/白银/黄金分级。",
+      "descriptionEn": "YOLO — GitHub's own tagline is 'You want it? You merge it.' — is a single-tier achievement awarded for merging a pull request that received no code review. GitHub's live badge history confirms the trigger with the row 'Merged without a review'. The usual route is opening a pull request on your own repository and merging it yourself without waiting for a reviewer, which is why the community describes this one as requiring '1 user and 1 reviewer' via the Collaborating flow. Only the default artwork is served; there are no tier levels or x2/x3/x4 labels. Verified live on 41 harvested profiles including ljharb, Schweinepriester, egoist, shadcn, simonw, steipete and yyx990803. Note: because YOLO rewards merging unreviewed code, it is only appropriate on repositories you own or where you have explicit permission — merging unreviewed code into a shared project without permission is a bad practice regardless of the badge.",
+      "descriptionZh": "YOLO 的 GitHub 官方标语是「You want it? You merge it.」，这是一枚单等级成就，用于表彰在没有收到代码评审的情况下合并拉取请求。GitHub 的实时徽章历史用「Merged without a review」这一行确认了触发条件。常见做法是在自己的仓库上开一个 pull request 然后自行合并，不必等待评审，因此社区把它描述为通过 Collaborating 流程实现「1 user + 1 reviewer」。官方只提供默认等级图片，没有等级分级与 x2/x3/x4 标签。已在 41 个采集到的账号上验证，包括 ljharb、Schweinepriester、egoist、shadcn、simonw、steipete、yyx990803。提醒：YOLO 奖励的是合并未经评审的代码，因此只应在你自己的仓库、或你明确获得许可的场景中使用——在共享项目里未经许可合并未评审代码，无论徽章与否都是糟糕做法。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): the badge tagline is \"You want it? You merge it.\" and the history row reads \"Merged without a review\". One event unlocks it; there are no higher tiers.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：徽章标语为「You want it? You merge it.」，历史行显示「Merged without a review」。完成一次即解锁，没有更高等级。",
+      "availability": "AVAILABLE",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row 'Merged without a review' (21 harvested profiles show this exact row). Single tier only."
+        }
+      ],
+      "difficulty": 2,
+      "confidenceGrade": "A",
+      "confidenceNote": "Condition quoted verbatim from GitHub's own live badge history and confirmed across 21 harvested profiles; single-tier structure confirmed by the absence of tier labels and of bronze/silver/gold artwork.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for YOLO on @ljharb (tagline 'You want it? You merge it.', row 'Merged without a review')",
+          "url": "https://github.com/users/ljharb/achievements/yolo/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for YOLO on @Schweinepriester",
+          "url": "https://github.com/users/Schweinepriester/achievements/yolo/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — YOLO, 'Merged own pull request without code review', with a link to the dedicated YOLO discussion",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "YOLO how-to discussion (community-maintained, linked from the canonical catalog)",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements/discussions/6",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "public-sponsor",
+      "nameEn": "Public Sponsor",
+      "nameZh": "公开赞助人",
+      "officialImageUrl": "https://github.githubassets.com/assets/public-sponsor-default-9fa68986b057.png",
+      "summaryEn": "Awarded for sponsoring an open source contributor or organization publicly through GitHub Sponsors. Single tier, no Bronze/Silver/Gold levels.",
+      "summaryZh": "通过 GitHub Sponsors 以公开方式赞助开源贡献者或组织即可获得。仅一个等级，没有青铜/白银/黄金分级。",
+      "descriptionEn": "Public Sponsor recognizes funding open source work. GitHub's live badge wording varies with your current state: '@<user> is sponsoring N organizations or users.' while a sponsorship is active, and '@<user> has sponsored N organizations or users.' once it is past. The badge history row is '1st sponsorship'. The badge was renamed from 'GitHub Sponsor' when GitHub overhauled its achievement set on 2022-06-09, and it is a single-tier achievement — only the default artwork is served. Sponsorships must be public to count; private sponsorships do not qualify. Verified live on 23 harvested profiles including ljharb ('is sponsoring 23 organizations or users'), kentcdodds (14), tiangolo (15), steipete (19), yyx990803 (9).",
+      "descriptionZh": "Public Sponsor 用于表彰对开源项目的资金支持。GitHub 的实时徽章措辞会随当前状态变化：赞助生效时显示「@<用户名> is sponsoring N organizations or users.」，已结束时显示「@<用户名> has sponsored N organizations or users.」。徽章历史行显示「1st sponsorship」。在 GitHub 于 2022-06-09 重整成就体系时，它由「GitHub Sponsor」更名为「Public Sponsor」；这是一枚单等级成就，官方只提供默认等级图片。必须是公开赞助，私下赞助不计入。已在 23 个采集到的账号上验证，包括 ljharb（is sponsoring 23 organizations or users）、kentcdodds（14）、tiangolo（15）、steipete（19）、yyx990803（9）。",
+      "conditionEn": "GitHub's own wording (from the live badge detail): \"@<user> is sponsoring N organizations or users.\" (or \"has sponsored N\" once past). The history row reads \"1st sponsorship\". One event unlocks it; there are no higher tiers. Sponsorships must be public.",
+      "conditionZh": "GitHub 官方措辞（来自徽章详情页）：「@<用户名> is sponsoring N organizations or users.」（结束后为「has sponsored N」）。历史行显示「1st sponsorship」。完成一次即解锁，没有更高等级。赞助必须是公开的。",
+      "availability": "AVAILABLE",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row '1st sponsorship' (15 harvested profiles show this exact row). Single tier only."
+        }
+      ],
+      "difficulty": 2,
+      "confidenceGrade": "A",
+      "confidenceNote": "Condition quoted verbatim from GitHub's own live badge history and confirmed across 15 harvested profiles. The 'must be public' rule is stated by the nmloc catalog and is consistent with the badge name and the live wording 'is sponsoring'.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Public Sponsor on @ljharb ('is sponsoring 23 organizations or users', row '1st sponsorship')",
+          "url": "https://github.com/users/ljharb/achievements/public-sponsor/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for Public Sponsor on @tiangolo ('is sponsoring 15 organizations or users')",
+          "url": "https://github.com/users/tiangolo/achievements/public-sponsor/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Open source goes to Mars — 2021 announcement introducing the original GitHub Sponsor badge",
+          "url": "https://github.blog/2021-04-19-open-source-goes-to-mars/",
+          "sourceType": "CHANGELOG",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Public Sponsor listed as single tier, plus the 2022-06-09 rename history",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Public Sponsor earnable, single tier, public sponsorship required",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "arctic-code-vault-contributor",
+      "nameEn": "Arctic Code Vault Contributor",
+      "nameZh": "北极代码库贡献者",
+      "officialImageUrl": "https://github.githubassets.com/assets/arctic-code-vault-contributor-default-df8d74122a06.png",
+      "summaryEn": "Historical badge for contributing code to repositories archived in the 2020 GitHub Archive Program. No longer awarded.",
+      "summaryZh": "历史徽章：曾用于表彰向 2020 年 GitHub 存档计划中被归档的仓库贡献代码。现已不再颁发。",
+      "descriptionEn": "The Arctic Code Vault Contributor badge was given to developers whose commits were preserved in the 2020 GitHub Arctic Code Vault, a program that archived source code for roughly a thousand years. GitHub's official documentation states plainly that the event has ended and the badge is no longer available, so this is a DISCONTINUED achievement that survives only on the profiles of people who already earned it. GitHub's live badge wording reflects how many repositories qualified: '@<user> contributed code to several repositories in the 2020 GitHub Archive Program.' or '...to N repositories...', with the history row reading 'these repositories were archived'. Only the default tier exists. Verified live on 54 harvested profiles including torvalds, octocat, simonw, tj and yyx990803 — the badge is extremely common precisely because it was granted retroactively to a very large set of contributors.",
+      "descriptionZh": "Arctic Code Vault Contributor 徽章曾授予那些提交被保存在 2020 年 GitHub 北极代码库中的开发者——该项目将源代码封存了约一千年。GitHub 官方文档明确写道该活动已结束、徽章不再可用，因此这是一枚 DISCONTINUED 成就，只在已获得者 的档案上留存。GitHub 的实时徽章措辞会体现合格仓库数量：「@<用户名> contributed code to several repositories in the 2020 GitHub Archive Program.」或「...to N repositories...」，历史行为「these repositories were archived」。仅有默认等级。已在 54 个采集到的账号上验证，包括 torvalds、octocat、simonw、tj、yyx990803——该徽章极其常见，正因为它曾被追溯性地授予了非常大规模的贡献者群体。",
+      "conditionEn": "GitHub's official documentation (archived 2022 wording): \"If you authored any commit(s) on the default branch of a repository that was archived in the 2020 Arctic Vault program, you'll get an Arctic Code Vault Contributor badge on your profile.\" GitHub's current docs state: \"This event has now ended, and the badge is no longer available.\" Single tier only.",
+      "conditionZh": "GitHub 官方文档（2022 年归档措辞）：「If you authored any commit(s) on the default branch of a repository that was archived in the 2020 Arctic Vault program, you'll get an Arctic Code Vault Contributor badge on your profile.」GitHub 当前文档写明：「This event has now ended, and the badge is no longer available.」仅有默认等级。",
+      "availability": "DISCONTINUED",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge history row 'these repositories were archived' and the badge wording 'contributed code to several repositories in the 2020 GitHub Archive Program'. GitHub's docs state the event has ended and the badge is no longer available."
+        }
+      ],
+      "difficulty": 5,
+      "confidenceGrade": "A",
+      "confidenceNote": "The retirement is stated explicitly in GitHub's own current documentation ('This event has now ended, and the badge is no longer available'), and the archive-program condition is quoted from GitHub's own archived 2022 docs. Difficulty is 5 because it is no longer attainable at all.",
+      "officialSources": [
+        {
+          "title": "Profile reference — 'List of qualifying repositories for Mars 2020 Helicopter Contributor achievement' and the retirement note for archived program badges",
+          "url": "https://docs.github.com/en/account-and-profile/reference/profile-reference",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Archived official docs: 'Displaying badges on your profile' — Arctic Code Vault Contributor badge condition (2022-05-31 snapshot)",
+          "url": "https://web.archive.org/web/20220531023858/https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/personalizing-your-profile",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": "content retrieved successfully via WebFetch (direct proxy fetch was blocked by the local egress proxy, not by the URL)"
+        },
+        {
+          "title": "Live badge detail for Arctic Code Vault Contributor on @torvalds",
+          "url": "https://github.com/users/torvalds/achievements/arctic-code-vault-contributor/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "GitHub Archive Program (official program site)",
+          "url": "https://archiveprogram.github.com/",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Arctic Code Vault Contributor listed under 'Badges no longer earnable'",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "mars-2020-contributor",
+      "nameEn": "Mars 2020 Contributor",
+      "nameZh": "火星 2020 贡献者",
+      "officialImageUrl": "https://github.githubassets.com/assets/mars-2020-contributor-default-c9cad8495acf.png",
+      "summaryEn": "Historical badge for contributing code to repositories used in the Mars 2020 Helicopter Mission. No longer awarded.",
+      "summaryZh": "历史徽章：曾用于表彰向火星 2020 直升机任务所用仓库贡献代码。现已不再颁发。",
+      "descriptionEn": "The Mars 2020 Contributor badge was given to developers who authored commits in the open-source libraries that were carried on NASA's Mars 2020 Helicopter (Ingenuity) mission. It was introduced with the Ingenuity flight announcement in April 2021 and renamed from 'Mars 2020 Helicopter Contributor' when GitHub overhauled its achievement set in June 2022. GitHub's official documentation states plainly: 'The Mars 2020 Helicopter Contributor achievement was given to those who had authored a commit for one of the repositories listed below. This event has now ended, and the badge is no longer available.' GitHub still publishes the full list of qualifying repositories with the exact version and tag for each (about 70 repositories, e.g. torvalds/linux v3.4, python/cpython v3.9.2, curl/curl 7.72.0). GitHub's live badge wording is '@<user> contributed code to N repositories used in the Mars 2020 Helicopter Mission.' Verified live on 6 harvested profiles including torvalds, simonw, tiangolo, yyx990803, mdo and gvanrossum.",
+      "descriptionZh": "Mars 2020 Contributor 徽章曾授予那些在 NASA「火星 2020 直升机」（Ingenuity 毅力号）任务所搭载的开源库中编写过提交的开发���。它随 2021 年 4 月 Ingenuity 首飞公告一同推出，并在 GitHub 于 2022 年 6 月重整成就体系时从「Mars 2020 Helicopter Contributor」更名为「Mars 2020 Contributor」。GitHub 官方文档明确写道：「The Mars 2020 Helicopter Contributor achievement was given to those who had authored a commit for one of the repositories listed below. This event has now ended, and the badge is no longer available.」GitHub 至今仍完整公布合格仓库清单及各自的版本与 tag（约 70 个仓库，例如 torvalds/linux v3.4、python/cpython v3.9.2、curl/curl 7.72.0）。GitHub 的实时徽章措辞为「@<用户名> contributed code to N repositories used in the Mars 2020 Helicopter Mission.」已在 6 个采集到的账号上验证，包括 torvalds、simonw、tiangolo、yyx990803、mdo、gvanrossum。",
+      "conditionEn": "GitHub's official documentation: \"The Mars 2020 Helicopter Contributor achievement was given to those who had authored a commit for one of the repositories listed below. This event has now ended, and the badge is no longer available.\" GitHub publishes the full list of qualifying repositories with version and tag. Single tier only.",
+      "conditionZh": "GitHub 官方文档：「The Mars 2020 Helicopter Contributor achievement was given to those who had authored a commit for one of the repositories listed below. This event has now ended, and the badge is no longer available.」GitHub 完整公布了合格仓库清单及对应的版本与 tag。仅有默认等级。",
+      "availability": "DISCONTINUED",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge wording 'contributed code to N repositories used in the Mars 2020 Helicopter Mission' and history rows 'this repository was included' / 'these repositories were included'. GitHub's docs state the event has ended and the badge is no longer available."
+        }
+      ],
+      "difficulty": 5,
+      "confidenceGrade": "A",
+      "confidenceNote": "The retirement is stated explicitly in GitHub's own current documentation, and the condition plus the qualifying-repository table are in GitHub's own docs. Difficulty is 5 because it is no longer attainable.",
+      "officialSources": [
+        {
+          "title": "Profile reference — 'List of qualifying repositories for Mars 2020 Helicopter Contributor achievement' (full repo/version/tag table + 'the badge is no longer available')",
+          "url": "https://docs.github.com/en/account-and-profile/reference/profile-reference",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Open source goes to Mars — 2021-04-19 announcement introducing the Mars 2020 Helicopter badge",
+          "url": "https://github.blog/2021-04-19-open-source-goes-to-mars/",
+          "sourceType": "CHANGELOG",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live badge detail for Mars 2020 Contributor on @torvalds",
+          "url": "https://github.com/users/torvalds/achievements/mars-2020-contributor/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Mars 2020 Contributor listed under 'Badges no longer earnable', plus the 2021→2022 rename history",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "heart-on-your-sleeve",
+      "nameEn": "Heart On Your Sleeve",
+      "nameZh": "心有独钟",
+      "officialImageUrl": "https://raw.githubusercontent.com/Schweinepriester/github-profile-achievements/549ba7291ccb68efcff5daf8af8c2c0ac6817b6f/images/heart-on-your-sleeve-default.png",
+      "summaryEn": "Was tested by GitHub but switched off; nobody can earn it. Known thresholds: 16 (Bronze x2) and 128 (Silver x3) heart reactions; default and Gold thresholds were never published.",
+      "summaryZh": "曾被 GitHub 测试但已关闭，目前无人能够获得。已知门槛：青铜 x2 为 16 次 ❤️ 反应、白银 x3 为 128 次；默认与黄金门槛从未公布。",
+      "descriptionEn": "Heart On Your Sleeve was an experimental GitHub achievement intended for reacting to something on GitHub with a heart emoji. It was never broadly released. On 2026-03-27 a GitHub backend incident briefly re-enabled it together with Open Sourcerer, which caused them to appear on profiles across the site; GitHub staff then removed them again within days and stated that both achievements 'were part of an experimental rollout and were not meant to be broadly available'. No official criteria were ever published, and community trackers still carry '(???)' for its criteria. Because GitHub deleted its own artwork for this badge, the only surviving copies of the official artwork are community mirrors — the URL above is pinned to a specific immutable commit in the MIT-licensed Schweinepriester archive, so it cannot change or vanish. The tier numbers 16 and 128 for Bronze and Silver are community-derived; the default and Gold thresholds are unknown (the community catalog shows '???').",
+      "descriptionZh": "Heart On Your Sleeve 是 GitHub 的一项实验性成就，设想用于表彰在 GitHub 上用 ❤️ emoji 回应某项内容。它从未被广泛发布。2026-03-27 的一次 GitHub 后端故障连同 Open Sourcerer 一起短暂启用了这两枚徽章，导致它们出现在全站大量用户档案上；GitHub 员工随后在数日内再次移除，并声明这两项成就「属于一次实验性发布，本就不打算广泛开放」。官方从未公布任何获得条件，社区目录中至今仍标着「(???)」。由于 GitHub 已删除这枚徽章自己的官方图片，官方美术仅剩社区镜像——上面的 URL 固定到 MIT 许可的 Schweinepriester 归档中的某个不可变 commit，因此既不会改变也不会消失。青铜 16、白银 128 这两个门槛来自社区推测；默认与黄金门槛未知（社区目录显示为「???」）。",
+      "conditionEn": "Never officially published. Community description: \"React to something on GitHub with a ❤️ emoji.\" GitHub staff confirmed on 2026-03-29 that the achievement was part of an experimental rollout, was re-enabled in error, and was removed again. Currently unobtainable.",
+      "conditionZh": "官方从未公布。社区描述：「React to something on GitHub with a ❤️ emoji.」GitHub 员工于 2026-03-29 确认该成就属于实验性发布、被误开启并已再次移除。目前无法获得。",
+      "availability": "DISCONTINUED",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": null,
+          "sourceCredibility": "D",
+          "note": "UNKNOWN. Never published by GitHub and never measured by any reliable source. The community catalogs show '?' / '(???)'. Do not publish a number for this tier."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 16,
+          "sourceCredibility": "C",
+          "note": "Community-reported only: 16 heart reactions. Consistent across the Schweinepriester, drknzz and nmloc catalogs, but no GitHub source states it and the badge was never broadly available to test against."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 128,
+          "sourceCredibility": "C",
+          "note": "Community-reported only: 128 heart reactions. Consistent across the Schweinepriester, drknzz and nmloc catalogs, but no GitHub source states it."
+        },
+        {
+          "level": "GOLD",
+          "threshold": null,
+          "sourceCredibility": "D",
+          "note": "UNKNOWN. The community catalogs explicitly show '???' for the Gold threshold, i.e. nobody has ever confirmed it. Do not publish a number for this tier."
+        }
+      ],
+      "difficulty": 1,
+      "confidenceGrade": "C",
+      "confidenceNote": "The DISCONTINUED / not-earnable status is confirmed by an official GitHub staff reply (community discussion #190909, 2026-03-29) and by the 2026-03-27 incident thread (#190842). The specific criteria and the Bronze/Silver numbers are community-only and were never published by GitHub, so the overall grade is C rather than A. The image URL points to a community mirror because GitHub removed its own asset for this badge.",
+      "officialSources": [
+        {
+          "title": "[2026-03-27] Incident Thread - Achievements [Resolved] — official GitHub incident thread",
+          "url": "https://github.com/orgs/community/discussions/190842",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "My github some achivement badges dissapeared — github staff (mecodeatlas, 2026-03-29): Heart On Your Sleeve and Open Sourcerer were temporarily re-enabled in error and removed again",
+          "url": "https://github.com/orgs/community/discussions/190909",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Query regarding the 'Heart On Your Sleeve' (Heart Emoji) Achievement Badge — 2026-10-19, confirms it still has not been released",
+          "url": "https://github.com/orgs/community/discussions/210634",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "B",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Heart On Your Sleeve under 'Disabled', criteria '(???)', Bronze 16 / Silver 128 / Gold ???; also the source of the pinned mirror artwork used above",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        },
+        {
+          "title": "drknzz/GitHub-Achievements — Heart On Your Sleeve listed with (???) criteria and (?) tiers",
+          "url": "https://github.com/drknzz/GitHub-Achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "C"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Heart On Your Sleeve 'disabled', tiers {?,16,128,?}",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": true,
+      "uncertaintyNote": "The condition and the default/Gold thresholds are genuinely unknown — GitHub never published criteria for this achievement, and the community catalogs explicitly mark them '(???)'. The Bronze 16 / Silver 128 numbers are community-reported and were never verifiable against a live badge because the achievement was never broadly released. Do not present any number for the default or Gold tier as fact. The image URL points to a community mirror pinned to an immutable commit because GitHub deleted its own artwork for this badge."
+    },
+    {
+      "slug": "open-sourcerer",
+      "nameEn": "Open Sourcerer",
+      "nameZh": "开源贡献者",
+      "officialImageUrl": "https://raw.githubusercontent.com/Schweinepriester/github-profile-achievements/549ba7291ccb68efcff5daf8af8c2c0ac6817b6f/images/open-sourcerer-default.png",
+      "summaryEn": "Was tested by GitHub but switched off; nobody can earn it. Community-reported thresholds: 8 (Bronze x2), 16 (Silver x3), 64 (Gold x4) merged open-source PRs; default threshold unknown.",
+      "summaryZh": "曾被 GitHub 测试但已关闭，目前无人能够获得。社区推测的门槛：青铜 x2 为 8、白银 x3 为 16、黄金 x4 为 64 个已合并开源 PR；默认门槛未知。",
+      "descriptionEn": "Open Sourcerer was an experimental GitHub achievement for having pull requests merged across multiple public repositories. Like Heart On Your Sleeve it was never broadly released. During the 2026-03-27 backend incident it was briefly re-enabled and appeared on profiles site-wide; GitHub staff confirmed it was 'part of an experimental rollout and were not meant to be broadly available' and removed it again. GitHub never published its criteria. The community description is 'User had PRs merged in multiple public repositories', with reported thresholds of 8 merged open source PRs for Bronze, 16 for Silver and 64 for Gold; the default threshold is unknown. GitHub deleted its own artwork for this badge, so the official art survives only in community mirrors — the URL above is pinned to a specific immutable commit in the MIT-licensed Schweinepriester archive.",
+      "descriptionZh": "Open Sourcerer 是 GitHub 的一项实验性成就，用于表彰在多个公开仓库中有被合并的拉取请求。与 Heart On Your Sleeve 一样，它从未被广泛发布。在 2026-03-27 的后端故障中它被短暂启用并出现在全站档案上；GitHub 员工确认它「属于一次实验性发布，本就不打算广泛开放」并再次移除。GitHub 从未公布其获得条件。社区描述为「User had PRs merged in multiple public repositories」，推测门槛为青铜 8、白银 16、黄金 64 个已合并开源 PR；默认门槛未知。GitHub 已删除这枚徽章自己的官方图片，官方美术仅存于社区镜像——上面的 URL 固定到 MIT 许可的 Schweinepriester 归档中的某个不可变 commit。",
+      "conditionEn": "Never officially published. Community description: \"User had PRs merged in multiple public repositories.\" GitHub staff confirmed on 2026-03-29 that the achievement was part of an experimental rollout, was re-enabled in error, and was removed again. Currently unobtainable.",
+      "conditionZh": "官方从未公布。社区描述：「User had PRs merged in multiple public repositories.」GitHub 员工于 2026-03-29 确认该成就属于实验性发布、被误开启并已再次移除。目前无法获得。",
+      "availability": "DISCONTINUED",
+      "isTiered": true,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": null,
+          "sourceCredibility": "D",
+          "note": "UNKNOWN. Never published by GitHub and never measured. The community catalogs show '?' / '(???)'. Do not publish a number for this tier."
+        },
+        {
+          "level": "BRONZE",
+          "threshold": 8,
+          "sourceCredibility": "C",
+          "note": "Community-reported only: 8 merged open source pull requests. Consistent across the Schweinepriester, drknzz and nmloc catalogs, but no GitHub source states it."
+        },
+        {
+          "level": "SILVER",
+          "threshold": 16,
+          "sourceCredibility": "C",
+          "note": "Community-reported only: 16 merged open source pull requests. Consistent across the Schweinepriester, drknzz and nmloc catalogs, but no GitHub source states it."
+        },
+        {
+          "level": "GOLD",
+          "threshold": 64,
+          "sourceCredibility": "C",
+          "note": "Community-reported only: 64 merged open source pull requests. Consistent across the Schweinepriester, drknzz and nmloc catalogs, but no GitHub source states it."
+        }
+      ],
+      "difficulty": 2,
+      "confidenceGrade": "C",
+      "confidenceNote": "The DISCONTINUED / not-earnable status is confirmed by an official GitHub staff reply (community discussion #190909, 2026-03-29) and by the incident thread (#190842). The criteria and all threshold numbers are community-only and were never published by GitHub, hence grade C. The image URL points to a community mirror because GitHub removed its own asset for this badge.",
+      "officialSources": [
+        {
+          "title": "[2026-03-27] Incident Thread - Achievements [Resolved] — official GitHub incident thread",
+          "url": "https://github.com/orgs/community/discussions/190842",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "My github some achivement badges dissapeared — github staff (mecodeatlas, 2026-03-29): Heart On Your Sleeve and Open Sourcerer were temporarily re-enabled in error and removed again",
+          "url": "https://github.com/orgs/community/discussions/190909",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Open Sourcerer under 'Disabled', criteria '(???)', Bronze 8 / Silver 16 / Gold 64; also the source of the pinned mirror artwork used above",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        },
+        {
+          "title": "drknzz/GitHub-Achievements — Open Sourcerer listed with (???) criteria",
+          "url": "https://github.com/drknzz/GitHub-Achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "C"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Open Sourcerer 'disabled', tiers {?,8,16,64}",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": true,
+      "uncertaintyNote": "The condition and the default threshold are genuinely unknown — GitHub never published criteria and the community catalogs explicitly mark the default tier '?'. The Bronze/Silver/Gold numbers (8/16/64) are community-reported only and were never verifiable against a live badge because the achievement was never broadly released. The image URL points to a community mirror pinned to an immutable commit because GitHub deleted its own artwork for this badge."
+    },
+    {
+      "slug": "proxima-pioneer",
+      "nameEn": "Proxima Pioneer",
+      "nameZh": "Proxima 开拓者",
+      "officialImageUrl": "https://github.githubassets.com/assets/proxima-pioneer-default-51cd4e4969d5.png",
+      "summaryEn": "Internal GitHub-staff badge for contributing to the Proxima proof of concept. Cannot be earned through normal activity.",
+      "summaryZh": "GitHub 内部员工徽章，表彰参与 Proxima 概念验证的贡献。无法通过普通活动获得。",
+      "descriptionEn": "Proxima Pioneer is one of three internal GitHub achievements awarded to staff for contributions to GitHub's own internal development programs. GitHub's live badge detail gives the title 'M0 Participant' and the history row '@<user> contributed to Proxima POC'. The Proxima program was GitHub's internal platform re-architecture; the milestone levels are internal engineering milestones (M0 for the proof of concept, M8 for the staffship instance). Because these are staff-only, they appear on only a handful of public profiles and are never awarded to outside contributors. Single tier, default artwork only. Verified live on @brannon, whose profile shows both Proxima Pioneer and Proxima Staffshipper.",
+      "descriptionZh": "Proxima Pioneer 是 GitHub 内部三项成就之一，授予因参与 GitHub 自家内部开发计划而受认可的员工。GitHub 的实时徽章详情给出的标题是「M0 Participant」，历史行为「@<用户名> contributed to Proxima POC」。Proxima 是 GitHub 的内部平台重构计划，等级对应内部工程里程碑（M0 为概念验证，M8 为 staffship 实例）。由于仅面向员工，它们只出现在极少数公开档案上，绝不会授予外部贡献者。仅默认等级，只有默认图片。已在 @brannon 上验证，其档案同时显示 Proxima Pioneer 与 Proxima Staffshipper。",
+      "conditionEn": "GitHub's own live badge detail (on @brannon): title \"M0 Participant\", history row \"@<user> contributed to Proxima POC\". Internal GitHub staff program milestone; not obtainable by outside contributors.",
+      "conditionZh": "GitHub 官方实时徽章详情（@brannon）：标题「M0 Participant」，历史行「@<用户名> contributed to Proxima POC」。属 GitHub 内部员工项目里程碑，外部贡献者无法获得。",
+      "availability": "INTERNAL",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge detail on @brannon: title 'M0 Participant' and history row '@brannon contributed to Proxima POC'. Single tier only."
+        }
+      ],
+      "difficulty": 5,
+      "confidenceGrade": "B",
+      "confidenceNote": "The badge exists, its artwork, title and history wording are confirmed directly from GitHub's live pages on @brannon, which makes existence grade A. Grade B overall because GitHub has never documented these internal achievements publicly, so the exact eligibility rule beyond 'internal staff milestone' is inferred from the badge's own wording.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Proxima Pioneer on @brannon (title 'M0 Participant', row '@brannon contributed to Proxima POC')",
+          "url": "https://github.com/users/brannon/achievements/proxima-pioneer/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live achievements tab for @brannon (Proxima Pioneer and Proxima Staffshipper badges)",
+          "url": "https://github.com/brannon?tab=achievements",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Proxima Pioneer listed under 'Internal', 'M0 Participant (\"contributed to Proxima POC\")'",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        },
+        {
+          "title": "nmloc/gh-achievements — verified catalog, Proxima Pioneer classified as internal / GitHub staff only",
+          "url": "https://github.com/nmloc/gh-achievements",
+          "sourceType": "COLLECTIVE_EVIDENCE",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "proxima-staffshipper",
+      "nameEn": "Proxima Staffshipper",
+      "nameZh": "Proxima 舰船员",
+      "officialImageUrl": "https://github.githubassets.com/assets/proxima-staffshipper-default-84f658288021.png",
+      "summaryEn": "Internal GitHub-staff badge for shipping the Proxima staffship instance. Cannot be earned through normal activity.",
+      "summaryZh": "GitHub 内部员工徽章，表彰交付 Proxima staffship 实例。无法通过普通活动获得。",
+      "descriptionEn": "Proxima Staffshipper is the second of GitHub's three internal achievements. GitHub's live badge detail gives the title 'M8 Participant' and the history row '@<user> shipped Proxima Staffship instance'. Like Proxima Pioneer, it marks a milestone in GitHub's internal Proxima platform program and is only awarded to GitHub staff, so it appears on a very small number of public profiles. Single tier, default artwork only. Verified live on @brannon, who holds both Proxima Pioneer and Proxima Staffshipper.",
+      "descriptionZh": "Proxima Staffshipper 是 GitHub 三项内部成就中的第二项。GitHub 的实时徽章详情给出的标题是「M8 Participant」，历史行为「@<用户名> shipped Proxima Staffship instance」。与 Proxima Pioneer 一样，它标记的是 GitHub 内部 Proxima 平台计划的里程碑，仅授予 GitHub 员工，因此只出现在极少数公开档案上。仅默认等级，只有默认图片。已在 @brannon 上验证，他同时持有 Proxima Pioneer 与 Proxima Staffshipper。",
+      "conditionEn": "GitHub's own live badge detail (on @brannon): title \"M8 Participant\", history row \"@<user> shipped Proxima Staffship instance\". Internal GitHub staff program milestone; not obtainable by outside contributors.",
+      "conditionZh": "GitHub 官方实时徽章详情（@brannon）：标题「M8 Participant」，历史行「@<用户名> shipped Proxima Staffship instance」。属 GitHub 内部员工项目里程碑，外部贡献者无法获得。",
+      "availability": "INTERNAL",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge detail on @brannon: title 'M8 Participant' and history row '@brannon shipped Proxima Staffship instance'. Single tier only."
+        }
+      ],
+      "difficulty": 5,
+      "confidenceGrade": "B",
+      "confidenceNote": "Existence, artwork, title and history wording are confirmed directly from GitHub's live pages, making existence grade A. Grade B overall because GitHub has never documented these internal achievements publicly.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Proxima Staffshipper on @brannon (title 'M8 Participant', row '@brannon shipped Proxima Staffship instance')",
+          "url": "https://github.com/users/brannon/achievements/proxima-staffshipper/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live achievements tab for @brannon (Proxima Staffshipper badge)",
+          "url": "https://github.com/brannon?tab=achievements",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Proxima Staffshipper listed under 'Internal', 'M8 Participant (\"shipped Proxima Staffship instance\")'",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "proxima-staffuser",
+      "nameEn": "Proxima Staffuser",
+      "nameZh": "Proxima 员工",
+      "officialImageUrl": "https://github.githubassets.com/assets/proxima-staffuser-default-02bf6163ea31.png",
+      "summaryEn": "Internal GitHub-staff badge awarded when a team is onboarded to Proxima. Cannot be earned through normal activity.",
+      "summaryZh": "GitHub 内部员工徽章，团队被接入 Proxima 时授予。无法通过普通活动获得。",
+      "descriptionEn": "Proxima Staffuser is the third of GitHub's three internal achievements. Unlike Proxima Pioneer and Proxima Staffshipper, which mark individual contributions and shipping milestones, this one is granted to the whole person when their team is onboarded to Proxima: GitHub's live badge detail on @timrogers shows the title 'When your team is on Proxima' and the history row '@<user> onboarded to Proxima'. It is therefore a team-level trigger expressed as a personal badge, and is only relevant to GitHub staff. Single tier, default artwork only. Verified live on @timrogers.",
+      "descriptionZh": "Proxima Staffuser 是 GitHub 三项内部成就中的第三项。与标记个人贡献和交付里程碑的 Proxima Pioneer、Proxima Staffshipper 不同，这一枚是在整个团队被接入 Proxima 时授予个人的：GitHub 在 @timrogers 上的实时徽章详情显示标题为「When your team is on Proxima」，历史行为「@<用户名> onboarded to Proxima」。因此它本质上是一个团队级触发、以个人徽章呈现的成就，只对 GitHub 员工有意义。仅默认等级，只有默认图片。已在 @timrogers 上验证。",
+      "conditionEn": "GitHub's own live badge detail (on @timrogers): title \"When your team is on Proxima\", history row \"@<user> onboarded to Proxima\". Internal GitHub staff team-onboarding trigger; not obtainable by outside contributors.",
+      "conditionZh": "GitHub 官方实时徽章详情（@timrogers）：标题「When your team is on Proxima」，历史行「@<用户名> onboarded to Proxima」。属 GitHub 内部员工团队接入触发，外部贡献者无法获得。",
+      "availability": "INTERNAL",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "A",
+          "note": "Confirmed from GitHub's live badge detail on @timrogers: title 'When your team is on Proxima' and history row '@timrogers onboarded to Proxima'. Single tier only."
+        }
+      ],
+      "difficulty": 5,
+      "confidenceGrade": "B",
+      "confidenceNote": "Existence, artwork, title and history wording are confirmed directly from GitHub's live pages, making existence grade A. Grade B overall because GitHub has never documented these internal achievements publicly.",
+      "officialSources": [
+        {
+          "title": "Live badge detail for Proxima Staffuser on @timrogers (title 'When your team is on Proxima', row '@timrogers onboarded to Proxima')",
+          "url": "https://github.com/users/timrogers/achievements/proxima-staffuser/detail?hovercard=1",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Live achievements tab for @timrogers (Proxima Staffuser badge)",
+          "url": "https://github.com/timrogers?tab=achievements",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Proxima Staffuser listed under 'Internal', 'When your team is on Proxima (\"onboarded to Proxima\")'",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": false,
+      "uncertaintyNote": null
+    },
+    {
+      "slug": "discussion-answered",
+      "nameEn": "Discussion answered",
+      "nameZh": "讨论已回答",
+      "officialImageUrl": null,
+      "summaryEn": "Formerly documented profile badge shown when a reply to a discussion was marked as the answer. Removed from GitHub's docs and superseded by the Galaxy Brain achievement.",
+      "summaryZh": "曾被官方文档记录的个人资料徽章：当你在讨论中的回复被标记为答案时显示。已从 GitHub 文档中移除，被 Galaxy Brain 成就取代。",
+      "descriptionEn": "Discussion answered was a profile badge documented in GitHub's official docs from roughly late 2022 until 2024, with the wording: 'If your reply to a discussion is marked as the answer, you'll get a Discussion answered badge on your profile.' GitHub's own docs repository tracked its removal in issue #25069, where a contributor noted that support had confirmed the badge was replaced by the Galaxy Brain achievement and asked for the docs to be updated. The badge is no longer listed in the current 'Displaying badges on your profile' table, which now lists only Developer Program Member, Pro, Security Bug Bounty Hunter, GitHub Campus Expert and Security advisory credit. This entry is included for historical completeness; do not present it as a currently obtainable badge.",
+      "descriptionZh": "Discussion answered 曾是 GitHub 官方文档记录的个人资料徽章，约在 2022 年末至 2024 年间存在，措辞为：「If your reply to a discussion is marked as the answer, you'll get a Discussion answered badge on your profile.」GitHub 自己的文档仓库在 issue #25069 中记录了它的移除：一位贡献者指出客服已确认该徽章被 Galaxy Brain 成就取代，并请求更新文档。该徽章已不在当前的「Displaying badges on your profile」表格中——现在只列出 Developer Program Member、Pro、Security Bug Bounty Hunter、GitHub Campus Expert 和 Security advisory credit。收录本条仅为历史完整性，请勿将其呈现为当前可获得的徽章。",
+      "conditionEn": "GitHub's official docs (2022-10-19 revision of personalizing-your-profile.md): \"If your reply to a discussion is marked as the answer, you'll get a Discussion answered badge on your profile.\" Removed from the docs after it was superseded by the Galaxy Brain achievement.",
+      "conditionZh": "GitHub 官方文档（personalizing-your-profile.md 的 2022-10-19 修订版）：「If your reply to a discussion is marked as the answer, you'll get a Discussion answered badge on your profile.」在被 Galaxy Brain 成就取代后从文档中移除。",
+      "availability": "DISCONTINUED",
+      "isTiered": false,
+      "tiers": [
+        {
+          "level": "DEFAULT",
+          "threshold": 1,
+          "sourceCredibility": "C",
+          "note": "The badge was a single, untiered profile badge with no level system, so it has exactly one threshold. Its artwork URL could not be confirmed as still live on GitHub's CDN, so officialImageUrl is null."
+        }
+      ],
+      "difficulty": 1,
+      "confidenceGrade": "B",
+      "confidenceNote": "Its existence and exact wording are confirmed from GitHub's own docs at the 2022-10-19 revision of personalizing-your-profile.md, and its removal is tracked in GitHub's own docs repository issue #25069. It is absent from the current docs. Grade B because the badge's artwork URL could not be verified as live and the precise removal date was not pinned down.",
+      "officialSources": [
+        {
+          "title": "Archived official docs (2022-10-19 revision) — 'Displaying badges on your profile' table including the Discussion answered badge",
+          "url": "https://web.archive.org/web/20221019230955/https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/personalizing-your-profile",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": "not fetched directly (local egress proxy blocked the raw archive fetch); the content was read from the github/docs repository at revision ea6ecc68a, 2022-10-19"
+        },
+        {
+          "title": "github/docs issue #25069 — 'Discussion(s) Answered' badge included in docs despite being replaced; requests removal",
+          "url": "https://github.com/github/docs/issues/25069",
+          "sourceType": "OFFICIAL_DISCUSSION",
+          "credibility": "A",
+          "httpStatus": 200
+        },
+        {
+          "title": "Profile reference — current 'Displaying badges on your profile' table, from which Discussion answered has been removed",
+          "url": "https://docs.github.com/en/account-and-profile/reference/profile-reference",
+          "sourceType": "OFFICIAL_DOC",
+          "credibility": "A",
+          "httpStatus": 200
+        }
+      ],
+      "communitySources": [
+        {
+          "title": "Schweinepriester/github-profile-achievements — Highlights section listing Discussion answered as no longer obtainable",
+          "url": "https://github.com/Schweinepriester/github-profile-achievements",
+          "sourceType": "COMMUNITY",
+          "credibility": "B"
+        }
+      ],
+      "uncertain": true,
+      "uncertaintyNote": "Included for historical completeness only. GitHub has never published an achievements list, and this badge was dropped from the docs at an unverified date. The artwork URL is null because no live GitHub CDN URL could be confirmed. A site builder should not present this as a currently earnable badge."
+    }
+  ],
+  "notes": "CRITICAL FRAMING FOR A SITE BUILDER — there is no official list of GitHub achievements, and there never has been since the 2022-06-09 public beta. Everything below is what I actually verified.\n\n(1) THE OFFICIAL DOCS PAGE DOES NOT LIST ACHIEVEMENTS. https://docs.github.com/en/account-and-profile/reference/profile-reference (HTTP 200) contains exactly two relevant sections: 'Displaying badges on your profile' (a table of 5 program BADGES, not achievements: Developer Program Member, Pro, Security Bug Bounty Hunter, GitHub Campus Expert, Security advisory credit) and 'Earning Achievements' (about 60 words describing the feature generically, with no achievement names, no conditions and no thresholds). I also checked the docs repo's git history: the file content of personalizing-your-profile.md at revisions ea6ecc68a (2022-10-19), abe4fc461 (2023-02-01), 1daed5cad (2023-03-03), c993a9138 (2023-06-01) and d7341440a (2022-06-23) contains ZERO occurrences of Pull Shark / Quickdraw / YOLO / Galaxy Brain / Starstruck / Public Sponsor / Pair Extraordinaire / Finishing Touch / Heart On Your Sleeve / Open Sourcerer / Proxima. GitHub's 2022 blog post says outright: 'What achievements are there? Great question, we'll never tell'. Do not attribute any per-achievement list to GitHub Docs.\n\n(2) THE ONLY AUTHORITATIVE SOURCE OF NAMES, CONDITIONS AND THRESHOLDS IS THE LIVE PROFILE PAGE. Two undocumented endpoints expose everything: (a) GET https://github.com/users/<login>/achievements/<slug>/detail?hovercard=1 with the header 'X-Requested-With: XMLHttpRequest' returns an HTML fragment containing the badge's GitHub-written description, the tier badge images, the unlock date, and a history whose rows NAME each threshold (e.g. '2nd pull request merged', '16 stars', '2nd accepted answer', '1st UI quality pull request merged', 'Closed within 5 minutes of opening', 'Merged without a review', '1st sponsorship'); (b) GET https://github.com/users/<login>?tab=achievements returns the badge images and the x2/x3/x4 tier labels. Without the XHR header the detail endpoint returns HTTP 406, so a site builder scraping it must set that header. IMPORTANT: these are undocumented, unsupported, subject to change, and the REST/GraphQL APIs do NOT expose achievements at all — I confirmed there is no 'Achievement' type in GitHub's published GraphQL schema (src/graphql/data/fpt/schema-users.json). Only the unrelated profile HIGHLIGHTS are in GraphQL, via User boolean fields isDeveloperProgramMember, isBountyHunter, isCampusExpert and isGitHubStar. If your site wants live per-user badges it must scrape HTML, not call the API.\n\n(3) THE COMPLETE SET IS 15 ACHIEVEMENTS. Harvesting ~130 real profiles surfaced exactly 13 slugs (pull-shark, starstruck, pair-extraordinaire, galaxy-brain, finishing-touch, quickdraw, yolo, public-sponsor, arctic-code-vault-contributor, mars-2020-contributor, proxima-pioneer, proxima-staffshipper, proxima-staffuser) plus the 2 that GitHub switched off (heart-on-your-sleeve, open-sourcerer) = 15. This matches the nmloc/gh-achievements catalog (8 earnable, 2 switched off, 2 retired, 3 staff) and Schweinepriester/github-profile-achievements exactly. I also found a 16th, historical item — the 'Discussion answered' profile BADGE (not an achievement), documented by GitHub until it was superseded by Galaxy Brain; I included it flagged DISCONTINUED so you do not accidentally publish it as current.\n\n(4) TIER SYSTEM: 4 levels, named DEFAULT / BRONZE (x2) / SILVER (x3) / GOLD (x4). Badge art changes per level; the tier is a small coloured label. Tier label colours from the community catalog: Bronze x2 #F9BFA7, Silver x3 #E1E4E4, Gold x4 #FAE57E. Note the DEFAULT tier has no x-label — a user with only 2 merged PRs shows the base Pull Shark art with no label, while the DEFAULT artwork file still exists. Quickdraw, YOLO and Public Sponsor are single-tier with no x-labels and only default artwork served. Some badges (notably Starstruck and Quickdraw) also ship emoji skin-tone variants tied to the Appearance Settings preference.\n\n(5) WHICH THRESHOLDS ARE ACTUALLY FIRST-HAND vs COMMUNITY. Confirmed verbatim from GitHub's own live history (grade A): Pull Shark 2/16/128/1024; Starstruck 16/128/512/4096; Galaxy Brain 2/8/16/32; Finishing Touch 1/4/16/32. NOT printed by GitHub anywhere (grade C, community only, three independent catalogs agree): Pair Extraordinaire 1/10/24/48 — GitHub's history rows for this badge read only 'Coauthored with an unknown user' and never a number, and GitHub's counting rule for co-authorship is genuinely not public (nmloc reports API counts of Co-authored-by PRs disagreeing with the tier by a wide margin). Heart On Your Sleeve 16/128 (default and Gold unknown, catalogs show '???') and Open Sourcerer 8/16/64 (default unknown). If your site states a threshold, label Pair Extraordinaire / Heart On Your Sleeve / Open Sourcerer numbers as community-sourced, and never invent a default or Gold number for the two disabled badges.\n\n(6) THINGS GITUB HAS QUIETLY CHANGED — build these into the site's copy. (a) 2024-02-06: GitHub turned OFF earning Achievements inside GitHub's own Community Discussions (github.com/orgs/community) because of a 134% surge in spam posts, and the badge was earned at 566% the rate of the next-highest granting repo. Official announcement: community discussion #106536 (github-staff). Existing badges and progress were explicitly NOT removed. This change applies ONLY to github.com/orgs/community — accepted answers in every other public repo's Discussions still earn Galaxy Brain. (b) 2026-03-27: a backend incident accidentally re-enabled the never-released Heart On Your Sleeve and Open Sourcerer, so they flashed across profiles site-wide for a few days; GitHub staff removed them again and confirmed they 'were part of an experimental rollout and were not meant to be broadly available' (discussion #190909, staff reply 2026-03-29; incident thread #190842). As of 2026-10 they still cannot be earned (discussion #210634). (c) 2022-06-09: GitHub overhauled its achievement set, renaming 'GitHub Sponsor' -> 'Public Sponsor' and 'Mars 2020 Helicopter Contributor' -> 'Mars 2020 Contributor', and redesigning the artwork. (d) The 'Discussion answered' profile badge was replaced by the Galaxy Brain achievement (github/docs issue #25069). (e) GitHub retired the Discussion answered badge and removed it from the docs table, which now lists 5 program badges.\n\n(7) THE CONTRIBUTIONS GRAPH IS A SEPARATE SYSTEM — do not conflate them. Achievements are not contribution-graph squares. Opening/answering a discussion still counts toward the graph even where it no longer earns an achievement. Separately, the 'Show Achievements on my profile' setting (https://docs.github.com/en/account-and-profile/how-tos/contribution-settings/manage-visibility-settings-for-private-contributions-and-achievements) does two independent things: it shows anonymized private activity as numbers on the contribution calendar, and it controls whether badges are displayed at all. There is a common myth that you must enable it for private activity to COUNT toward achievements — the official page does not say that, and the community evidence indicates private-repo merged PRs do count toward Pull Shark (GitHub's own badge history lists private-repo milestones as 'inaccessible' but counted). Treat 'does the toggle affect counting?' as UNRESOLVED and do not make a claim either way.\n\n(8) PUBLIC-SPONSOR SEMANTICS ARE SUBTLE. GitHub's badge wording changes with state: '@<user> is sponsoring N organizations or users.' while active, versus '@<user> has sponsored N organizations or users.' once past. Only PUBLIC sponsorships qualify.\n\n(9) THE API DOES NOT EXPOSE ACHIEVEMENTS — but it does expose their ingredients, so a site can estimate progress. For Pull Shark, the search API 'is:pr is:merged author:<login>' is a close but LOW-biased approximation of the true counter (GitHub's own cumulative counter does not decrement when a repo is deleted or made private, so the gap grows with volume — observed gaps of 0 at the 2nd PR, 1 at the 16th, 2 at the 128th, 15 at the 1024th). Starstruck must be counted on a SINGLE repository, not summed across the account. Pair Extraordinaire cannot be counted reliably from the API at all, so show the tier only.\n\n(10) ASSET URLS. All 28 official GitHub badge PNGs (13 achievements x up to 4 tiers) were individually fetched and returned HTTP 200 with real byte sizes, and the exact URLs match the nmloc catalog byte-for-byte. Format: https://github.githubassets.com/assets/<slug>-<default|bronze|silver|gold>-<hash>.png — note the hash suffix, so do NOT construct URLs by string substitution without the hash. The 8 tier art files for the two disabled badges are GONE from GitHub's CDN (GitHub deleted them), so those two entries point at a community mirror pinned to an immutable commit (549ba7291ccb68efcff5daf8af8c2c0ac6817b6f) in the MIT-licensed Schweinepriester repo; all 8 were confirmed present via the GitHub API. Also note the docs' own badge images are SVG octicons rendered inline, not PNG assets, so program badges have no stable CDN image URL.\n\n(11) RARITY. Across ~130 harvested profiles: Arctic Code Vault Contributor appeared on 54, Pull Shark 54, Starstruck 54, Pair Extraordinaire 52, Quickdraw 41, YOLO 41, Public Sponsor 23, Galaxy Brain 21, Mars 2020 Contributor 6, and Finishing Touch and the three Proxima badges on exactly 1 each. Finishing Touch is therefore extremely rare, and its eligibility for non-GitHub contributors is an OPEN QUESTION with no official answer (community discussion #211041, 2026-10-22) — do not promise outsiders a path to it.\n\n(12) SAFETY/ETHICS NOTE worth carrying into the site copy: GitHub treats coordinated badge farming as abuse and has terminated accounts over it (explicit threats listed in the #106536 announcement: content removal, blocking, suspension, termination). Do not publish 'badge farming' scripts or tutorials.\n\nREPRODUCIBILITY: I harvested live data from these public profiles, all HTTP 200 — torvalds, ljharb, dylanatsmith, brannon, timrogers, Schweinepriester, Rongronggg9, octocat, mojombo, simonw, steipete, tiangolo, yyx990803, kentcdodds, mitchellh, egoist, shadcn, swyxio, isaacs, gvanrossum, mdo, jhy, leerob, jaredpar, wesbos, mreiferson, vsavkin, aral, jessepollak, joshbruce, kneath, schacon, mgechev, thomasf85, defunkt, plus ~40 more. All 28 badge asset URLs returned HTTP 200. Source-URL status codes are recorded per entry in the JSON above."
+}

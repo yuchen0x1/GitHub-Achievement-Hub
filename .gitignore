@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local databases and runtime data
+.pglite/
+**/.pglite/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Build and framework output
+.next/
+out/
+dist/
+coverage/
+apps/desktop/dist/
+apps/mobile/www/
+apps/mobile/dist/
+apps/api/dist/
+apps/api/.cache/
+apps/api/logs/
+
+# Native build output
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/schemas/
+apps/mobile/android/.gradle/
+apps/mobile/android/build/
+apps/mobile/android/app/build/
+apps/mobile/android/local.properties
+apps/mobile/ios/App/Pods/
+apps/mobile/ios/App/build/
+apps/mobile/ios/DerivedData/
+
+# Native signing and local configuration
+*.jks
+*.keystore
+apps/desktop/src-tauri/tauri.conf.local.json
+
+# Logs and temporary files
+*.log
+*.tmp
+*.cache
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

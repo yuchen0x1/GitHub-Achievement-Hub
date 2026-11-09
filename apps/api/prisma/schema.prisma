@@ -1,0 +1,616 @@
+// ============================================================================
+// GitHub Achievement Hub — Prisma Schema
+// 数据源: PostgreSQL (生产) / PGlite 兼容 Postgres 协议 (本地开发)
+// 说明: Prisma 7 使用 driver adapter, 连接串通过 prisma.config.ts / 运行时传入。
+// ============================================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// 枚举
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  USER
+  EDITOR
+  ADMIN
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+/// 勋章获取状态
+enum Availability {
+  /// 当前可正常获取
+  AVAILABLE
+  /// 分级勋章
+  TIERED
+  /// 限定获取
+  LIMITED
+  /// 已停止发放
+  DISCONTINUED
+  /// 测试中 / 状态不明确
+  TESTING
+  /// 内部或专属身份
+  INTERNAL
+}
+
+enum TierLevel {
+  DEFAULT
+  BRONZE
+  SILVER
+  GOLD
+}
+
+/// 资料可信度: A 官方 / B 可复现实测 / C 多源一致 / D 待验证推测
+enum Credibility {
+  A
+  B
+  C
+  D
+}
+
+enum SourceType {
+  OFFICIAL_DOC
+  CHANGELOG
+  OFFICIAL_DISCUSSION
+  COMMUNITY
+  COLLECTIVE_EVIDENCE
+}
+
+enum SourceStatus {
+  ACTIVE
+  DISPUTED
+  OUTDATED
+  ARCHIVED
+}
+
+enum UserAchievementStatus {
+  EARNED
+  PLANNED
+  FAVORITED
+}
+
+enum FeedbackType {
+  BUG
+  SUGGESTION
+  CORRECTION
+  QUESTION
+  OTHER
+}
+
+enum FeedbackStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  REJECTED
+}
+
+enum ChangeType {
+  CREATE
+  UPDATE
+  DELETE
+  PUBLISH
+  UNPUBLISH
+  ARCHIVE
+  ROLLBACK
+}
+
+enum ArticleCategory {
+  GETTING_STARTED
+  GIT_BASICS
+  REPOSITORY
+  ISSUES
+  PULL_REQUESTS
+  DISCUSSIONS
+  ACTIONS
+  OPEN_SOURCE
+  SPONSORS
+  ACHIEVEMENT_TIPS
+  TIER_PROGRESSION
+  TROUBLESHOOTING
+}
+
+enum SyncStatus {
+  SUCCESS
+  PARTIAL
+  FAILED
+  RATE_LIMITED
+}
+
+enum AnnouncementLevel {
+  INFO
+  WARNING
+  IMPORTANT
+}
+
+// ---------------------------------------------------------------------------
+// 用户体系
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  email         String   @unique
+  passwordHash  String?
+  displayName   String
+  avatarUrl     String?
+  bio           String?  @db.Text
+  role          UserRole @default(USER)
+  locale        String   @default("zh-CN")
+  emailVerified Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  githubAccount    GithubAccount?
+  userAchievements UserAchievement[]
+  favorites        UserFavorite[]
+  progress         UserProgress[]
+  articles         Article[]        @relation("ArticleAuthor")
+  feedback         Feedback[]
+  adminLogs        AdminLog[]
+  refreshTokens    RefreshToken[]
+  handledFeedback  Feedback[]       @relation("FeedbackHandler")
+  achievementLogs  AchievementHistory[]
+
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+/// OAuth state 校验表 — 防止 OAuth CSRF
+model OAuthState {
+  id          String    @id @default(uuid()) @db.Uuid
+  state       String    @unique
+  provider    String
+  redirectUri String?
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([expiresAt])
+  @@map("oauth_states")
+}
+
+// ---------------------------------------------------------------------------
+// 勋章百科
+// ---------------------------------------------------------------------------
+
+model Achievement {
+  id              String       @id @default(uuid()) @db.Uuid
+  slug            String       @unique
+  nameEn          String
+  nameZh          String
+  summaryEn       String       @db.Text
+  summaryZh       String       @db.Text
+  descriptionEn   String       @db.Text
+  descriptionZh   String       @db.Text
+  backgroundEn    String?      @db.Text
+  backgroundZh    String?      @db.Text
+  conditionEn     String       @db.Text
+  conditionZh     String       @db.Text
+  imageUrl        String?
+  imageHdUrl      String?
+  difficulty      Int          @default(3)
+  availability    Availability @default(AVAILABLE)
+  isTiered        Boolean      @default(false)
+  hasTiers        Boolean      @default(false)
+  categoryId      String?      @db.Uuid
+  credibility     Credibility  @default(D)
+  uncertain       Boolean      @default(false)
+  uncertaintyNote String?      @db.Text
+  popularity      Int          @default(0)
+  viewCount       Int          @default(0)
+  status          ContentStatus @default(PUBLISHED)
+  sortOrder       Int          @default(100)
+  verifiedAt      DateTime?
+  publishedAt     DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  category         Category?                 @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tiers            AchievementTier[]
+  translations     AchievementTranslation[]
+  requirements     AchievementRequirement[]
+  guides           AchievementGuide[]
+  sources          AchievementSource[]
+  history          AchievementHistory[]
+  userAchievements UserAchievement[]
+  favorites        UserFavorite[]
+  progress         UserProgress[]
+
+  @@index([status, availability])
+  @@index([categoryId])
+  @@index([difficulty])
+  @@index([popularity])
+  @@index([updatedAt])
+  @@index([isTiered])
+  @@map("achievements")
+}
+
+model AchievementTranslation {
+  id            String   @id @default(uuid()) @db.Uuid
+  achievementId String   @db.Uuid
+  locale        String
+  name          String
+  summary       String   @db.Text
+  description   String   @db.Text
+  background    String?  @db.Text
+  conditionText String   @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([achievementId, locale])
+  @@index([locale])
+  @@map("achievement_translations")
+}
+
+model AchievementTier {
+  id            String      @id @default(uuid()) @db.Uuid
+  achievementId String      @db.Uuid
+  level         TierLevel
+  threshold     Int
+  labelEn       String
+  labelZh       String
+  descriptionEn String?     @db.Text
+  descriptionZh String?     @db.Text
+  sortOrder     Int         @default(0)
+  credibility   Credibility @default(C)
+  sourceNote    String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([achievementId, level])
+  @@index([achievementId, sortOrder])
+  @@map("achievement_tiers")
+}
+
+model Category {
+  id            String   @id @default(uuid()) @db.Uuid
+  slug          String   @unique
+  nameEn        String
+  nameZh        String
+  descriptionEn String?  @db.Text
+  descriptionZh String?  @db.Text
+  icon          String?
+  colorHex      String?
+  sortOrder     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  achievements Achievement[]
+
+  @@index([sortOrder])
+  @@map("achievement_categories")
+}
+
+model AchievementRequirement {
+  id            String   @id @default(uuid()) @db.Uuid
+  achievementId String   @db.Uuid
+  title         String
+  titleZh       String
+  content       String   @db.Text
+  contentZh     String   @db.Text
+  /// 完整操作步骤（有序数组）
+  steps         Json?
+  codeExample   String?  @db.Text
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@index([achievementId, order])
+  @@map("achievement_requirements")
+}
+
+model AchievementGuide {
+  id            String   @id @default(uuid()) @db.Uuid
+  achievementId String   @db.Uuid
+  title         String
+  titleZh       String
+  content       String   @db.Text
+  contentZh     String   @db.Text
+  coverImage    String?
+  order         Int      @default(0)
+  readingTime   Int      @default(5)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@index([achievementId, order])
+  @@map("achievement_guides")
+}
+
+model AchievementSource {
+  id            String       @id @default(uuid()) @db.Uuid
+  achievementId String       @db.Uuid
+  title         String
+  url           String
+  sourceType    SourceType
+  credibility   Credibility
+  status        SourceStatus @default(ACTIVE)
+  verifiedAt    DateTime
+  note          String?      @db.Text
+  isDisputed    Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@index([achievementId])
+  @@index([status])
+  @@map("achievement_sources")
+}
+
+model AchievementHistory {
+  id            String     @id @default(uuid()) @db.Uuid
+  achievementId String     @db.Uuid
+  field         String
+  oldValue      String?    @db.Text
+  newValue      String?    @db.Text
+  changeType    ChangeType
+  note          String?    @db.Text
+  changedById   String?    @db.Uuid
+  createdAt     DateTime   @default(now())
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  changedBy   User?       @relation(fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@index([achievementId, createdAt])
+  @@map("achievement_history")
+}
+
+// ---------------------------------------------------------------------------
+// 用户勋章数据
+// ---------------------------------------------------------------------------
+
+model UserAchievement {
+  id            String                @id @default(uuid()) @db.Uuid
+  userId        String                @db.Uuid
+  achievementId String                @db.Uuid
+  status        UserAchievementStatus @default(EARNED)
+  tierLevel     TierLevel?
+  acquiredAt    DateTime?
+  notes         String?               @db.Text
+  /// MANUAL 手动记录 / GITHUB_API 由 GitHub 数据推断
+  source        String                @default("MANUAL")
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId, status])
+  @@map("user_achievements")
+}
+
+model UserFavorite {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @db.Uuid
+  achievementId String   @db.Uuid
+  note          String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@map("user_favorites")
+}
+
+model UserProgress {
+  id            String     @id @default(uuid()) @db.Uuid
+  userId        String     @db.Uuid
+  achievementId String     @db.Uuid
+  currentCount  Int        @default(0)
+  targetCount   Int?
+  targetTier    TierLevel?
+  note          String?    @db.Text
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@map("user_progress")
+}
+
+// ---------------------------------------------------------------------------
+// GitHub 账号关联
+// ---------------------------------------------------------------------------
+
+model GithubAccount {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @unique @db.Uuid
+  githubId       Int
+  login          String
+  avatarUrl      String?
+  profileUrl     String?
+  /// 加密存储的 access token（服务端专用，绝不下发前端）
+  accessTokenEnc String?   @db.Text
+  scopes         String?
+  tokenExpiresAt DateTime?
+  lastSyncedAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncLogs  GithubSyncLog[]
+
+  @@index([login])
+  @@map("github_accounts")
+}
+
+model GithubSyncLog {
+  id              String     @id @default(uuid()) @db.Uuid
+  githubAccountId String?    @db.Uuid
+  userId          String?    @db.Uuid
+  status          SyncStatus @default(SUCCESS)
+  httpStatus      Int?
+  itemsFound      Int        @default(0)
+  message         String?    @db.Text
+  durationMs      Int?
+  createdAt       DateTime   @default(now())
+
+  githubAccount GithubAccount? @relation(fields: [githubAccountId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("github_sync_logs")
+}
+
+// ---------------------------------------------------------------------------
+// 知识库文章
+// ---------------------------------------------------------------------------
+
+model Article {
+  id          String          @id @default(uuid()) @db.Uuid
+  slug        String          @unique
+  title       String
+  titleZh     String
+  category    ArticleCategory
+  excerpt     String?         @db.Text
+  contentMd   String          @db.Text
+  coverImage  String?
+  authorId    String?         @db.Uuid
+  authorName  String          @default("GitHub Achievement Hub 编辑部")
+  readingTime Int             @default(5)
+  tags        String[]
+  status      ContentStatus   @default(PUBLISHED)
+  publishedAt DateTime?
+  views       Int             @default(0)
+  featured    Boolean         @default(false)
+  sortOrder   Int             @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  author User? @relation("ArticleAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([status, category])
+  @@index([publishedAt])
+  @@index([featured])
+  @@map("articles")
+}
+
+// ---------------------------------------------------------------------------
+// 反馈与后台日志
+// ---------------------------------------------------------------------------
+
+model Feedback {
+  id           String         @id @default(uuid()) @db.Uuid
+  userId       String?        @db.Uuid
+  type         FeedbackType
+  subject      String
+  content      String         @db.Text
+  email        String?
+  status       FeedbackStatus @default(PENDING)
+  adminNote    String?        @db.Text
+  handledById  String?        @db.Uuid
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user      User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  handledBy User?  @relation("FeedbackHandler", fields: [handledById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@map("feedback")
+}
+
+model AdminLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String?  @db.Uuid
+  userName   String?
+  action     String
+  entityType String
+  entityId   String?
+  before     Json?
+  after      Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("admin_logs")
+}
+
+// ---------------------------------------------------------------------------
+// 常见问题
+// ---------------------------------------------------------------------------
+
+model Faq {
+  id         String   @id @default(uuid()) @db.Uuid
+  slug       String   @unique
+  question   String
+  questionZh String
+  answer     String   @db.Text
+  answerZh   String   @db.Text
+  category   String   @default("general")
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category, sortOrder])
+  @@map("faqs")
+}
+
+// ---------------------------------------------------------------------------
+// 站点公告
+// ---------------------------------------------------------------------------
+
+model Announcement {
+  id          String            @id @default(uuid()) @db.Uuid
+  title       String
+  content     String            @db.Text
+  level       AnnouncementLevel @default(INFO)
+  isActive    Boolean           @default(true)
+  publishedAt DateTime          @default(now())
+  expiresAt   DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([isActive, publishedAt])
+  @@map("announcements")
+}
