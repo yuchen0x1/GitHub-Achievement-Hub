@@ -93,9 +93,11 @@ npx tauri build --config src-tauri/tauri.release.conf.json
 - Release 是 draft 或 prerelease：稳定清单不会把它作为正式更新提供。
 - 发布失败：Actions 保留失败日志，draft Release 和已上传资产由维护者检查后再处理。
 
+本地打包完成后，在仓库根目录运行 `node apps/desktop/scripts/prepare-release.mjs 0.0.2`（替换为实际版本）。脚本使用客户端公钥校验两种安装包及签名内版本，随后在 `.release/v0.0.2/` 生成发布附件、`latest.json` 和 SHA-256 校验清单。签名不一致时不会生成新清单。上传整套附件并确认远程检查结果后再公开 Release。
+
 ## 当前限制
 
 - 只有 Windows 桌面端进入本次自动发布矩阵；移动端仍遵循 Google Play / App Store 的商店更新机制。
 - Windows 代码签名证书（Authenticode）未包含在仓库和 Actions 中，安装包可能显示未知发布者；更新包本身仍由 Tauri updater 签名校验。
-- GitHub Secrets、Windows runner、真实 Release 发布和安装升级尚未在当前本地工作区完成端到端验证，需在仓库权限和 Secret 齐备后执行一次 draft Release 验收。
+- 本地签名打包及公钥校验已通过；真实旧客户端发现更新、下载、安装并重启的全过程尚未验收，不能以产物签名成功代替该验收。
 - 当前稳定更新源不提供 Beta/dev 通道。
