@@ -30,10 +30,12 @@
 
 ### v0.0.2 · 2026-11-13
 
-- GitHub 查询增加超时提示与限流等待倒计时，错误原因更清楚。
-- 收藏完成率统计更准确，历史勋章继续保留。
-- 桌面端支持检查更新、下载进度和签名校验后安装。
-- 新登录授权范围收窄，开发环境的数据保护得到加强。
+- 发布 Windows x64 安装包；桌面端支持检查更新、下载进度和签名校验后安装。
+- GitHub 查询区分超时、账号不存在和限流，提供等待倒计时，并明确成就数据的可用范围。
+- 修正收藏完成率，保留历史勋章；完善攻略、搜索和移动端导航的反馈。
+- 新登录授权范围收窄，公开攻略仅展示已发布内容，开发环境的数据保护得到加强。
+
+桌面端需连接自行部署的 API。安装与升级条件、各版本功能和已知限制见完整更新记录。
 
 [查看完整更新记录](docs/releases/release-notes.md) · [下载最新版本](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest)
 
@@ -537,7 +539,15 @@ git push -u origin feat/your-change
 2. 是否涉及数据库 schema、环境变量或 API 行为。
 3. 使用了哪些测试命令，以及测试结果。
 4. 如果修改 UI，请附上真实运行截图或录屏。
-5. 不要提交 `.env`、密钥、数据库目录、构建缓存、`node_modules` 或签名文件。
+5. 不要提交 `.env`、私钥及其密码、数据库目录、构建缓存、`node_modules` 或本地安装包。安装包及其公开校验签名通过 GitHub Releases 分发。
+
+### 本地文件与仓库边界
+
+- `.evolution/`、`_research/` 和根目录旧审计报告属于临时研究材料，不进入源码仓库；有长期价值的结论整理到 `docs/`。
+- `.next/`、`out/`、`dist/`、Rust `target/`、Gradle 构建缓存及 `.tsbuildinfo` 可在停止相关进程后清理，之后需重新构建。移动端生成的资源通过 `npm run mobile:sync` 恢复。
+- `.env`、`apps/api/.pglite/`、桌面端 `.tauri/` 中的签名密钥与密码是本地配置或数据；忽略提交不代表可以删除。`.pglite-*` 也默认忽略，仅在确认是已停用的临时数据库后清理。
+- `.release/` 保留本地发布副本，不提交 Git；发布附件以对应 GitHub Release 为准。
+- 保留源码、锁文件、环境配置示例、Gradle Wrapper、应用图标和文档截图。`apps/api/src/generated/prisma/` 当前被构建直接引用，不能按普通缓存删除。
 
 ## 许可
 
@@ -556,14 +566,3 @@ git push -u origin feat/your-change
 **Build real contributions. Let the achievements follow.**
 
 </div>
-
-
-## 2026-11-13 可靠性升级
-
-- GitHub 查询增加 10 秒上游超时、最多 32 个排队请求、同用户名并发合并，以及遵循 GitHub 响应的限流冷却。
-- 限流返回 HTTP 429、`Retry-After` 和 `retryAfterSeconds`，查询页显示等待倒计时；404 只表示用户不存在，网络故障不再误报为账号不存在。
-- 不再请求未文档化的 `/users/:login/badges`；保留响应字段，空成就列表表示数据不可用，不代表未获得。OAuth 新授权仅申请 `read:user`。
-- 收藏馆的“当前可获取勋章完成率”只统计同一可获取范围内的已获得勋章，历史停发勋章仍保留在勋章墙。
-- 开发启动同步表结构不再使用 `--accept-data-loss`；若同步涉及数据损失，必须停止并由维护者评估迁移。
-
-本轮验证：67 项单元测试、21 项 API 集成测试、类型检查及生产构建通过。浏览器交互验收和依赖漏洞扫描受环境阻塞，未宣称通过；原生安装和真实 OAuth 未验收。详见 [本轮升级报告](docs/EVOLUTION_2026-11-13.md)。

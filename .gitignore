@@ -9,10 +9,12 @@ node_modules/
 *.key
 *.p12
 *.pfx
+*.password
 
 # Local databases and runtime data
 .pglite/
 **/.pglite/
+.pglite-*/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
@@ -55,10 +57,13 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Disposable local verification artifacts
-apps/api/.pglite-test-*/
-apps/api/.pglite-evolution-preview/
-.evolution/.tools/
-.evolution/.pip-cache/
-apps/api/.pglite-release-build/
+# Local research, audit scratch files and release artifacts
+/_research/
+/.evolution/
+/PROJECT_AUDIT_REPORT.md
 .release/
+
+# Python tooling caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
