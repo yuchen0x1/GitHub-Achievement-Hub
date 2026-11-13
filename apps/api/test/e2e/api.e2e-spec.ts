@@ -334,3 +334,28 @@ describe('鉴权与安全', () => {
     expect(serialized).not.toContain('$2b$');
   });
 });
+import { GithubApiService, GithubRateLimitError } from '../../src/modules/github/github-api.service';
+
+describe('GitHub rate-limit HTTP contract', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('returns 429 with Retry-After and a structured countdown', async () => {
+    jest.spyOn(app.get(GithubApiService), 'fetchUser').mockRejectedValueOnce(new GithubRateLimitError('0', 42));
+    const res = await request(server).get(url('/github/profile/limited-fixture')).expect(429);
+    expect(res.headers['retry-after']).toBe('42');
+    expect(res.body.retryAfterSeconds).toBe(42);
+    expect(res.body.message).not.toContain('不存在');
+  });
+
+  it('validation propagates 429 rather than reporting valid:false', async () => {
+    jest.spyOn(app.get(GithubApiService), 'fetchUser').mockRejectedValueOnce(new GithubRateLimitError('0', 42));
+    const res = await request(server).get(url('/github/validate?username=limited-fixture')).expect(429);
+    expect(res.body.retryAfterSeconds).toBe(42);
+  });
+
+  it('rejects malformed profile names without contacting GitHub', async () => {
+    const upstream = jest.spyOn(app.get(GithubApiService), 'fetchUser');
+    await request(server).get(url('/github/profile/invalid--name')).expect(400);
+    expect(upstream).not.toHaveBeenCalled();
+  });
+});

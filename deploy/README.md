@@ -74,11 +74,19 @@ TOKEN_ENCRYPTION_KEY=64位十六进制密钥
 ADMIN_PASSWORD=独立的管理员密码
 ```
 
-`web.env` 用于 Next.js 运行时，构建阶段的内部 API 地址由 updater 的 `GACH_API_INTERNAL_URL` 注入：
+`web.env` 用于 Next.js 运行时，运行期代理地址由 updater 的 `GACH_API_INTERNAL_URL` 烘焙进 Next.js rewrite；构建期页面数据请求单独使用 updater 的 `GACH_BUILD_API_INTERNAL_URL`（默认为临时构建 API），避免临时端口被写入运行产物：
 
 ```dotenv
 PORT=3000
 HOSTNAME=127.0.0.1
+```
+
+updater 的内部地址区分如下：
+
+```dotenv
+GACH_API_INTERNAL_URL=http://127.0.0.1:4000/api/v1       # Next.js 运行期 /api/v1 rewrite
+GACH_BUILD_API_INTERNAL_URL=http://127.0.0.1:4100/api/v1 # 仅用于构建期服务端数据读取
+GACH_BUILD_API_PORT=4100
 ```
 
 如果仓库是私有仓库，在 `updater.env` 设置只读 GitHub fine-grained token；公开仓库可以留空：
@@ -88,6 +96,7 @@ GACH_REPOSITORY=yuchen0x1/GitHub-Achievement-Hub
 GACH_DEPLOY_ROOT=/srv/github-achievement-hub
 GACH_API_INTERNAL_URL=http://127.0.0.1:4000/api/v1
 GACH_BUILD_API_PORT=4100
+GACH_BUILD_API_INTERNAL_URL=http://127.0.0.1:4100/api/v1
 GACH_RUN_MIGRATIONS=false
 GACH_RELEASE_KEEP=3
 GACH_GITHUB_TOKEN=

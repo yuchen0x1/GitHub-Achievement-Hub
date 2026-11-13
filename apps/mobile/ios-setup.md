@@ -79,7 +79,7 @@ GACH_API_BASE="https://api.your-domain.com/api/v1" \
   node apps/mobile/scripts/sync-web.mjs --no-build
 ```
 
-> Web 端 `output: 'export'` 目前还有 4 处未修复（见 `apps/desktop/README.md` 第 3 节）。
+> Web 端 `output: 'export'` 已由 `apps/web/scripts/export-static.mjs` 统一执行；导出前需要可达且已初始化的内容 API。
 > 修复前可临时用 `--allow-shell` 生成壳页来验证原生工程能否编译。
 
 ---

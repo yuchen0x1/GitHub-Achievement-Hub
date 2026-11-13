@@ -31,6 +31,7 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": ["nsis", "msi"],
     "publisher": "GitHub Achievement Hub",
     "copyright": "Copyright © 2026 GitHub Achievement Hub",
@@ -57,8 +58,11 @@
   },
   "plugins": {
     "updater": {
-      "endpoints": [],
-      "pubkey": "",
+      "endpoints": [
+        "https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGOTU5RkM2RDQ0MEJBMkEKUldRcXVrRFV4cCtWajNQYXpFQXR6OTVtbzNZdHRKVUZIa1ZGaHRsSjRhNWJxOEd0Y2ZmUldzK1QK",
+      "requireSignedVersion": true,
       "windows": {
         "installMode": "passive"
       }

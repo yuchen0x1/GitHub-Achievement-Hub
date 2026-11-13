@@ -25,7 +25,10 @@ import {
   CsrfService,
   requireRefreshToken,
 } from '../../common/services/csrf.service';
-import { sanitizeRedirect } from '../../common/utils/redirect.util';
+import {
+  oauthOriginKey,
+  sanitizeRedirect,
+} from '../../common/utils/redirect.util';
 
 const REFRESH_COOKIE = 'gach_refresh';
 const NATIVE_OAUTH_ORIGINS = [
@@ -61,7 +64,7 @@ export class AuthController {
     this.allowedOAuthOrigins = new Set(
       [...configuredOrigins, ...NATIVE_OAUTH_ORIGINS].flatMap((origin) => {
         try {
-          return [new URL(origin).origin];
+          return [oauthOriginKey(new URL(origin))];
         } catch {
           return [];
         }
@@ -319,7 +322,7 @@ export class AuthController {
 
     try {
       const url = new URL(raw);
-      if (!this.allowedOAuthOrigins.has(url.origin)) return `${this.webOrigin}/`;
+      if (!this.allowedOAuthOrigins.has(oauthOriginKey(url))) return `${this.webOrigin}/`;
       url.hash = '';
       return url.toString();
     } catch {

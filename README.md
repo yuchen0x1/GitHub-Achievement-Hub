@@ -26,6 +26,17 @@
 >
 > 本站是非官方社区项目，与 GitHub, Inc. 无隶属关系。GitHub 成就机制可能发生变化，请以 GitHub 实际展示为准。
 
+## 最新更新
+
+### v0.0.2 · 2026-11-13
+
+- GitHub 查询增加超时提示与限流等待倒计时，错误原因更清楚。
+- 收藏完成率统计更准确，历史勋章继续保留。
+- 桌面端支持检查更新、下载进度和签名校验后安装。
+- 新登录授权范围收窄，开发环境的数据保护得到加强。
+
+[查看完整更新记录](docs/releases/release-notes.md) · [下载最新版本](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest)
+
 ## 目录
 
 - [项目简介](#项目简介)
@@ -105,7 +116,7 @@ GitHub Achievement Hub 解决的是「知道 GitHub 有成就，但不知道每�
 | 等级系统 | Default / Bronze / Silver / Gold 门槛与进度计算 | 已实现 | 无 |
 | 攻略知识库 | 12 篇攻略、分类、Markdown 正文、目录和阅读时间 | 已实现 | 无 |
 | 搜索 | 全站搜索、快速搜索、建议词 | 已实现 | 无 |
-| GitHub 账号查询 | 查询公开 GitHub 资料与公开成就信息 | 已实现 | 可选 GitHub API 配置；实际数据取决于 GitHub API |
+| GitHub 账号查询 | 查询公开资料；明确标注成就数据不可用，支持限流等待和重试 | 已实现 | 可选服务端 GitHub Token；官方 API 不提供完整成就列表 |
 | 收藏与进度 | 收藏勋章、记录进度、成就墙、数据导出 | 已实现 | 需要登录 |
 | 认证 | 邮箱注册/登录、JWT、刷新令牌、CSRF 双提交校验 | 已实现 | 需要强随机密钥 |
 | GitHub OAuth | OAuth 登录与账号同步入口 | 部分实现 | `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET` |
@@ -275,7 +286,7 @@ npm start
 npm run start -w @gach/web
 ```
 
-生产环境请设置 `DB_PROVIDER=postgres` 和 `DATABASE_URL`，并关闭 `DB_AUTO_PUSH`、`DB_AUTO_SEED`。生产部署的 systemd、Release 轮询、健康检查、自动回滚和数据库注意事项见 [`deploy/README.md`](deploy/README.md)。
+生产环境请设置 `DB_PROVIDER=postgres` 和 `DATABASE_URL`，并关闭 `DB_AUTO_PUSH`、`DB_AUTO_SEED`。生产部署的 systemd、Release 轮询、健康检查、自动回滚和数据库注意事项见 [`deploy/README.md`](deploy/README.md)。桌面端 Tauri 更新、签名清单、GitHub Secrets 和发布验收见 [`docs/AUTO_UPDATE.md`](docs/AUTO_UPDATE.md)。
 
 ### 桌面端
 
@@ -377,6 +388,7 @@ http://localhost:4000/api/v1/auth/github/callback
 | `DATABASE_URL` | PostgreSQL 连接串 | 生产必填 | 由部署环境提供 |
 | `PGLITE_DATA_DIR` | 本地 PGlite 数据目录 | 否 | `./.pglite` |
 | `PGLITE_PORT` | PGlite 本地端口 | 否 | `55432` |
+| `PGLITE_REUSE_EXTERNAL` | 明确允许复用端口上已存在的本项目 PGlite 实例；默认拒绝 | 否 | `false` |
 | `DB_AUTO_PUSH` | 开发时自动同步 Prisma schema | 否 | `true`（开发示例） |
 | `DB_AUTO_SEED` | 开发时自动同步种子资料 | 否 | `true`（开发示例） |
 | `REDIS_URL` | Redis 连接串 | 否 | 留空时使用进程内缓存 |
@@ -444,7 +456,7 @@ npm run lint
 npm run build
 ```
 
-测试环境使用独立的 `PGLITE_PORT=55499` 和 `./.pglite-test`，不会复用开发数据库。单元测试覆盖 CSRF 服务、文本工具和等级进度计算；e2e 覆盖健康检查、勋章、攻略、FAQ、搜索、鉴权、越权和敏感字段不泄露等路径。
+测试环境使用专用 `PGLITE_PORT=55499` 与每次运行唯一的 `.pglite-test-*` 数据目录。若测试端口已被占用，API 会拒绝复用已有服务，避免误连其他项目的数据库。单元测试覆盖 CSRF 服务、文本工具和等级进度计算；e2e 覆盖健康检查、勋章、攻略、FAQ、搜索、鉴权、越权和敏感字段不泄露等路径。
 
 ## 部署
 
@@ -460,14 +472,14 @@ npm run build
 
 ### 发布流程
 
-推送符合 SemVer 的标签后，GitHub Actions 会执行依赖安装、lint、API 单元测试、生产构建，并创建 GitHub Release：
+推送符合 SemVer 的标签后，GitHub Actions 会执行依赖安装、lint、API 单元测试、生产构建，并在签名 Secrets 齐备时创建包含桌面安装包与更新清单的 draft GitHub Release：
 
 ```bash
 git tag v1.1.0
 git push origin v1.1.0
 ```
 
-发布工作流位于 [`.github/workflows/release.yml`](.github/workflows/release.yml)。仓库当前没有 Docker 镜像发布流程，也没有已提交的预构建桌面或移动安装包。
+发布工作流位于 [`.github/workflows/release.yml`](.github/workflows/release.yml)。确认 draft Release 的安装包、`.sig` 和 `latest.json` 完整后，需要在 GitHub 上手动发布它，桌面客户端才会把它作为稳定更新；缺少签名 Secrets 时工作流不会创建空 Release。仓库当前没有 Docker 镜像发布流程，也没有已提交的预构建移动安装包。
 
 ## 项目状态与已知限制
 
@@ -491,7 +503,7 @@ git push origin v1.1.0
 ### 已知问题与注意事项
 
 - API e2e 已验证 `POST /auth/login` 在存在 CSRF cookie 且缺少 header 时返回 401；认证与敏感字段回归覆盖见 [`apps/api/README.md`](apps/api/README.md)。
-- 移动端静态导出：Next.js 已生成 53 个静态页面，但 `@gach/web` 的 `export:static` 脚本当前引用缺失的 `apps/web/scripts/export-static.mjs`，因此移动端真实 Web 产物同步仍未完成；详见 [`apps/mobile/README.md`](apps/mobile/README.md)。
+- 移动端静态导出：`@gach/web export:static` 会在跨平台脚本中执行 `NEXT_OUTPUT=export next build` 并校验真实 `out/index.html`；动态详情页需要构建时可达且已初始化的 API，详见 [`apps/mobile/README.md`](apps/mobile/README.md)。
 - 当前仓库没有 Prisma migration 基线，因此生产自动更新默认不会执行 migration。
 - 根 `package.json` 的 license metadata 为 MIT，但仓库当前没有独立 `LICENSE` 文件；正式对外分发前应补齐许可证文件。
 
@@ -544,3 +556,14 @@ git push -u origin feat/your-change
 **Build real contributions. Let the achievements follow.**
 
 </div>
+
+
+## 2026-11-13 可靠性升级
+
+- GitHub 查询增加 10 秒上游超时、最多 32 个排队请求、同用户名并发合并，以及遵循 GitHub 响应的限流冷却。
+- 限流返回 HTTP 429、`Retry-After` 和 `retryAfterSeconds`，查询页显示等待倒计时；404 只表示用户不存在，网络故障不再误报为账号不存在。
+- 不再请求未文档化的 `/users/:login/badges`；保留响应字段，空成就列表表示数据不可用，不代表未获得。OAuth 新授权仅申请 `read:user`。
+- 收藏馆的“当前可获取勋章完成率”只统计同一可获取范围内的已获得勋章，历史停发勋章仍保留在勋章墙。
+- 开发启动同步表结构不再使用 `--accept-data-loss`；若同步涉及数据损失，必须停止并由维护者评估迁移。
+
+本轮验证：67 项单元测试、21 项 API 集成测试、类型检查及生产构建通过。浏览器交互验收和依赖漏洞扫描受环境阻塞，未宣称通过；原生安装和真实 OAuth 未验收。详见 [本轮升级报告](docs/EVOLUTION_2026-11-13.md)。

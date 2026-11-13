@@ -134,7 +134,7 @@ export class CollectionService {
   async getWall(userId: string) {
     const [earned, favorites, planned, totalAchievements] = await Promise.all([
       this.prisma.userAchievement.findMany({
-        where: { userId, status: 'EARNED' },
+        where: { userId, status: 'EARNED', achievement: { status: 'PUBLISHED' } },
         include: {
           achievement: {
             include: { tiers: { orderBy: { sortOrder: 'asc' } } },
@@ -159,6 +159,10 @@ export class CollectionService {
       },
     });
 
+    const earnedObtainable = earned.filter((row) =>
+      ['AVAILABLE', 'TIERED'].includes(row.achievement.availability),
+    ).length;
+
     return {
       earned: earned.map((row) => ({
         achievementId: row.achievementId,
@@ -178,8 +182,9 @@ export class CollectionService {
         plannedCount: planned.length,
         totalAchievements,
         obtainableAchievements: obtainable,
+        earnedObtainableCount: earnedObtainable,
         completionRate:
-          obtainable > 0 ? Math.round((earned.length / obtainable) * 1000) / 10 : 0,
+          obtainable > 0 ? Math.min(100, Math.round((earnedObtainable / obtainable) * 1000) / 10) : 0,
       },
     };
   }

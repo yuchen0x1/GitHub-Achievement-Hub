@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../cache/cache.service';
 import {
@@ -10,7 +10,7 @@ import type { GithubProfileResult } from '@gach/shared';
 
 @Injectable()
 export class GithubProfileService {
-  private readonly logger = new Logger(GithubProfileService.name);
+  private readonly inFlight = new Map<string, ReturnType<GithubProfileService['loadProfile']>>();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -41,17 +41,25 @@ export class GithubProfileService {
       sourceNote: string;
     }
   > {
-    const normalized = login.trim().replace(/^@/, '');
+    const normalized = (typeof login === 'string' ? login : '').trim().replace(/^@/, '');
     if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(normalized)) {
-      throw new NotFoundException('GitHub 用户名格式不正确');
+      throw new BadRequestException('GitHub 用户名格式不正确');
     }
 
-    const cacheKey = `github:profile:${normalized.toLowerCase()}`;
+    const cacheKey = `github:profile:v2:${normalized.toLowerCase()}`;
     const cached = await this.cache.get<
-      GithubProfileResult & { achievementsOverview: unknown[] }
+      Awaited<ReturnType<GithubProfileService['loadProfile']>>
     >(cacheKey);
-    if (cached) return cached as never;
+    if (cached) return cached;
 
+    const pending = this.inFlight.get(cacheKey);
+    if (pending) return pending;
+    const request = this.loadProfile(normalized, cacheKey);
+    this.inFlight.set(cacheKey, request);
+    try { return await request; } finally { this.inFlight.delete(cacheKey); }
+  }
+
+  private async loadProfile(normalized: string, cacheKey: string) {
     let profile;
     let badges: Awaited<ReturnType<GithubApiService['fetchPublicBadges']>>;
 
@@ -64,11 +72,6 @@ export class GithubProfileService {
       if (err instanceof GithubUserNotFoundError) {
         throw new NotFoundException(
           `GitHub 用户 "${normalized}" 不存在，或其资料不可公开访问`,
-        );
-      }
-      if (err instanceof GithubRateLimitError) {
-        throw new NotFoundException(
-          'GitHub API 请求频率受限，请稍后再试（未返回任何伪造数据）',
         );
       }
       throw err;
@@ -157,18 +160,18 @@ export class GithubProfileService {
       followers: profile.followers,
       following: profile.following,
       createdAt: profile.created_at,
-      achievements: badges.badges,
+      achievements: badges.badges.map((badge) => ({ ...badge, login: profile.login })),
       apiLimitations: badges.limitations,
       achievementsOverview,
       sourceNote:
         '本页数据来自 GitHub 官方公开 API。GitHub 未提供 Profile Achievements 的完整查询接口，' +
-        '因此仅标记 API 明确返回的徽章为"已获得"，其余显示"数据不可用"。' +
+        '因此本页不自动判定任何勋章为已获得，空列表不表示未获得。' +
         '如需精确追踪，请在「我的收藏馆」中手动记录。',
       fetchedAt: new Date().toISOString(),
     };
 
     await this.cache.set(cacheKey, result, 300);
-    return result as never;
+    return result;
   }
 
   /** 查询并记录同步日志（用户绑定自己的 GitHub 账号时使用） */

@@ -200,20 +200,25 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
   const [state, setState] = useState<LoadState>('loading');
   const [errorMessage, setErrorMessage] = useState('');
   const [attempt, setAttempt] = useState(0);
+  const [retryAt, setRetryAt] = useState(0);
+  const [retrySeconds, setRetrySeconds] = useState(0);
   const [filter, setFilter] = useState<FilterValue>('ALL');
 
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
+    const controller = new AbortController();
 
     setState('loading');
     setErrorMessage('');
+    setRetryAt(0);
+    setRetrySeconds(0);
 
     (async () => {
       try {
         const data = await apiFetch<GithubProfile>(
           `/github/profile/${encodeURIComponent(username)}`,
-          { token: accessToken, credentials: 'include' },
+          { token: accessToken, credentials: 'include', signal: controller.signal },
         );
         if (cancelled) return;
         setProfile(data);
@@ -222,6 +227,13 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
       } catch (err) {
         if (cancelled) return;
         const { state: nextState, message } = classifyError(err);
+        if (err instanceof ApiRequestError && err.status === 429) {
+          const seconds = (err.body as { retryAfterSeconds?: number } | null)?.retryAfterSeconds;
+          const wait = typeof seconds === 'number' && Number.isFinite(seconds) && seconds > 0
+            ? Math.ceil(seconds) : 60;
+          setRetryAt(Date.now() + wait * 1000);
+          setRetrySeconds(wait);
+        }
         setErrorMessage(message);
         setState(nextState);
       }
@@ -229,10 +241,21 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [username, accessToken, hydrated, attempt]);
 
-  const retry = useCallback(() => setAttempt((n) => n + 1), []);
+  useEffect(() => {
+    if (!retryAt) return;
+    const tick = () => setRetrySeconds(Math.max(0, Math.ceil((retryAt - Date.now()) / 1000)));
+    tick();
+    const timer = setInterval(tick, 1000);
+    return () => clearInterval(timer);
+  }, [retryAt]);
+
+  const retry = useCallback(() => {
+    if (Date.now() >= retryAt) setAttempt((n) => n + 1);
+  }, [retryAt]);
 
   const overview = profile?.achievementsOverview ?? [];
 
@@ -263,6 +286,7 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
         message={errorMessage}
         username={username}
         onRetry={retry}
+        retrySeconds={retrySeconds}
         loggedIn={Boolean(user)}
       />
     );
@@ -278,7 +302,7 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
           <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <LogIn size={14} className="shrink-0" />
             <span>
-              你当前未登录。查询使用的是服务端配置的 GitHub Token，结果不会保存到你的账号。
+              你当前未登录。查询仅使用公开资料，结果不会保存到你的账号。
             </span>
             <Link
               href={`/login?next=${encodeURIComponent(profileHref(username))}`}
@@ -676,12 +700,12 @@ const ERROR_COPY: Record<
 > = {
   notfound: {
     title: '未找到这个 GitHub 用户',
-    hint: '请检查用户名拼写；账号也可能已改名、被删除、被停用，或限制了公开访问。GitHub API 触发限流时同样可能把请求判为「不存在」。',
+    hint: '请检查用户名拼写；账号也可能已改名、被删除、被停用，或限制了公开访问。限流和网络故障会单独提示，不会判断为用户不存在。',
     tone: 'warning',
   },
   ratelimited: {
     title: 'GitHub API 请求频率受限',
-    hint: '服务端没有拿到任何数据，因此本页不会给出结论性内容。未认证请求每小时额度更低，请稍等几分钟后重试，或登录后重试。',
+    hint: '服务端没有拿到任何数据，因此本页不会给出结论性内容。请在倒计时结束后重试；登录本站不会提高服务端的 GitHub API 配额。',
     tone: 'warning',
   },
   unauthorized: {
@@ -701,12 +725,14 @@ function ErrorPanel({
   message,
   username,
   onRetry,
+  retrySeconds,
   loggedIn,
 }: {
   state: LoadState;
   message: string;
   username: string;
   onRetry: () => void;
+  retrySeconds: number;
   loggedIn: boolean;
 }) {
   const key = state === 'loading' || state === 'ready' ? 'network' : state;
@@ -739,9 +765,9 @@ function ErrorPanel({
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
           {retryable && (
-            <button type="button" onClick={onRetry} className="btn btn-primary">
+            <button type="button" onClick={onRetry} disabled={retrySeconds > 0} className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50">
               <RefreshCw size={15} />
-              重试查询
+              {retrySeconds > 0 ? `${retrySeconds} 秒后可重试` : '重试查询'}
             </button>
           )}
           {key === 'unauthorized' || !loggedIn ? (
@@ -771,7 +797,7 @@ function ErrorPanel({
         <p className="mt-4 text-[11px] text-[var(--color-ink-subtle)]">
           {key === 'ratelimited'
             ? '提示：等待期间可以对照「勋章图鉴」了解各枚勋章的获取条件。'
-            : '如果重复失败，请确认 API 服务（localhost:4000）正在运行。'}
+            : '如果重复失败，请稍后重试或联系站点管理员。'}
         </p>
         <Link
           href="/achievements"

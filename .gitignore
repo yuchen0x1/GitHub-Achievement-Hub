@@ -54,3 +54,11 @@ apps/desktop/src-tauri/tauri.conf.local.json
 Thumbs.db
 .vscode/
 .idea/
+
+# Disposable local verification artifacts
+apps/api/.pglite-test-*/
+apps/api/.pglite-evolution-preview/
+.evolution/.tools/
+.evolution/.pip-cache/
+apps/api/.pglite-release-build/
+.release/

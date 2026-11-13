@@ -498,7 +498,7 @@ export function CollectionClient() {
         {wall && wall.stats.obtainableAchievements > 0 && (
           <>
             {' '}
-            若只计算当前可获取的 {wall.stats.obtainableAchievements} 枚，则为{' '}
+            当前可获取勋章的完成率（不计历史停发勋章），以 {wall.stats.obtainableAchievements} 枚为总数，为{' '}
             {wall.stats.completionRate}%。
           </>
         )}

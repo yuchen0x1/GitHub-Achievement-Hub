@@ -3,7 +3,7 @@
  * 准备桌面端前端产物。
  *
  * 流程：
- *   1. 确保 `apps/web/out` 存在（不存在则用 NEXT_OUTPUT=export 现场导出）。
+ *   1. 重新生成 `apps/web/out`，避免把旧界面打进新版本（--no-build 除外）。
  *   2. 复制 `apps/web/out` → `apps/desktop/dist`（tauri.conf.json 的 frontendDist）。
  *   3. 把 `src/runtime/*.js` 放进 `dist/__gach/`。
  *   4. 给每个 HTML 的 `</head>` 前注入运行期脚本（API base + 离线缓存）。
@@ -43,6 +43,16 @@ function fail(msg) {
 /* ------------------------------------------------ 1. 确保静态导出产物 */
 
 let sourceDir = WEB_OUT;
+
+if (!NO_BUILD) {
+  log('生成当前源码的 Web 静态产物…');
+  const result = spawnSync(process.execPath, [join(REPO_ROOT, 'apps', 'web', 'scripts', 'export-static.mjs')], {
+    cwd: REPO_ROOT,
+    stdio: 'inherit',
+    env: process.env,
+  });
+  if (result.status !== 0) fail('Web 静态导出失败，拒绝使用旧的缓存产物发布。');
+}
 
 if (!existsSync(join(WEB_OUT, 'index.html'))) {
   if (NO_BUILD) {

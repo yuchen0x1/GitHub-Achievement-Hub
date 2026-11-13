@@ -263,71 +263,62 @@ signtool sign /f cert.pfx /p <password> /tr http://timestamp.digicert.com /td sh
 
 ---
 
-## 8. 自动更新（占位，需替换）
+## 8. 自动更新（GitHub Releases + Tauri 签名更新）
 
-> ⚠️ **`tauri.conf.json` 中的 `plugins.updater` 是占位配置，不能用于生产。**
-> `"pubkey": ""` 与 `"endpoints": []` 必须在发布前替换为你自己的公钥与更新地址。
-> 本仓库**没有、也不会伪造任何可用的签名公钥**。
+桌面端已经接入 Tauri v2 updater。客户端只访问 HTTPS 的 GitHub Releases
+`latest.json`，Tauri 在安装前验证更新签名；Web 页面中的“桌面端更新”区域提供启动后每日检查、手动检查、更新日志、稍后提醒、真实下载进度和安装重启。
 
-### 8.1 生成更新密钥对
+更新地址和公钥已写入 `src-tauri/tauri.conf.json`。仓库不会提交私钥；本机生成的私钥位于被忽略的 `.tauri/` 目录，正式发布时必须复制到 GitHub Actions Secret `TAURI_SIGNING_PRIVATE_KEY`。
+
+### 8.1 签名密钥
 
 ```bash
 cd apps/desktop
-npx tauri signer generate -w ~/.tauri/gach-updater.key
+npx tauri signer generate --ci --password "<strong-password>" -w .tauri/gach-updater.key
 ```
 
 输出示例（真实值由你的机器生成）：
 
 ```
 Your keypair was generated successfully
-Private: ~/.tauri/gach-updater.key (Keep it secret!)
-Public:  ~/.tauri/gach-updater.key.pub
+Private: .tauri/gach-updater.key (Keep it secret!)
+Public:  .tauri/gach-updater.key.pub
 ```
 
 - **私钥**（`gach-updater.key`）只放在 CI secrets / 本机，绝不提交；
-- **公钥**内容粘贴到 `tauri.conf.json` 的 `plugins.updater.pubkey`。
+- **公钥**内容写入 `src-tauri/tauri.conf.json` 的 `plugins.updater.pubkey`。
+- **私钥密码**保存为 GitHub Actions Secret `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`。
 
-### 8.2 配置 endpoints
+### 8.2 GitHub Releases 清单
 
 ```json
 {
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://releases.your-domain.com/gach/{{target}}/{{arch}}/{{current_version}}"
+        "https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest/download/latest.json"
       ],
-      "pubkey": "<粘贴 gach-updater.key.pub 的内容>",
+      "pubkey": "<仓库内固定公钥>",
+      "requireSignedVersion": true,
       "windows": { "installMode": "passive" }
     }
   }
 }
 ```
 
-`endpoints` 需返回 Tauri 更新清单 JSON：
-
-```json
-{
-  "version": "1.1.0",
-  "notes": "修复若干问题",
-  "pub_date": "2026-12-01T00:00:00Z",
-  "platforms": {
-    "windows-x86_64": {
-      "signature": "<签名内容>",
-      "url": "https://releases.your-domain.com/gach/GitHub.Achievement.Hub_1.1.0_x64-setup.nsis.zip"
-    }
-  }
-}
-```
+`latest.json`、安装包和 `.sig` 由 `.github/workflows/release.yml` 的
+`tauri-apps/tauri-action` 生成，不能手工伪造下载链接、校验值或签名。
 
 ### 8.3 构建签名产物
 
-```bash
-export TAURI_SIGNING_PRIVATE_KEY="$(cat ~/.tauri/gach-updater.key)"
-export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="your-password"
-npx tauri build
+```powershell
+$env:TAURI_SIGNING_PRIVATE_KEY = Get-Content -Raw .\.tauri\gach-updater.key
+$env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD = Get-Content -Raw .\.tauri\gach-updater.key.password
+npm run write-release-config -- 1.1.0
+npx tauri build --config src-tauri/tauri.release.conf.json
 ```
 
-会额外产出 `.sig` 文件，其内容填入上面的 `signature` 字段。
+构建会生成 Tauri updater 使用的签名产物。生产发布优先使用 GitHub Actions，避免把密钥写入仓库或日志。
 
 ### 8.4 前端触发检查
 
@@ -340,8 +331,7 @@ if (update?.available) {
 }
 ```
 
-> 目前 `package.json` 未安装 `@tauri-apps/plugin-updater` JS 包（Rust 侧已注册）。
-> 需要前端调用时执行 `npm i @tauri-apps/plugin-updater -w @gach/desktop`。
+前端调用代码位于 `apps/web/src/components/layout/desktop-updater.tsx`；普通浏览器运行时会自动跳过 Tauri API，不影响 Web 站点。
 
 ---
 
@@ -373,8 +363,8 @@ if (update?.available) {
 4. **仅 Windows 构建**：macOS / Linux 需在对应平台执行 `npx tauri build`。
 5. **MSI 需要 WiX**：首次 `--bundles msi` 时 Tauri 会下载 WiX 3.x，需要网络。
 6. **NSIS 需要网络**：首次打包会下载 NSIS 与插件到 `%LOCALAPPDATA%\tauri`。
-7. **自动更新未启用**：pubkey / endpoints 为占位。
-8. **无代码签名**：安装时 SmartScreen 会告警。
+7. **自动更新依赖发布条件**：客户端配置、更新界面和 GitHub Actions 已接入；只有配置 `TAURI_SIGNING_PRIVATE_KEY` 与密码 Secret 并发布正式 Release 后，在线更新才会有可下载资产。
+8. **无代码签名**：安装时 SmartScreen 会告警；Tauri updater 的更新包签名仍会单独校验。
 
 ---
 

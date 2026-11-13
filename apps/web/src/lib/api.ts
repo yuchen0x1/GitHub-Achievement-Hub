@@ -5,8 +5,11 @@
  * - 浏览器端走 Next.js 的 /api/v1 代理（同源，无需处理 CORS）
  */
 
+const DEFAULT_API_BASE = 'http://localhost:4000/api/v1';
 const INTERNAL_BASE =
-  process.env.API_INTERNAL_URL ?? 'http://localhost:4000/api/v1';
+  process.env.NEXT_PHASE === 'phase-production-build'
+    ? (process.env.API_BUILD_URL ?? process.env.API_INTERNAL_URL ?? DEFAULT_API_BASE)
+    : (process.env.API_INTERNAL_URL ?? DEFAULT_API_BASE);
 export const CLIENT_BASE = '/api/v1';
 
 export interface ApiError extends Error {

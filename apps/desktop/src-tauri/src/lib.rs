@@ -168,9 +168,10 @@ fn cache_clear(app: AppHandle) -> Result<(), String> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
-        // 自动更新：pubkey / endpoints 为占位，详见 README「自动更新」章节
+        // 自动更新：固定公钥校验签名与版本，详见 docs/AUTO_UPDATE.md。
         .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             app_info,

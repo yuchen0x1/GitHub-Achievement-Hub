@@ -20,6 +20,7 @@ import { ArticleCard } from '@/components/article/article-card';
 import { Container, Notice } from '@/components/common/layout';
 import { Toc } from '@/components/markdown/toc';
 import { ArticleBody } from './article-body-client';
+import { IS_EXPORT } from '@/lib/export-mode';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -35,19 +36,34 @@ const REVALIDATE = 300;
 
 /**
  * 构建期枚举全部攻略 slug。
- * API 不可达时返回空数组，构建不会因为后端未启动而失败。
+ * SSR 模式下 API 暂时不可达时返回空数组；静态导出则必须拿到真实内容，
+ * 否则继续构建会生成空的动态路由集合并掩盖数据源故障。
  */
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   try {
-    const result = await apiFetchSafe<Paginated<ArticleSummary>>(
+    const result = await (IS_EXPORT || process.env.NEXT_OUTPUT === 'export'
+      ? apiFetch<Paginated<ArticleSummary>>(
+          '/articles?pageSize=100',
+          { revalidate: REVALIDATE },
+        )
+      : apiFetchSafe<Paginated<ArticleSummary>>(
       '/articles?pageSize=100',
       { revalidate: REVALIDATE },
-    );
+        ));
+    if (!result && (IS_EXPORT || process.env.NEXT_OUTPUT === 'export')) {
+      throw new Error('静态导出 API 未返回攻略数据。');
+    }
     return (result?.items ?? [])
       .map((item) => item?.slug)
       .filter((slug): slug is string => Boolean(slug))
       .map((slug) => ({ slug }));
-  } catch {
+  } catch (error) {
+    if (IS_EXPORT || process.env.NEXT_OUTPUT === 'export') {
+      throw new Error(
+        '静态导出需要可达的内容 API（/articles）。请先启动 API，或设置 API_BUILD_URL/API_INTERNAL_URL 指向已初始化的实例。',
+        { cause: error },
+      );
+    }
     return [];
   }
 }

@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "export:static": "next build && node scripts/export-static.mjs"
+    "export:static": "node scripts/export-static.mjs"
   },
   "dependencies": {
     "@gach/shared": "*",
@@ -25,6 +25,9 @@
     "@radix-ui/react-tabs": "1.2.1",
     "@radix-ui/react-tooltip": "1.4.1",
     "@tanstack/react-query": "5.107.1",
+    "@tauri-apps/api": "2.12.4",
+    "@tauri-apps/plugin-process": "2.4.0",
+    "@tauri-apps/plugin-updater": "2.14.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "lucide-react": "1.70.0",

@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { AuthHydrator } from '@/components/layout/auth-hydrator';
+import { DesktopUpdater } from '@/components/layout/desktop-updater';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -74,8 +75,17 @@ export default function RootLayout({
         >
           <AuthHydrator />
           <div className="flex min-h-dvh flex-col">
+            <a
+              href="#main-content"
+              className="sr-only fixed left-4 top-4 z-[100] rounded-lg bg-[var(--color-surface)] px-4 py-2 font-medium text-[var(--color-ink)] shadow-[var(--shadow-lift)] focus:not-sr-only focus:outline-2 focus:outline-offset-2 focus:outline-[var(--color-accent)]"
+            >
+              跳到主要内容
+            </a>
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+            <DesktopUpdater />
             <SiteFooter />
           </div>
         </ThemeProvider>

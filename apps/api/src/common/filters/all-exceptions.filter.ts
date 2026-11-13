@@ -15,6 +15,7 @@ interface ErrorBody {
   message: string;
   path: string;
   timestamp: string;
+  retryAfterSeconds?: number;
 }
 
 /**
@@ -34,6 +35,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = '服务器内部错误，请稍后再试';
     let error = 'Internal Server Error';
+    let retryAfterSeconds: number | undefined;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
@@ -41,11 +43,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       if (typeof payload === 'string') {
         message = payload;
       } else if (payload && typeof payload === 'object') {
-        const p = payload as { message?: string | string[]; error?: string };
+        const p = payload as { message?: string | string[]; error?: string; retryAfterSeconds?: number };
         message = Array.isArray(p.message)
           ? p.message.join('；')
           : (p.message ?? exception.message);
         error = p.error ?? exception.name;
+        if (status === 429 && typeof p.retryAfterSeconds === 'number' && Number.isFinite(p.retryAfterSeconds)) {
+          retryAfterSeconds = Math.max(1, Math.ceil(p.retryAfterSeconds));
+          response.setHeader('Retry-After', String(retryAfterSeconds));
+        }
       }
     } else if (exception instanceof Error) {
       this.logger.error(exception.message, exception.stack);
@@ -67,6 +73,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message,
       path: request.url,
       timestamp: new Date().toISOString(),
+      ...(retryAfterSeconds !== undefined ? { retryAfterSeconds } : {}),
     };
     response.status(status).json(body);
   }

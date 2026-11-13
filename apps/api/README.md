@@ -29,11 +29,11 @@ e2e 会在测试进程内启动一份独立的 PGlite，并自动完成建表与
 
    ```
    PGLITE_PORT=55499
-   PGLITE_DATA_DIR=./.pglite-test
+   PGLITE_DATA_DIR=./.pglite-test-<process>-<run>
    ```
 
-   每次运行前会删除 `.pglite-test`，结束后再次删除；不会影响开发环境正在使用的 `55432` 端口与 `.pglite` 目录。
-   由于种子脚本是幂等 upsert，即使目录清理失败也能安全重跑。
+   每次运行使用唯一目录，初始化失败或测试结束时都会清理。若专用测试端口已被占用，启动会失败，且默认不会复用该端口上的服务；不会影响开发环境的 `55432` 端口与 `.pglite` 目录。
+   `PGLITE_REUSE_EXTERNAL=true` 仅适用于已经确认属于本项目的外部 PGlite 实例，默认关闭。
 
 ## 命令
 
@@ -92,3 +92,27 @@ apps/api/
 ## 跳过说明
 
 当前没有 `skip` 的用例。测试中未依赖任何外部 GitHub Token / 网络服务。
+
+
+## GitHub 查询可靠性与错误契约（2026-11-13）
+
+`GET /api/v1/github/profile/:username` 仅查询公开资料，账号名按大小写无关缓存 300 秒；同一进程内的同名并发查询合并为一个上游请求。没有官方成就列表接口，因此 `achievements` 保留为空数组，并在 `apiLimitations` 中说明未知状态。不要将空数组用于判定用户没有勋章。
+
+| 情况 | HTTP | 响应行为 |
+| --- | --- | --- |
+| 格式错误 | 400 | 不访问 GitHub |
+| GitHub 明确返回用户 404 | 404 | 提示用户不存在或不可公开访问 |
+| 主/次级限流 | 429 | `Retry-After` 响应头及 JSON `retryAfterSeconds`；冷却期间拒绝新的上游访问 |
+| 上游网络/权限/响应故障 | 502 | 通用可重试提示，不泄露上游细节 |
+| 进程内请求队列达到 32 | 503 | 提示繁忙，允许之后重试 |
+| 上游超时 | 504 | 中止请求并释放队列 |
+
+`GET /github/validate` 仅在用户名格式错误或不存在时返回 `{ valid: false }`；限流、网络故障继续返回对应错误状态。`POST /github/sync` 的同步日志正确区分 `RATE_LIMITED` 和 `FAILED`。
+
+`GITHUB_API_MIN_INTERVAL_MS` 默认 220，范围 0–5000；`GITHUB_API_TIMEOUT_MS` 默认 10000，范围 100–30000。无效配置回落默认值。超时包含网络请求和读取响应体，不包含此前排队时间。冷却与队列限于单个 API 进程，多实例部署仍需共享配额协调。
+
+OAuth 新授权只申请 `read:user`，不需要 `public_repo` 仓库写权限；既有 GitHub 授权不会被此代码自动撤销。原有 Token 和用户数据保持兼容。
+
+`GET /collection/wall` 的 `stats.completionRate` 采用已发布且当前可获取勋章的同范围分子/分母，并增加 `earnedObtainableCount`。历史勋章仍在 `earned` 中。数据库无需迁移。
+
+开发模式 `DB_AUTO_PUSH=true` 仅执行普通 `prisma db push`。存在数据损失风险时命令失败并停止启动；请先备份并设计迁移，禁止把自动容许数据丢失作为启动的默认行为。

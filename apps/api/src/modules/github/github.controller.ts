@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -38,8 +39,9 @@ export class GithubController {
     try {
       const profile = await this.profiles.getProfile(username);
       return { valid: true, login: profile.login, avatarUrl: profile.avatarUrl };
-    } catch {
-      return { valid: false };
+    } catch (error) {
+      if (error instanceof BadRequestException || error instanceof NotFoundException) return { valid: false };
+      throw error;
     }
   }
 

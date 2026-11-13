@@ -30,8 +30,8 @@ export class ArticlesService {
     const pageSize = Math.min(50, Math.max(1, Number(query.pageSize) || 10));
     const where: Prisma.ArticleWhereInput = {};
 
-    // 公开接口只返回已发布内容
-    where.status = query.status ?? 'PUBLISHED';
+    // Public listing must not let callers override the published-only policy.
+    where.status = 'PUBLISHED';
     if (query.category && query.category !== 'all') {
       where.category = query.category as ArticleCategory;
     }
@@ -175,7 +175,7 @@ export class ArticlesService {
         readingTime: estimateReadingTime(data.contentMd),
         featured: data.featured ?? false,
         status: data.status ?? 'DRAFT',
-        publishedAt: (data.status ?? 'PUBLISHED') === 'PUBLISHED' ? new Date() : null,
+        publishedAt: (data.status ?? 'DRAFT') === 'PUBLISHED' ? new Date() : null,
       },
     });
     await this.invalidate();

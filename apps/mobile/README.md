@@ -92,10 +92,11 @@ GACH_API_BASE=https://api.your-domain.com/api/v1 \
 > 因为注入会往 HTML 里写 `<script>`，直接改 `apps/web/out` 会污染 Web 仓库产物；
 > 且 `cap sync` 需要一个稳定的、可清理的目录。`www` 每次同步都全量重建。
 
-### ⚠️ 当前 Web 端静态产物同步未完成
+### ⚠️ Web 端静态产物的构建前提
 
-Next.js 当前可以生成 53 个静态页面，但 `@gach/web` 的 `export:static` 脚本会继续调用缺失的
-`apps/web/scripts/export-static.mjs`，因此完整的 Web 产物同步仍未通过验证。
+`@gach/web export:static` 已提供跨平台的真实静态导出脚本，会校验 `apps/web/out/index.html`。
+由于勋章和攻略详情页来自真实 API，导出时必须让 `API_BUILD_URL` 或 `API_INTERNAL_URL`
+指向已初始化的 API 实例；API 不可达时脚本会失败并给出原因，不会生成壳页或假数据。
 
 在真实 Web 产物可用前，可以使用降级开关验证原生工具链：
 
@@ -297,7 +298,7 @@ origin: ['capacitor://localhost', 'https://localhost', 'http://localhost']
 
 ## 8. 已知限制
 
-1. **Web 静态导出未通过** → 当前 `www` 只能来自壳页（`--allow-shell`）。
+1. **静态导出依赖 API** → API 不可达时只能显式使用壳页降级（`--allow-shell`），该产物不是真实界面。
 2. **iOS 未生成工程**：Windows 无 Xcode，需在 macOS 执行 `npx cap add ios`。
 3. **未签名**：没有 release keystore，也没有 iOS 证书 / Provisioning Profile。
 4. **Android WebView 版本依赖**：Capacitor 8 需要 Android 6.0+ / WebView 60+。

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 export interface GithubTokenResponse {
@@ -44,14 +44,16 @@ export interface GithubProfileBadge {
  */
 @Injectable()
 export class GithubApiService {
-  private readonly logger = new Logger(GithubApiService.name);
   private readonly minIntervalMs: number;
+  private readonly timeoutMs: number;
   private lastRequestAt = 0;
+  private queue: Promise<unknown> = Promise.resolve();
+  private pending = 0;
+  private blockedUntil = 0;
 
   constructor(private readonly config: ConfigService) {
-    this.minIntervalMs = Number(
-      this.config.get<string>('GITHUB_API_MIN_INTERVAL_MS', '220'),
-    );
+    this.minIntervalMs = this.readDuration('GITHUB_API_MIN_INTERVAL_MS', 220, 0, 5000);
+    this.timeoutMs = this.readDuration('GITHUB_API_TIMEOUT_MS', 10000, 100, 30000);
   }
 
   get isOAuthConfigured(): boolean {
@@ -77,7 +79,7 @@ export class GithubApiService {
     const params = new URLSearchParams({
       client_id: this.clientId,
       redirect_uri: this.callbackUrl,
-      scope: 'read:user public_repo',
+      scope: 'read:user',
       state,
       allow_signup: 'true',
     });
@@ -86,135 +88,113 @@ export class GithubApiService {
 
   /** 用授权码换取 access token */
   async exchangeCode(code: string): Promise<GithubTokenResponse> {
-    const res = await fetch('https://github.com/login/oauth/access_token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+    return this.requestJson<GithubTokenResponse>(
+      'https://github.com/login/oauth/access_token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          client_id: this.clientId,
+          client_secret: this.config.get<string>('GITHUB_CLIENT_SECRET', ''),
+          code,
+          redirect_uri: this.callbackUrl,
+        }),
       },
-      body: JSON.stringify({
-        client_id: this.clientId,
-        client_secret: this.config.get<string>('GITHUB_CLIENT_SECRET', ''),
-        code,
-        redirect_uri: this.callbackUrl,
-      }),
-    });
-    if (!res.ok) {
-      throw new Error(`GitHub token 交换失败: HTTP ${res.status}`);
-    }
-    return (await res.json()) as GithubTokenResponse;
-  }
-
-  /** 使用 access token 读取当前授权用户资料 */
-  async fetchAuthenticatedUser(token: string): Promise<GithubUserResponse> {
-    await this.throttle();
-    const res = await fetch('https://api.github.com/user', {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${token}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-        'User-Agent': 'GitHub-Achievement-Hub',
-      },
-    });
-    if (!res.ok) {
-      throw new Error(`GitHub /user 接口异常: HTTP ${res.status}`);
-    }
-    return (await res.json()) as GithubUserResponse;
-  }
-
-  /** 读取公开用户资料 */
-  async fetchUser(login: string, token?: string): Promise<GithubUserResponse> {
-    await this.throttle();
-    const headers: Record<string, string> = {
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'GitHub-Achievement-Hub',
-    };
-    const serverToken = this.config.get<string>('GITHUB_TOKEN');
-    if (serverToken) headers.Authorization = `Bearer ${serverToken}`;
-    else if (token) headers.Authorization = `Bearer ${token}`;
-
-    const res = await fetch(
-      `https://api.github.com/users/${encodeURIComponent(login)}`,
-      { headers },
     );
-    if (res.status === 404) {
-      throw new GithubUserNotFoundError(login);
-    }
-    if (res.status === 403 || res.status === 429) {
-      throw new GithubRateLimitError(res.headers.get('x-ratelimit-remaining'));
-    }
-    if (!res.ok) {
-      throw new Error(`GitHub 用户接口异常: HTTP ${res.status}`);
-    }
-    return (await res.json()) as GithubUserResponse;
   }
 
-  /**
-   * 读取用户公开徽章。
-   *
-   * 重要说明：GitHub REST API 只暴露极少数"公开徽章"，
-   * 并不提供 Profile Achievements 的完整列表与等级。
-   * 因此这里只返回 API 真实提供的数据，其余在响应中标注为不可用。
-   */
-  async fetchPublicBadges(
-    login: string,
-    token?: string,
-  ): Promise<{ badges: GithubProfileBadge[]; limitations: string[] }> {
-    const limitations: string[] = [
-      'GitHub REST API 未提供 Profile Achievements 的完整列表，仅公开部分徽章信息。',
-      '勋章等级（Default/Bronze/Silver/Gold）与解锁数量无法通过官方 API 查询。',
-      'GitHub 未公开"某用户是否已获得某枚勋章"的查询接口。',
-    ];
+  async fetchAuthenticatedUser(token: string): Promise<GithubUserResponse> {
+    return this.requestJson('https://api.github.com/user', {
+      headers: this.headers(token),
+    });
+  }
 
-    await this.throttle();
-    const headers: Record<string, string> = {
+  async fetchUser(login: string, token?: string): Promise<GithubUserResponse> {
+    return this.requestJson(
+      `https://api.github.com/users/${encodeURIComponent(login)}`,
+      { headers: this.headers(this.config.get<string>('GITHUB_TOKEN') || token) },
+      login,
+    );
+  }
+
+  /** Keep the response contract without calling an undocumented /badges endpoint. */
+  async fetchPublicBadges(
+    _login: string,
+    _token?: string,
+  ): Promise<{ badges: GithubProfileBadge[]; limitations: string[] }> {
+    return {
+      badges: [],
+      limitations: [
+        'GitHub 官方 REST API 未提供 Profile Achievements 列表查询接口。',
+        '勋章等级与解锁数量无法通过官方 API 查询。',
+        '空列表表示数据不可用，不代表用户未获得任何勋章；请前往 GitHub 个人主页核对。',
+      ],
+    };
+  }
+
+  private headers(token?: string): Record<string, string> {
+    return {
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'GitHub-Achievement-Hub',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
-    const serverToken = this.config.get<string>('GITHUB_TOKEN');
-    if (serverToken) headers.Authorization = `Bearer ${serverToken}`;
-    else if (token) headers.Authorization = `Bearer ${token}`;
-
-    try {
-      const res = await fetch(
-        `https://api.github.com/users/${encodeURIComponent(login)}/badges`,
-        { headers },
-      );
-      if (!res.ok) {
-        this.logger.warn(`badges 接口返回 HTTP ${res.status}，返回空列表`);
-        return { badges: [], limitations };
-      }
-      const raw = (await res.json()) as {
-        id: number;
-        slug?: string;
-        name: string;
-        description?: string | null;
-        image_url?: string | null;
-        badge_creator?: { login: string };
-      }[];
-      const badges = raw.map((b) => ({
-        slug: b.slug ?? `badge-${b.id}`,
-        name: b.name,
-        description: b.description ?? null,
-        imageUrl: b.image_url ?? null,
-      }));
-      return { badges, limitations };
-    } catch (err) {
-      this.logger.warn(`badges 接口请求失败: ${(err as Error).message}`);
-      return { badges: [], limitations };
-    }
   }
 
-  /** 简单的请求节流，避免触发 GitHub 次级速率限制 */
-  private async throttle(): Promise<void> {
-    const now = Date.now();
-    const elapsed = now - this.lastRequestAt;
-    if (elapsed < this.minIntervalMs) {
-      await new Promise((r) => setTimeout(r, this.minIntervalMs - elapsed));
+  private readDuration(key: string, fallback: number, min: number, max: number): number {
+    const value = Number(this.config.get<string>(key, String(fallback)));
+    return Number.isFinite(value) && value >= min && value <= max ? value : fallback;
+  }
+
+  /** Serialize the full request (including body), with bounded queue and timeout. */
+  private async requestJson<T>(url: string, init: RequestInit, login?: string): Promise<T> {
+    if (this.pending >= 32) {
+      throw new HttpException('GitHub 查询繁忙，请稍后重试', 503);
     }
-    this.lastRequestAt = Date.now();
+    this.pending++;
+    const task = this.queue.then(async () => {
+      if (this.blockedUntil > Date.now()) {
+        throw new GithubRateLimitError(null, Math.ceil((this.blockedUntil - Date.now()) / 1000));
+      }
+      const delay = this.minIntervalMs - (Date.now() - this.lastRequestAt);
+      if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
+      this.lastRequestAt = Date.now();
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+      try {
+        const res = await fetch(url, { ...init, signal: controller.signal });
+        if (res.status === 404 && login) throw new GithubUserNotFoundError(login);
+        // A plain 403 can be a permission failure. Inspect the documented headers
+        // and secondary-rate-limit message before classifying it as quota exhaustion.
+        const payload: unknown = await res.json().catch((error: unknown) => {
+          if (res.ok) throw error;
+          return null;
+        });
+        const message = payload && typeof payload === 'object' && 'message' in payload
+          && typeof payload.message === 'string' ? payload.message : '';
+        const remaining = res.headers.get('x-ratelimit-remaining');
+        if (res.status === 429 || (res.status === 403 &&
+            (remaining === '0' || res.headers.has('retry-after') || /rate limit/i.test(message)))) {
+          const retry = Number(res.headers.get('retry-after'));
+          const reset = Number(res.headers.get('x-ratelimit-reset')) * 1000;
+          const seconds = Number.isFinite(retry) && retry > 0 ? retry
+            : remaining === '0' && reset > Date.now() ? Math.ceil((reset - Date.now()) / 1000) : 60;
+          this.blockedUntil = Date.now() + seconds * 1000;
+          throw new GithubRateLimitError(remaining, seconds);
+        }
+        if (!res.ok) throw new HttpException('GitHub 服务暂时不可用，请稍后重试', 502);
+        return payload as T;
+      } catch (error) {
+        if (error instanceof HttpException || error instanceof GithubUserNotFoundError) throw error;
+        throw new HttpException(
+          controller.signal.aborted ? 'GitHub 请求超时，请稍后重试' : '无法读取 GitHub 响应，请稍后重试',
+          controller.signal.aborted ? 504 : 502,
+        );
+      } finally {
+        clearTimeout(timer);
+      }
+    });
+    this.queue = task.catch(() => undefined);
+    try { return await task; } finally { this.pending--; }
   }
 }
 
@@ -225,9 +205,15 @@ export class GithubUserNotFoundError extends Error {
   }
 }
 
-export class GithubRateLimitError extends Error {
-  constructor(public readonly remaining?: string | null) {
-    super('GitHub API 请求频率受限，请稍后再试');
-    this.name = 'GithubRateLimitError';
+export class GithubRateLimitError extends HttpException {
+  constructor(
+    public readonly remaining?: string | null,
+    public readonly retryAfterSeconds: number = 60,
+  ) {
+    super({
+      message: 'GitHub API 请求频率受限，请在等待时间结束后重试',
+      error: 'GitHub Rate Limit',
+      retryAfterSeconds: Math.max(1, Math.ceil(retryAfterSeconds)),
+    }, 429);
   }
 }

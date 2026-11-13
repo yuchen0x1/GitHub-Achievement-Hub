@@ -85,15 +85,21 @@ export function GuidesClient() {
     ArticleCategoryStat[] | null
   >(null);
   const [listStatus, setListStatus] = useState<ListStatus>('loading');
+  const [allStatus, setAllStatus] = useState<ListStatus>('loading');
 
   // 全量文章 + 分类统计只依赖数据本身，加载一次
   useEffect(() => {
     let cancelled = false;
-    apiFetchSafe<Paginated<ArticleSummary>>('/articles?pageSize=50').then(
+    apiFetch<Paginated<ArticleSummary>>('/articles?pageSize=50').then(
       (data) => {
-        if (!cancelled) setAllResult(data);
+        if (!cancelled) {
+          setAllResult(data);
+          setAllStatus('ready');
+        }
       },
-    );
+    ).catch(() => {
+      if (!cancelled) setAllStatus('error');
+    });
     apiFetchSafe<ArticleCategoryStat[]>('/articles/categories').then((data) => {
       if (!cancelled) setCategoryStats(data);
     });
@@ -186,11 +192,17 @@ export function GuidesClient() {
         </div>
       </PageHeader>
 
-      {listStatus === 'error' && !allResult && (
+      {listStatus === 'error' && (
         <Notice tone="danger">
           攻略数据暂时无法加载。请确认 API 服务（
           <code className="font-mono text-xs">localhost:4000</code>
           ）已启动，或稍后重试。页面不会用占位内容代替真实知识库。
+        </Notice>
+      )}
+
+      {allStatus === 'error' && (
+        <Notice tone="danger">
+          攻略专题数据暂时无法加载。其他已成功加载的分页内容仍可浏览；请稍后重试。
         </Notice>
       )}
 
@@ -358,7 +370,8 @@ export function GuidesClient() {
                 </div>
               )}
 
-              {visibleArticles.length === 0 &&
+              {listStatus === 'ready' &&
+                visibleArticles.length === 0 &&
                 (!paged || paged.items.length === 0) && (
                   <EmptyState
                     title={

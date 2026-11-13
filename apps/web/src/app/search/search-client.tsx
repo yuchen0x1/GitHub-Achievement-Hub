@@ -84,7 +84,11 @@ export function SearchClient() {
   );
   const [faqAll, setFaqAll] = useState<FaqItem[] | null>(null);
   const [dataLoading, setDataLoading] = useState(false);
-  const [dataError, setDataError] = useState(false);
+  const [dataErrors, setDataErrors] = useState({
+    achievements: false,
+    articles: false,
+    faq: false,
+  });
   const [isPending, startTransition] = useTransition();
   const [navLoading, setNavLoading] = useState(false);
 
@@ -100,38 +104,34 @@ export function SearchClient() {
       setArticles(null);
       setFaqAll(null);
       setDataLoading(false);
-      setDataError(false);
+      setDataErrors({ achievements: false, articles: false, faq: false });
       return;
     }
 
     let cancelled = false;
     setDataLoading(true);
-    setDataError(false);
+    setDataErrors({ achievements: false, articles: false, faq: false });
 
     (async () => {
-      try {
-        const [ach, art, faq] = await Promise.all([
-          apiFetch<Paginated<Achievement>>(
-            `/search?q=${encodeURIComponent(q)}&page=${page}&pageSize=${PAGE_SIZE}`,
-          ),
-          apiFetch<Paginated<ArticleSummary>>(
-            `/articles?q=${encodeURIComponent(q)}&page=${articlePage}&pageSize=${PAGE_SIZE}`,
-          ),
-          apiFetch<FaqItem[]>('/faq'),
-        ]);
-        if (cancelled) return;
-        setAchievements(ach);
-        setArticles(art);
-        setFaqAll(faq);
-      } catch {
-        if (cancelled) return;
-        setAchievements(null);
-        setArticles(null);
-        setFaqAll(null);
-        setDataError(true);
-      } finally {
-        if (!cancelled) setDataLoading(false);
-      }
+      const [ach, art, faq] = await Promise.allSettled([
+        apiFetch<Paginated<Achievement>>(
+          `/search?q=${encodeURIComponent(q)}&page=${page}&pageSize=${PAGE_SIZE}`,
+        ),
+        apiFetch<Paginated<ArticleSummary>>(
+          `/articles?q=${encodeURIComponent(q)}&page=${articlePage}&pageSize=${PAGE_SIZE}`,
+        ),
+        apiFetch<FaqItem[]>('/faq'),
+      ]);
+      if (cancelled) return;
+      setAchievements(ach.status === 'fulfilled' ? ach.value : null);
+      setArticles(art.status === 'fulfilled' ? art.value : null);
+      setFaqAll(faq.status === 'fulfilled' ? faq.value : null);
+      setDataErrors({
+        achievements: ach.status === 'rejected',
+        articles: art.status === 'rejected',
+        faq: faq.status === 'rejected',
+      });
+      setDataLoading(false);
     })();
 
     return () => {
@@ -158,6 +158,10 @@ export function SearchClient() {
   const showAchievements = type === 'all' || type === 'achievement';
   const showArticles = type === 'all' || type === 'article';
   const showFaq = type === 'all' || type === 'faq';
+  const hasVisibleErrors =
+    (showAchievements && dataErrors.achievements) ||
+    (showArticles && dataErrors.articles) ||
+    (showFaq && dataErrors.faq);
 
   /** 只统计当前分区可见的结果数 */
   const total =
@@ -324,9 +328,9 @@ export function SearchClient() {
         </div>
       )}
 
-      {dataError && (
+      {hasVisibleErrors && (
         <p className="rounded-xl border border-[var(--color-danger)] bg-[var(--color-surface-raised)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
-          搜索服务暂时不可用。请确认 API 服务（
+          部分搜索分区暂时不可用；其余结果仍会正常显示。请确认 API 服务（
           <code className="font-mono text-xs">localhost:4000</code>
           ）已启动，或稍后重试。
         </p>
@@ -341,7 +345,7 @@ export function SearchClient() {
       )}
 
       {/* 搜索结果 */}
-      {q && !dataError && type === 'all' && total === 0 && !loading && (
+      {q && !hasVisibleErrors && type === 'all' && total === 0 && !loading && (
         <EmptyState
           title={`没有找到与「${q}」匹配的内容`}
           description="换个关键词试试，或者浏览全部分类。站内不会展示未经核实的内容，因此收录范围有限。"
@@ -349,7 +353,7 @@ export function SearchClient() {
         />
       )}
 
-      {q && !dataError && showAchievements && (
+      {q && !dataErrors.achievements && showAchievements && (
         <section aria-labelledby="search-achievements">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
             <h2
@@ -387,7 +391,7 @@ export function SearchClient() {
         </section>
       )}
 
-      {q && !dataError && showArticles && (
+      {q && !dataErrors.articles && showArticles && (
         <section aria-labelledby="search-articles" className="pt-2">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
             <h2
@@ -431,7 +435,7 @@ export function SearchClient() {
         </section>
       )}
 
-      {q && !dataError && showFaq && (
+      {q && !dataErrors.faq && showFaq && (
         <section aria-labelledby="search-faq" className="pt-2">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
             <h2

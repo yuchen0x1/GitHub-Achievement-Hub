@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 import { PrismaClient } from '../generated/prisma/client';
 import {
+  assertExternalPgliteReuse,
   resolveDbSettings,
   type DbProvider,
   type DbSettings,
@@ -78,9 +79,17 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const dataDir = this.settings.pgliteDataDir;
     const port = this.settings.pglitePort;
 
-    // 已在运行（外部脚本启动）时直接复用
-    if (await this.isPortAlive(port)) {
-      this.logger.log(`检测到本地 Postgres 协议端口 ${port} 已在运行，直接复用`);
+    // Never infer database ownership from an open port. Reusing an unrelated
+    // Postgres service is especially dangerous when autoPush is enabled.
+    const shouldReuseExternal = assertExternalPgliteReuse(
+      port,
+      await this.isPortAlive(port),
+      this.settings.reuseExternalPglite,
+    );
+    if (shouldReuseExternal) {
+      this.logger.warn(
+        `按 PGLITE_REUSE_EXTERNAL=true 配置复用 ${port} 上的外部数据库；请确认该数据库属于本项目。`,
+      );
       return;
     }
 
@@ -125,7 +134,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     try {
       await execFileAsync(
         process.execPath,
-        [prismaBin, 'db', 'push', '--accept-data-loss'],
+        [prismaBin, 'db', 'push'],
         {
           cwd: process.cwd(),
           env: {

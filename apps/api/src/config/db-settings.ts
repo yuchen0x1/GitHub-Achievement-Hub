@@ -11,9 +11,29 @@ export interface DbSettings {
   connectionString: string;
   pglitePort: number;
   pgliteDataDir: string;
+  reuseExternalPglite: boolean;
   autoPush: boolean;
   autoSeed: boolean;
   isProduction: boolean;
+}
+
+/**
+ * Refuse to infer that an arbitrary PostgreSQL listener belongs to this app.
+ * Returns true only when an existing listener may explicitly be reused.
+ */
+export function assertExternalPgliteReuse(
+  port: number,
+  isPortAlive: boolean,
+  reuseAllowed: boolean,
+): boolean {
+  if (!isPortAlive) return false;
+  if (!reuseAllowed) {
+    throw new Error(
+      `PGlite 端口 ${port} 已被占用。为避免连接到其他项目的数据库，启动已中止。` +
+        '如确认该端口属于本项目的外部 PGlite 实例，可设置 PGLITE_REUSE_EXTERNAL=true。',
+    );
+  }
+  return true;
 }
 
 export function resolveDbSettings(): DbSettings {
@@ -33,6 +53,7 @@ export function resolveDbSettings(): DbSettings {
     connectionString,
     pglitePort,
     pgliteDataDir: process.env.PGLITE_DATA_DIR ?? './.pglite',
+    reuseExternalPglite: process.env.PGLITE_REUSE_EXTERNAL === 'true',
     autoPush: (process.env.DB_AUTO_PUSH ?? 'false') === 'true' && !isProduction,
     autoSeed: (process.env.DB_AUTO_SEED ?? 'false') === 'true' && !isProduction,
     isProduction,

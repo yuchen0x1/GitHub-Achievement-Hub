@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next';
 
-const API_INTERNAL = process.env.API_INTERNAL_URL ?? 'http://localhost:4000/api/v1';
+// Runtime rewrites always target the stable production API; API_BUILD_URL is
+// read only by server-side data requests during the build.
+const API_RUNTIME = process.env.API_INTERNAL_URL ?? 'http://localhost:4000/api/v1';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -35,7 +37,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/v1/:path*',
-        destination: `${API_INTERNAL}/:path*`,
+        destination: `${API_RUNTIME}/:path*`,
       },
     ];
   },

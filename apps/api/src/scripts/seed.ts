@@ -2,7 +2,7 @@
  * 数据初始化脚本。
  *
  * 用法：
- *   npm run seed              # 使用 DATABASE_URL 连接
+ *   npm run seed              # 根据 DB_PROVIDER 选择本地 PGlite 或 DATABASE_URL
  *   （开发环境下 API 启动时若数据库为空，也会自动调用本脚本）
  *
  * 特性：幂等。重复执行不会产生重复数据；会更新已有条目的内容字段。
@@ -15,10 +15,9 @@ import { CATEGORIES } from './data/categories';
 import { FAQS } from './data/faq';
 import { ARTICLES } from './data/articles';
 import { estimateReadingTime } from '../common/utils/text.util';
+import { resolveDbSettings } from '../config/db-settings';
 
-const DATABASE_URL =
-  process.env.DATABASE_URL ??
-  'postgresql://postgres:postgres@127.0.0.1:55432/postgres';
+const DATABASE_URL = resolveDbSettings().connectionString;
 
 export interface SeedResult {
   achievements: number;
@@ -153,7 +152,7 @@ export async function seedDatabase(
   if (announcementCount === 0) {
     await prisma.announcement.create({
       data: {
-        title: '本站已收录 11 枚 GitHub 个人成就',
+        title: `本站已收录 ${ACHIEVEMENTS.length} 枚 GitHub 个人成就`,
         content:
           '我们逐一核实了 GitHub 官方文档、官方公告与社区实测数据，' +
           '并对每一条等级门槛标注了可信度等级。' +

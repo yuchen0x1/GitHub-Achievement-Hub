@@ -3,7 +3,7 @@
 import { Award, LayoutDashboard, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '@/lib/auth-store';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './theme-toggle';
@@ -25,6 +25,7 @@ export function SiteHeader() {
   const { user, hydrated, logout } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -165,10 +166,12 @@ export function SiteHeader() {
 
           {/* 移动端菜单按钮 */}
           <button
+            ref={mobileMenuButtonRef}
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label="打开菜单"
+            aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-ink-muted)] lg:hidden"
           >
             <span className="relative block h-3.5 w-4">
@@ -197,7 +200,17 @@ export function SiteHeader() {
 
       {/* 移动端面板 */}
       {mobileOpen && (
-        <div className="animate-fade border-t border-[var(--color-border)] lg:hidden">
+        <div
+          id="mobile-navigation"
+          className="animate-fade border-t border-[var(--color-border)] lg:hidden"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              setMobileOpen(false);
+              mobileMenuButtonRef.current?.focus();
+            }
+          }}
+        >
           <div className="space-y-3 px-4 py-4 sm:px-6">
             <SearchBox className="w-full" />
             <nav className="grid grid-cols-2 gap-1" aria-label="移动端导航">

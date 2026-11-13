@@ -15,6 +15,19 @@ concurrency:
 jobs:
   verify-and-publish:
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: ci-only-disposable-jwt-secret-not-for-production
+      REFRESH_TOKEN_SECRET: ci-only-disposable-refresh-secret-not-for-production
+      ADMIN_EMAIL: admin@gach.local
+      ADMIN_PASSWORD: Admin@12345
+      DB_PROVIDER: pglite
+      DB_AUTO_PUSH: 'true'
+      DB_AUTO_SEED: 'true'
+      PGLITE_REUSE_EXTERNAL: 'false'
+      PGLITE_DATA_DIR: ./.pglite-release-build
+      PGLITE_PORT: '55498'
+      REDIS_URL: ''
+      PORT: '4000'
     steps:
       - name: Check out tag
         uses: actions/checkout@v4
@@ -42,13 +55,167 @@ jobs:
       - name: Unit tests
         run: npm run test:unit -w @gach/api
 
+      - name: API integration tests
+        run: npm run test:e2e
+
+      - name: Start isolated API for prerendering
+        shell: bash
+        run: |
+          cd apps/api
+          node -r ts-node/register/transpile-only src/main.ts > "$RUNNER_TEMP/gach-build-api.log" 2>&1 &
+          echo "GACH_BUILD_API_PID=$!" >> "$GITHUB_ENV"
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent 'http://127.0.0.1:4000/api/v1/achievements?pageSize=1' | node -e 'let s="";process.stdin.on("data",c=>s+=c).on("end",()=>{try{process.exit(JSON.parse(s).items?.length>0?0:1)}catch{process.exit(1)}})'; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/gach-build-api.log"
+          exit 1
+
       - name: Build production bundles
         run: npm run build
         env:
           API_INTERNAL_URL: http://127.0.0.1:4000/api/v1
+          API_BUILD_URL: http://127.0.0.1:4000/api/v1
           NEXT_PUBLIC_EXPORT_MODE: '0'
 
-      - name: Create GitHub Release
+      - name: Stop build API
+        if: always()
+        run: if [ -n "$GACH_BUILD_API_PID" ]; then kill "$GACH_BUILD_API_PID" || true; fi
+
+  publish-desktop:
+    name: Build and publish signed desktop updater
+    needs: verify-and-publish
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    env:
+      JWT_SECRET: ci-only-disposable-jwt-secret-not-for-production
+      REFRESH_TOKEN_SECRET: ci-only-disposable-refresh-secret-not-for-production
+      ADMIN_EMAIL: admin@gach.local
+      ADMIN_PASSWORD: Admin@12345
+      DB_PROVIDER: pglite
+      DB_AUTO_PUSH: 'true'
+      DB_AUTO_SEED: 'true'
+      PGLITE_REUSE_EXTERNAL: 'false'
+      PORT: '4000'
+      API_PREFIX: /api/v1
+      API_INTERNAL_URL: http://127.0.0.1:4000/api/v1
+      API_BUILD_URL: http://127.0.0.1:4000/api/v1
+      PGLITE_DATA_DIR: ./.pglite-release-build
+
+    steps:
+      - name: Check out tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared package
+        run: npm run build -w @gach/shared
+
+      - name: Check updater signing secrets
+        id: signing
+        shell: pwsh
+        env:
+          SIGNING_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:SIGNING_KEY) -or [string]::IsNullOrWhiteSpace($env:SIGNING_PASSWORD)) {
+            'ready=false' >> $env:GITHUB_OUTPUT
+            Write-Host '未配置 Tauri 签名 Secrets，跳过 CI 桌面打包；可在受控发布机签名并上传完整产物。'
+          } else {
+            'ready=true' >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Start isolated API for static export
+        if: steps.signing.outputs.ready == 'true'
+        shell: pwsh
+        run: |
+          $apiLog = Join-Path $env:RUNNER_TEMP 'gach-api.log'
+          $apiError = Join-Path $env:RUNNER_TEMP 'gach-api.err'
+          $apiPid = Join-Path $env:RUNNER_TEMP 'gach-api.pid'
+          $api = Start-Process -FilePath 'node.exe' -ArgumentList @('-r', 'ts-node/register/transpile-only', 'src/main.ts') -WorkingDirectory (Join-Path $env:GITHUB_WORKSPACE 'apps/api') -WindowStyle Hidden -PassThru -RedirectStandardOutput $apiLog -RedirectStandardError $apiError
+          Set-Content -Path $apiPid -Value $api.Id
+          $healthy = $false
+          for ($attempt = 0; $attempt -lt 60; $attempt++) {
+            Start-Sleep -Seconds 2
+            try {
+              $response = Invoke-RestMethod -Uri 'http://127.0.0.1:4000/api/v1/achievements?pageSize=1' -TimeoutSec 5
+              if ($response.items.Count -gt 0) { $healthy = $true; break }
+            } catch { }
+            if ($api.HasExited) { break }
+          }
+          if (-not $healthy) {
+            Get-Content -Path $apiLog -ErrorAction SilentlyContinue
+            Get-Content -Path $apiError -ErrorAction SilentlyContinue
+            throw '隔离 API 未能在静态导出前通过健康检查'
+          }
+
+      - name: Write release version overlay
+        if: steps.signing.outputs.ready == 'true'
+        run: npm run write-release-config -w @gach/desktop
+
+      - name: Build and upload Tauri updater assets
+        if: steps.signing.outputs.ready == 'true'
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: apps/desktop
+          tauriScript: npx tauri
+          args: --config src-tauri/tauri.release.conf.json
+          tagName: ${{ github.ref_name }}
+          releaseName: GitHub Achievement Hub ${{ github.ref_name }}
+          releaseBody: '桌面端安装包与签名更新清单。发布前请确认 Release 资产完整。'
+          releaseDraft: true
+          prerelease: false
+          generateReleaseNotes: true
+          uploadUpdaterJson: true
+          updaterJsonPreferNsis: true
+          uploadUpdaterSignatures: true
+
+      - name: Upload SHA-256 checksums
+        if: steps.signing.outputs.ready == 'true'
+        shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes
+        run: |
+          $bundleDir = Join-Path $env:GITHUB_WORKSPACE 'apps/desktop/src-tauri/target/release/bundle'
+          $checksumFile = Join-Path $env:RUNNER_TEMP 'SHA256SUMS.txt'
+          $files = Get-ChildItem -Path $bundleDir -Recurse -File | Where-Object { $_.Extension -in @('.exe', '.msi', '.zip', '.sig') }
+          if (-not $files) { throw '未找到桌面端 Release 资产，拒绝上传空校验清单' }
+          $lines = foreach ($file in $files) {
+            $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash.ToLowerInvariant()
+            "$hash  $($file.Name)"
+          }
+          Set-Content -LiteralPath $checksumFile -Value $lines -Encoding utf8
+          gh release upload "$env:GITHUB_REF_NAME" $checksumFile --repo "$env:GITHUB_REPOSITORY" --clobber
+
+      - name: Report desktop release blocker
+        if: steps.signing.outputs.ready != 'true'
+        run: Write-Host 'CI 未构建桌面附件，可使用本地签名发布；如需 CI 打包，请配置签名 Secrets 后重跑工作流，不要移动已有标签。'
+
+      - name: Stop isolated API
+        if: always()
+        shell: pwsh
+        run: |
+          $apiPid = Join-Path $env:RUNNER_TEMP 'gach-api.pid'
+          if (Test-Path -LiteralPath $apiPid) {
+            $pidValue = Get-Content -LiteralPath $apiPid -Raw
+            Stop-Process -Id ([int]$pidValue.Trim()) -Force -ErrorAction SilentlyContinue
+          }

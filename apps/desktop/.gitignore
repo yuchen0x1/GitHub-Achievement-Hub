@@ -5,6 +5,8 @@ src-tauri/target/
 src-tauri/gen/schemas/
 
 # 本地配置（不要提交签名私钥 / 更新私钥）
+.tauri/
 *.pem
 *.key
 src-tauri/tauri.conf.local.json
+src-tauri/tauri.release.conf.json
