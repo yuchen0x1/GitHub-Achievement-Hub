@@ -19,6 +19,11 @@
 
 [发布页与下载](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/tag/v0.0.3) · [与 v0.0.2 的完整差异](https://github.com/yuchen0x1/GitHub-Achievement-Hub/compare/v0.0.2...v0.0.3)
 
+### 发布验证与附件
+
+- GitHub Actions `43880891131` 的源码验证通过：依赖安装、shared 构建、lint、语义版本校验、单元测试、API 集成测试、API 预渲染启动和生产构建均通过。
+- Windows 桌面发布作业成功结束，但发布环境没有 Tauri 签名 Secrets，因此桌面打包、更新清单和 SHA-256 附件按工作流规则跳过；本版本发布页不包含 Windows 安装包。
+
 ## v0.0.2 · 2026-11-13
 
 ### 新增与改善

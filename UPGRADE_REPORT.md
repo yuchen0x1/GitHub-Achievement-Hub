@@ -79,6 +79,8 @@
 | PASS | `npm run lint -w @gach/web` | Web TypeScript noEmit 通过 |
 | PASS | `npm run build -w @gach/shared` | shared 包构建通过 |
 | PASS | `npm run build` | shared、API、Web 全量构建通过；Next.js 生成 24 个静态页面 |
+| PASS | GitHub Actions `43880891131` | 标签 `v0.0.3` 的依赖安装、lint、单元测试、API 集成测试、预渲染启动和生产构建全部通过 |
+| PARTIAL | GitHub Actions 桌面发布作业 | 作业成功，但未配置 Tauri 签名 Secrets，桌面打包、更新清单和校验清单步骤跳过 |
 | BLOCKED/PARTIAL | 浏览器视觉、Tauri/Capacitor 原生、真实 OAuth、生产 PostgreSQL/Redis、签名安装升级 | 当前环境没有形成完整端到端证据 |
 
 测试脚本中的 Jest e2e 使用 `--forceExit`，所以通过表示断言通过，不表示所有外部句柄已自然关闭。没有运行 `npm audit` 并把网络失败当成通过，也没有伪造性能、生产或安装结果。
@@ -102,7 +104,7 @@
 
 - 本轮没有完成 Prisma migration、生产恢复演练、多实例配额、全文索引、目标计划、趋势图和分享卡片。
 - 没有浏览器自动化、压力测试、真实 OAuth、原生安装、生产数据库/Redis 和跨版本升级验收证据。
-- 已完成 `v0.0.3` 发布准备：远端 `main` 的依赖安全修复已纳入发布分支，README、CHANGELOG 和正式发布记录已同步；标签推送后由 GitHub Actions 重新执行发布校验。
+- 已发布 `v0.0.3`：`main` 与标签已推送到 `origin`，GitHub Actions `43880891131` 全部成功，正式 Release 已创建；由于没有 Tauri 签名 Secrets，发布页不包含 Windows 安装包、更新清单或 SHA-256 附件。
 
 ## F. 后续执行建议
 
