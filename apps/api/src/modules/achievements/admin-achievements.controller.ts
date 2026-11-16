@@ -15,6 +15,7 @@ import { Roles } from '../../common/decorators/metadata.decorator';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 import { slugify } from '../../common/utils/text.util';
+import { boundedPositiveInt } from '../../common/utils/number.util';
 
 /** 可选文本字段：空字符串归一为 null，避免写入无意义的空串 */
 function optionalText(value: unknown): string | null {
@@ -47,8 +48,8 @@ export class AdminAchievementsController {
     @Query('status') status?: string,
     @Query('q') q?: string,
   ) {
-    const p = Math.max(1, Number(page) || 1);
-    const size = Math.min(100, Math.max(1, Number(pageSize) || 20));
+    const p = boundedPositiveInt(page, 1, Number.MAX_SAFE_INTEGER);
+    const size = boundedPositiveInt(pageSize, 20, 100);
     const where: Record<string, unknown> = {};
     if (status && status !== 'all') where.status = status;
     if (q?.trim()) {

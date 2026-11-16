@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../cache/cache.service';
+import { boundedPositiveInt } from '../../common/utils/number.util';
 
 export interface SearchHit {
   type: 'achievement' | 'article';
@@ -26,6 +27,7 @@ export class SearchService {
   ) {}
 
   async search(q: string, limit = 20) {
+    limit = boundedPositiveInt(limit, 20, 50);
     const keyword = q.trim();
     if (!keyword) {
       return { query: keyword, achievements: [], articles: [], total: 0 };
@@ -101,6 +103,7 @@ export class SearchService {
 
   /** 搜索建议（输入联想） */
   async suggest(q: string, limit = 8) {
+    limit = boundedPositiveInt(limit, 8, 20);
     const keyword = q.trim();
     if (!keyword) return [];
 
@@ -176,8 +179,8 @@ export class SearchService {
               ? [{ popularity: 'desc' }]
               : [{ updatedAt: 'desc' }];
 
-    const page = Math.max(1, Number(query.page) || 1);
-    const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 12));
+    const page = boundedPositiveInt(query.page, 1, Number.MAX_SAFE_INTEGER);
+    const pageSize = boundedPositiveInt(query.pageSize, 12, 100);
 
     const [items, total] = await this.prisma.$transaction([
       this.prisma.achievement.findMany({

@@ -13,6 +13,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Public } from '../../common/decorators/metadata.decorator';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/metadata.decorator';
+import { boundedPositiveInt } from '../../common/utils/number.util';
+import { SubmitFeedbackDto } from './feedback.dto';
 
 @ApiTags('用户反馈')
 @Controller('feedback')
@@ -22,16 +24,7 @@ export class FeedbackController {
   @Public()
   @Post()
   @ApiOperation({ summary: '提交反馈' })
-  async submit(
-    @Body()
-    body: {
-      type?: 'BUG' | 'SUGGESTION' | 'CORRECTION' | 'QUESTION' | 'OTHER';
-      subject: string;
-      content: string;
-      email?: string;
-    },
-    @CurrentUser() user?: AuthUser,
-  ) {
+  async submit(@Body() body: SubmitFeedbackDto, @CurrentUser() user?: AuthUser) {
     const created = await this.prisma.feedback.create({
       data: {
         userId: user?.id ?? null,
@@ -77,8 +70,8 @@ export class AdminOpsController {
     @Query('page') page?: string,
     @Query('pageSize') pageSize?: string,
   ) {
-    const p = Math.max(1, Number(page) || 1);
-    const size = Math.min(100, Math.max(1, Number(pageSize) || 20));
+    const p = boundedPositiveInt(page, 1, Number.MAX_SAFE_INTEGER);
+    const size = boundedPositiveInt(pageSize, 20, 100);
     const where = status && status !== 'all' ? { status: status as never } : {};
     const [items, total] = await this.prisma.$transaction([
       this.prisma.feedback.findMany({
@@ -130,8 +123,8 @@ export class AdminOpsController {
     @Query('page') page?: string,
     @Query('pageSize') pageSize?: string,
   ) {
-    const p = Math.max(1, Number(page) || 1);
-    const size = Math.min(100, Math.max(1, Number(pageSize) || 30));
+    const p = boundedPositiveInt(page, 1, Number.MAX_SAFE_INTEGER);
+    const size = boundedPositiveInt(pageSize, 30, 100);
     const where = entityType && entityType !== 'all' ? { entityType } : {};
     const [items, total] = await this.prisma.$transaction([
       this.prisma.adminLog.findMany({
@@ -152,8 +145,8 @@ export class AdminOpsController {
     @Query('pageSize') pageSize?: string,
     @Query('q') q?: string,
   ) {
-    const p = Math.max(1, Number(page) || 1);
-    const size = Math.min(100, Math.max(1, Number(pageSize) || 20));
+    const p = boundedPositiveInt(page, 1, Number.MAX_SAFE_INTEGER);
+    const size = boundedPositiveInt(pageSize, 20, 100);
     const where = q?.trim()
       ? {
           OR: [

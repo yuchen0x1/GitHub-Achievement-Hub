@@ -18,6 +18,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../cache/cache.service';
 import { paginated } from '../../common/utils/paginate.util';
+import { boundedPositiveInt } from '../../common/utils/number.util';
 import { slugify } from '../../common/utils/text.util';
 import type { Paginated } from '@gach/shared';
 
@@ -60,8 +61,8 @@ export class AchievementsService {
   // -------------------------------------------------------------------------
 
   async findAll(query: AchievementListQuery): Promise<Paginated<Achievement>> {
-    const page = Math.max(1, Number(query.page) || 1);
-    const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 12));
+    const page = boundedPositiveInt(query.page, 1, Number.MAX_SAFE_INTEGER);
+    const pageSize = boundedPositiveInt(query.pageSize, 12, 100);
     const where = this.buildWhere(query);
 
     const [items, total] = await this.prisma.$transaction([

@@ -8,6 +8,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../cache/cache.service';
 import { paginated } from '../../common/utils/paginate.util';
 import { estimateReadingTime, extractToc, slugify } from '../../common/utils/text.util';
+import { boundedPositiveInt } from '../../common/utils/number.util';
 
 export interface ArticleListQuery {
   page?: number;
@@ -26,8 +27,8 @@ export class ArticlesService {
   ) {}
 
   async findAll(query: ArticleListQuery) {
-    const page = Math.max(1, Number(query.page) || 1);
-    const pageSize = Math.min(50, Math.max(1, Number(query.pageSize) || 10));
+    const page = boundedPositiveInt(query.page, 1, Number.MAX_SAFE_INTEGER);
+    const pageSize = boundedPositiveInt(query.pageSize, 10, 50);
     const where: Prisma.ArticleWhereInput = {};
 
     // Public listing must not let callers override the published-only policy.

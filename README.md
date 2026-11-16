@@ -28,6 +28,15 @@
 
 ## 最新更新
 
+### Unreleased · 2026-11-16
+
+- 统一 API 分页、搜索和管理端的正整数边界，避免非法 `limit/pageSize` 触发异常查询。
+- 搜索联想增加请求取消、加载反馈和完整键盘/屏幕阅读器语义。
+- 增加 `/health/live` 与 `/health/ready` 探针，部署器改用数据库就绪检查；Redis 前缀失效改为分批 `SCAN`。
+- 反馈接口增加类型、长度和邮箱校验；补充项目审计、16 个开源项目对标和 40 项升级路线图。
+
+本轮审计与路线图见 [`PROJECT_AUDIT.md`](PROJECT_AUDIT.md)、[`COMPETITOR_ANALYSIS.md`](COMPETITOR_ANALYSIS.md)、[`UPGRADE_ROADMAP.md`](UPGRADE_ROADMAP.md) 和 [`UPGRADE_REPORT.md`](UPGRADE_REPORT.md)。
+
 ### v0.0.2 · 2026-11-13
 
 - 发布 Windows x64 安装包；桌面端支持检查更新、下载进度和签名校验后安装。
@@ -244,7 +253,7 @@ npm run dev
 
 - Web：`http://localhost:3000`
 - API：`http://localhost:4000/api/v1`
-- 健康检查：`http://localhost:4000/api/v1/health`
+- 健康检查：`http://localhost:4000/api/v1/health`；部署就绪探针：`http://localhost:4000/api/v1/health/ready`
 - Swagger：`http://localhost:4000/api/v1/docs`
 
 开发环境下，API 会在数据库为空或 `DB_AUTO_SEED=true` 时同步种子资料。默认本地数据目录为 `apps/api/.pglite/`，该目录已被 Git 忽略。
@@ -332,7 +341,7 @@ Android Debug APK 的完整环境要求、平台添加、同步、构建和签�
 3. 执行 npm ci，不要删除用户文件，也不要读取或输出任何密钥。
 4. 从 apps/api/.env.example 创建本地 apps/api/.env，并要求我在真实密钥字段中自行填写值。
 5. 使用本地 PGlite 配置运行 npm run dev。
-6. 验证 http://localhost:3000、http://localhost:4000/api/v1/health 和 Swagger 页面。
+6. 验证 http://localhost:3000、http://localhost:4000/api/v1/health/ready 和 Swagger 页面。
 7. 如果失败，说明真实错误原因，不要伪造成功结果或绕过认证与安全检查。
 ```
 
@@ -427,7 +436,7 @@ npm run db:studio
 启动 API 后可使用：
 
 - Swagger UI：`http://localhost:4000/api/v1/docs`
-- 健康检查：`GET /api/v1/health`
+- 健康检查：`GET /api/v1/health`（进程与数据库状态）；生产就绪探针：`GET /api/v1/health/ready`；存活探针：`GET /api/v1/health/live`
 - 勋章：`/api/v1/achievements`
 - 攻略：`/api/v1/articles`
 - 搜索：`/api/v1/search`

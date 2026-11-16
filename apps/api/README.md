@@ -72,13 +72,14 @@ apps/api/
     │   └── csrf.service.spec.ts    # CsrfService.verify 双提交校验
     └── e2e/
         ├── test-app.ts             # 装配 AppModule + 启动独立 PGlite + seed
-        └── api.e2e-spec.ts         # 18 条 HTTP 层用例
+        └── api.e2e-spec.ts         # 24 条 HTTP 层用例
 ```
 
 ## e2e 覆盖范围
 
-- 健康检查；勋章列表 / 统计 / 分类 / 详情；`availability`、`tiered` 筛选（含 `tiered=true` 500 回归）
+- 健康检查（`/health`、`/health/live`、`/health/ready`）；勋章列表 / 统计 / 分类 / 详情；`availability`、`tiered` 筛选（含 `tiered=true` 500 回归）
 - 攻略列表 / 详情（`contentMd` 与 `toc`）、FAQ、全站搜索
+- 反馈输入校验（缺少主题/正文和非法邮箱返回 400）
 - 鉴权（未登录 401）、CSRF 双提交校验、登录成功流程
 - 越权（普通 USER 访问 `/admin/dashboard` → 403）
 - 敏感字段不泄露（`/auth/me` 不含 `passwordHash` / `refreshTokenHash` / bcrypt 哈希）

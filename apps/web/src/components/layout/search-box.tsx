@@ -28,30 +28,43 @@ export function SearchBox({
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
+  const [loading, setLoading] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const requestRef = useRef<AbortController | null>(null);
 
   // 防抖搜索建议
   useEffect(() => {
     const keyword = q.trim();
+    requestRef.current?.abort();
     if (keyword.length < 1) {
       setSuggestions([]);
+      setLoading(false);
       return;
     }
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setLoading(true);
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(
           `/api/v1/search/suggest?q=${encodeURIComponent(keyword)}&limit=6`,
+          { signal: controller.signal },
         );
-        if (res.ok) {
+        if (res.ok && !controller.signal.aborted) {
           const data = (await res.json()) as Suggestion[];
           setSuggestions(data);
         }
       } catch {
-        setSuggestions([]);
+        if (!controller.signal.aborted) setSuggestions([]);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
     }, 220);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [q]);
 
   // 点击外部关闭
@@ -130,6 +143,13 @@ export function SearchBox({
           }}
           placeholder={placeholder}
           aria-label="搜索勋章"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={open && suggestions.length > 0}
+          aria-controls="achievement-search-suggestions"
+          aria-activedescendant={
+            active >= 0 ? `achievement-search-option-${active}` : undefined
+          }
           className="field pl-9 pr-9"
         />
         {q && (
@@ -147,10 +167,20 @@ export function SearchBox({
         )}
       </form>
 
-      {open && suggestions.length > 0 && (
-        <ul className="surface absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden p-1 shadow-[var(--shadow-lift)]">
+      {open && (suggestions.length > 0 || loading) && (
+        <ul
+          id="achievement-search-suggestions"
+          role="listbox"
+          aria-label="勋章搜索建议"
+          className="surface absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden p-1 shadow-[var(--shadow-lift)]"
+        >
+          {loading && suggestions.length === 0 && (
+            <li className="px-2.5 py-2 text-xs text-[var(--color-ink-subtle)]" role="status">
+              正在查找建议…
+            </li>
+          )}
           {suggestions.map((s, i) => (
-            <li key={s.slug}>
+            <li key={s.slug} id={`achievement-search-option-${i}`} role="option" aria-selected={active === i}>
               <Link
                 href={`/achievements/${s.slug}`}
                 onClick={() => {
@@ -158,6 +188,7 @@ export function SearchBox({
                   setQ('');
                 }}
                 onMouseEnter={() => setActive(i)}
+                aria-label={`${s.label}（${s.labelEn}）`}
                 className={cn(
                   'flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors',
                   active === i

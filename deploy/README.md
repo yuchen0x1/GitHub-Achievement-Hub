@@ -9,7 +9,7 @@
 - 每个版本目录名包含标签和提交短哈希，例如 `v1.2.3-0123456789ab`。
 - 生产环境变量位于 `/etc/github-achievement-hub/`，不会被复制进 Release 目录。
 - 更新器默认不执行数据库迁移。由于当前仓库没有可部署的 Prisma migration 基线，只有在已补齐并审查向前兼容 migration 后，才应设置 `GACH_RUN_MIGRATIONS=true`。
-- 每次 API 重启后先检查 `/api/v1/health` 且要求 `status=ok`、`database=ok`，再重启 Web 并检查 `/healthz`。
+- 每次 API 重启后先检查 `/api/v1/health/ready`；该就绪探针要求 `status=ok`、`database=ok`，数据库不可用时返回 503。存活探针 `/api/v1/health/live` 只反映进程是否可响应。通过后再重启 Web 并检查 `/healthz`。
 
 ## 服务器要求
 

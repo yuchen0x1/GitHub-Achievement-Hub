@@ -83,6 +83,20 @@ describe('健康检查', () => {
     expect(res.body.database).toBe('ok');
     expect(typeof res.body.timestamp).toBe('string');
   });
+
+  it('GET /health/live 只检查进程存活', async () => {
+    const res = await request(server).get(url('/health/live')).expect(200);
+
+    expect(res.body.status).toBe('ok');
+    expect(typeof res.body.uptime).toBe('number');
+  });
+
+  it('GET /health/ready 返回数据库就绪状态', async () => {
+    const res = await request(server).get(url('/health/ready')).expect(200);
+
+    expect(res.body.status).toBe('ok');
+    expect(res.body.database).toBe('ok');
+  });
 });
 
 describe('勋章百科（公开接口）', () => {
@@ -232,6 +246,18 @@ describe('攻略 / FAQ / 搜索（公开接口）', () => {
     expect(Array.isArray(res.body.items)).toBe(true);
     expect(res.body.items.length).toBeGreaterThan(0);
     expect(res.body.items.map((i: { slug: string }) => i.slug)).toContain('starstruck');
+  });
+});
+
+describe('反馈输入校验', () => {
+  it('拒绝缺少主题和正文的反馈', async () => {
+    const res = await request(server)
+      .post(url('/feedback'))
+      .send({ email: 'not-an-email' })
+      .expect(400);
+
+    expect(res.body.statusCode).toBe(400);
+    expect(String(res.body.message)).toContain('subject');
   });
 });
 

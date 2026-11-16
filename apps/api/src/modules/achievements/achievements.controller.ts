@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AchievementsService, type AchievementListQuery } from './achievements.service';
 import { Public } from '../../common/decorators/metadata.decorator';
+import { boundedPositiveInt } from '../../common/utils/number.util';
 
 @ApiTags('勋章百科')
 @Controller('achievements')
@@ -19,10 +20,7 @@ export class AchievementsController {
   @Get('featured')
   @ApiOperation({ summary: '首页热门勋章' })
   featured(@Query('limit') limit?: string) {
-    const n = Number(limit);
-    return this.achievements.findFeatured(
-      Number.isFinite(n) && n > 0 ? Math.min(n, 24) : 6,
-    );
+    return this.achievements.findFeatured(boundedPositiveInt(limit, 6, 24));
   }
 
   @Public()

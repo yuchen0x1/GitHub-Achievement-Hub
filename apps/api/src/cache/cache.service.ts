@@ -105,8 +105,19 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async delByPrefix(prefix: string): Promise<void> {
     if (this.redis) {
       try {
-        const keys = await this.redis.keys(`${prefix}*`);
-        if (keys.length) await this.redis.del(...keys);
+        // 使用 SCAN 分批遍历，避免 KEYS 在生产 Redis 上阻塞整个实例。
+        let cursor = '0';
+        do {
+          const [nextCursor, keys] = await this.redis.scan(
+            cursor,
+            'MATCH',
+            `${prefix}*`,
+            'COUNT',
+            '100',
+          );
+          if (keys.length) await this.redis.del(...keys);
+          cursor = nextCursor;
+        } while (cursor !== '0');
       } catch {
         /* ignore */
       }
