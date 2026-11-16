@@ -1,7 +1,8 @@
 # PROJECT EVOLUTION 升级交付报告
 
 报告日期：2026-11-16（Asia/Shanghai）
-仓库：GitHub Achievement Hub  〈`main` / HEAD `d8a7951`〉
+仓库基线：GitHub Achievement Hub 〈`main` / HEAD `d8a7951`〉
+交付提交：`348d785`，分支 `codex/project-evolution-20261116`，已推送到 `origin`。
 工作边界：按当前仓库真实架构推进；代码、文档和测试只写入本地工作区。现有未跟踪静态导出目录、zip 和 `.edgeone/` 已保留，未纳入本轮源码改动。
 
 ## A. 竞品研究
