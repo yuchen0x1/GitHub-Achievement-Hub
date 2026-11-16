@@ -1,9 +1,9 @@
 # PROJECT EVOLUTION 升级交付报告
 
 报告日期：2026-11-16（Asia/Shanghai）
-仓库基线：GitHub Achievement Hub 〈`main` / HEAD `d8a7951`〉
-交付提交：`348d785`，分支 `codex/project-evolution-20261116`，已推送到 `origin`。
-工作边界：按当前仓库真实架构推进；代码、文档和测试只写入本地工作区。现有未跟踪静态导出目录、zip 和 `.edgeone/` 已保留，未纳入本轮源码改动。
+升级起点：GitHub Achievement Hub 〈`main` / HEAD `d8a7951`〉；发布前已同步远端 `main` 的依赖安全修复 `7ae6d21`。
+主要交付提交：`348d785` 与发布说明提交 `3590269`，分支 `codex/project-evolution-20261116` 已推送到 `origin`。
+工作边界：按当前仓库真实架构推进；代码、文档和测试均在仓库工作区完成。现有未跟踪静态导出目录、zip 和 `.edgeone/` 已保留，未纳入本轮源码改动。
 
 ## A. 竞品研究
 
@@ -102,7 +102,7 @@
 
 - 本轮没有完成 Prisma migration、生产恢复演练、多实例配额、全文索引、目标计划、趋势图和分享卡片。
 - 没有浏览器自动化、压力测试、真实 OAuth、原生安装、生产数据库/Redis 和跨版本升级验收证据。
-- 没有创建或发布新版本标签；当前修改应先完成最终测试、review 和提交，再决定是否发布。
+- 已完成 `v0.0.3` 发布准备：远端 `main` 的依赖安全修复已纳入发布分支，README、CHANGELOG 和正式发布记录已同步；标签推送后由 GitHub Actions 重新执行发布校验。
 
 ## F. 后续执行建议
 
