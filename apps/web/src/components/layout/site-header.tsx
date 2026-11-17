@@ -8,18 +8,16 @@ import { useAuthStore } from '@/lib/auth-store';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './theme-toggle';
 import { SearchBox } from './search-box';
-
-const NAV = [
-  { href: '/', label: '首页' },
-  { href: '/achievements', label: '勋章图鉴' },
-  { href: '/guides', label: '获取攻略' },
-  { href: '/achievements/tiers', label: '勋章等级' },
-  { href: '/github-profile', label: '成就查询' },
-  { href: '/faq', label: '常见问题' },
-  { href: '/about', label: '关于本站' },
-];
+import { useI18n } from './locale-provider';
 
 export function SiteHeader() {
+  const { t, setting, setSetting } = useI18n();
+  const NAV = [
+    { href: '/', label: t('home') }, { href: '/achievements', label: t('achievements') },
+    { href: '/guides', label: t('guides') }, { href: '/achievements/tiers', label: t('tiers') },
+    { href: '/github-profile', label: t('profile') }, { href: '/faq', label: t('faq') },
+    { href: '/about', label: t('about') },
+  ];
   const pathname = usePathname();
   const router = useRouter();
   const { user, hydrated, logout } = useAuthStore();
@@ -60,7 +58,7 @@ export function SiteHeader() {
         </Link>
 
         {/* 主导航 */}
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="主导航">
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label={t('home')}>
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -83,6 +81,20 @@ export function SiteHeader() {
 
           <ThemeToggle className="hidden sm:flex" />
 
+          <label className="hidden items-center gap-1 text-xs text-[var(--color-ink-subtle)] sm:flex">
+            <span className="sr-only">{t('language')}</span>
+            <select
+              aria-label={t('language')}
+              value={setting}
+              onChange={(event) => setSetting(event.target.value as 'auto' | 'zh-CN' | 'en-US')}
+              className="rounded border border-[var(--color-border)] bg-transparent px-1.5 py-1 text-xs"
+            >
+              <option value="auto">{t('auto')}</option>
+              <option value="zh-CN">简体中文</option>
+              <option value="en-US">English</option>
+            </select>
+          </label>
+
           {/* 登录区 */}
           {hydrated && user ? (
             <div className="flex items-center gap-1.5">
@@ -91,7 +103,7 @@ export function SiteHeader() {
                 className="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-ink)] sm:flex"
               >
                 <Award size={15} />
-                收藏馆
+                {t('collection')}
               </Link>
               {(user.role === 'ADMIN' || user.role === 'EDITOR') && (
                 <Link
@@ -99,14 +111,14 @@ export function SiteHeader() {
                   className="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-ink)] md:flex"
                 >
                   <LayoutDashboard size={15} />
-                  后台
+                  {t('admin')}
                 </Link>
               )}
               <div className="group relative">
                 <button
                   type="button"
                   className="flex items-center gap-1.5 rounded-lg p-1 transition-colors hover:bg-[var(--color-surface-raised)]"
-                  aria-label="账号菜单"
+                  aria-label={t('admin')}
                 >
                   <span className="grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-[var(--color-surface-sunken)] text-xs font-bold">
                     {user.avatarUrl ? (
@@ -135,13 +147,13 @@ export function SiteHeader() {
                       href="/collection"
                       className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-ink)]"
                     >
-                      <Award size={14} /> 我的收藏馆
+                      <Award size={14} /> {t('collection')}
                     </Link>
                     <Link
                       href="/progress"
                       className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-ink)]"
                     >
-                      <LayoutDashboard size={14} /> 我的成就进度
+                      <LayoutDashboard size={14} /> {t('progress')}
                     </Link>
                     <button
                       type="button"
@@ -151,7 +163,7 @@ export function SiteHeader() {
                       }}
                       className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-ink)]"
                     >
-                      <LogOut size={14} /> 退出登录
+                      <LogOut size={14} /> {t('logout')}
                     </button>
                   </div>
                 </div>
@@ -160,7 +172,7 @@ export function SiteHeader() {
           ) : (
             <Link href="/login" className="btn btn-secondary btn-sm">
               <LogIn size={14} />
-              <span className="hidden sm:inline">登录</span>
+              <span className="hidden sm:inline">{t('login')}</span>
             </Link>
           )}
 
@@ -169,7 +181,7 @@ export function SiteHeader() {
             ref={mobileMenuButtonRef}
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}
+            aria-label={mobileOpen ? t('logout') : t('home')}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-ink-muted)] lg:hidden"
@@ -232,19 +244,25 @@ export function SiteHeader() {
                 href="/collection"
                 className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-raised)]"
               >
-                我的收藏馆
+                {t('collection')}
               </Link>
               <Link
                 href="/progress"
                 className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-raised)]"
               >
-                我的进度
+                {t('progress')}
               </Link>
             </nav>
             <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-3">
-              <span className="text-xs text-[var(--color-ink-subtle)]">主题</span>
+              <span className="text-xs text-[var(--color-ink-subtle)]">{t('theme')}</span>
               <ThemeToggle />
             </div>
+            <label className="flex items-center justify-between border-t border-[var(--color-border)] pt-3 text-xs text-[var(--color-ink-subtle)]">
+              <span>{t('language')}</span>
+              <select value={setting} onChange={(event) => setSetting(event.target.value as 'auto' | 'zh-CN' | 'en-US')} className="rounded border border-[var(--color-border)] bg-transparent px-2 py-1 text-xs">
+                <option value="auto">{t('auto')}</option><option value="zh-CN">简体中文</option><option value="en-US">English</option>
+              </select>
+            </label>
           </div>
         </div>
       )}

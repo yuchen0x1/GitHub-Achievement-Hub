@@ -4,6 +4,7 @@ import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { AuthHydrator } from '@/components/layout/auth-hydrator';
 import { DesktopUpdater } from '@/components/layout/desktop-updater';
+import { LocaleProvider } from '@/components/layout/locale-provider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -67,12 +68,8 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <LocaleProvider>
           <AuthHydrator />
           <div className="flex min-h-dvh flex-col">
             <a
@@ -88,6 +85,7 @@ export default function RootLayout({
             <DesktopUpdater />
             <SiteFooter />
           </div>
+          </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>
