@@ -28,19 +28,22 @@
 
 ## 最新更新
 
-### v0.0.4 · 2026-11-17
+<!-- github-release:start -->
+
+**[v0.0.3](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/tag/v0.0.3)** · 2026-11-16
+
+本版本加固搜索、查询边界、健康探针和缓存失效路径，同时补充项目审计、竞品研究和升级路线图。当前 Release 未附带预构建资产，属于源码发布。
+
+[全部发行记录](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases)
+
+<!-- github-release:end -->
+
+### 开发分支记录 · v0.0.4
 
 - Web 壳层支持按浏览器或系统语言自动选择中文/English，也可手动切换并保存。
 - 导航、账号菜单和语言入口即时更新；成就资料与 GitHub API 数据保持原样。
 
-### v0.0.3 · 2026-11-16
-
-- 搜索联想在快速输入时保持结果准确，显示加载状态，并支持键盘与屏幕阅读器。
-- 分页、搜索和后台管理会拒绝无效页码与数量；反馈提交会提前提示缺失、过长或格式错误的内容。
-- 部署健康检查现在区分进程存活与数据库就绪，数据库未准备好时不会误报可用；缓存清理也降低了高峰期阻塞风险。
-- 补充项目审计、开源竞品研究和 40 项后续升级路线图，方便自部署用户了解当前能力边界。
-
-[查看完整更新记录](docs/releases/release-notes.md) · [下载最新版本](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest)
+[完整更新日志](docs/releases/release-notes.md)
 
 ## 目录
 
