@@ -1,0 +1,36 @@
+name: Release health
+
+on:
+  schedule:
+    - cron: '20 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  attestations: read
+
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Verify the latest stable source release
+        run: |
+          tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)"
+          [[ "$tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          archive="GitHub-Achievement-Hub-$tag-Source.tar.gz"
+          for file in "$archive" release.json SHA256SUMS.txt; do
+            curl -fsSL --retry 3 --max-time 60 \
+              "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$tag/$file" -o "$file"
+          done
+          for file in "$archive" release.json; do
+            gh attestation verify "$file" --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml"
+          done
+          sha256sum -c SHA256SUMS.txt
+          jq -e --arg tag "$tag" --arg name "$archive" \
+            --arg sha "$(sha256sum "$archive" | cut -d' ' -f1)" \
+            --argjson size "$(stat -c '%s' "$archive")" \
+            '.schemaVersion == 1 and .tag == $tag and .type == "source" and .artifact.name == $name and .artifact.sha256 == $sha and .artifact.size == $size' release.json

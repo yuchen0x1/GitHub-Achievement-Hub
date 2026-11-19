@@ -1,6 +1,6 @@
 {
   "name": "@gach/desktop",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "private": true,
   "description": "GitHub Achievement Hub — Windows 桌面版 (Tauri v2)",
   "scripts": {

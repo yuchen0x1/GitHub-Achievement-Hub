@@ -9,7 +9,7 @@
 <p>
   <a href="https://github.com/yuchen0x1/GitHub-Achievement-Hub/actions/workflows/release.yml"><img src="https://github.com/yuchen0x1/GitHub-Achievement-Hub/actions/workflows/release.yml/badge.svg" alt="Release workflow"></a>
   <a href="https://github.com/yuchen0x1/GitHub-Achievement-Hub"><img src="https://img.shields.io/badge/TypeScript-monorepo-3178C6?logo=typescript&logoColor=white" alt="TypeScript monorepo"></a>
-  <a href="https://github.com/yuchen0x1/GitHub-Achievement-Hub/blob/main/package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A520.11-339933?logo=node.js&logoColor=white" alt="Node.js version"></a>
+  <a href="https://github.com/yuchen0x1/GitHub-Achievement-Hub/blob/main/package.json"><img src="https://img.shields.io/badge/Node.js-24-339933?logo=node.js&logoColor=white" alt="Node.js version"></a>
 </p>
 
 <p>
@@ -30,20 +30,13 @@
 
 <!-- github-release:start -->
 
-**[v0.0.3](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/tag/v0.0.3)** · 2026-11-16
+**v0.0.5** · 2026-11-18
 
-本版本加固搜索、查询边界、健康探针和缓存失效路径，同时补充项目审计、竞品研究和升级路线图。当前 Release 未附带预构建资产，属于源码发布。
+勋章详情按官方资料、社区证据和需要核对的来源分组。Windows 自托管开发环境支持配置绝对数据库路径。源码包附有 SHA-256、版本元数据和构建来源证明。
 
-[全部发行记录](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases)
+[最新源码与校验文件](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest) · [完整更新日志](docs/releases/release-notes.md)
 
 <!-- github-release:end -->
-
-### 开发分支记录 · v0.0.4
-
-- Web 壳层支持按浏览器或系统语言自动选择中文/English，也可手动切换并保存。
-- 导航、账号菜单和语言入口即时更新；成就资料与 GitHub API 数据保持原样。
-
-[完整更新日志](docs/releases/release-notes.md)
 
 ## 目录
 
@@ -62,6 +55,8 @@
 - [许可](#许可)
 
 ## 项目简介
+
+[在线演示](https://wee-jade-s3qiwc3c.edgeone.dev) · [GitHub Releases](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases) · [平台及维护状态](docs/MAINTENANCE.md)
 
 GitHub Achievement Hub 解决的是「知道 GitHub 有成就，但不知道每枚勋章如何获得、门槛是多少、资料是否可信」的问题。
 
@@ -199,7 +194,7 @@ graph TD
 
 | 项目 | 要求 |
 | --- | --- |
-| Node.js | 根项目要求 `>=20.11.0`；测试与 CI 使用 Node.js 24 |
+| Node.js | 使用 Node.js 24 LTS，与 CI 一致 |
 | npm | 与当前 Node.js 版本兼容的 npm，仓库提供 `package-lock.json` |
 | 数据库 | 本地开发默认使用内嵌 PGlite，无需单独安装 PostgreSQL 或 Docker |
 | 浏览器 | 支持现代 JavaScript 的 Chromium、Firefox 或 Safari |
@@ -271,7 +266,7 @@ npm start
 
 ## 安装方式
 
-当前仓库支持的安装方式如下；没有把 Docker、npm registry 包、Homebrew、Scoop 或预构建安装包写成已支持渠道。
+正式交付覆盖桌面和移动 Web，以及 Linux 服务端源码部署。平台能力、成本及验证状态见[维护手册](docs/MAINTENANCE.md)。
 
 | 方式 | 适合用户 | 依赖 | 推荐度 |
 | --- | --- | --- | --- |
@@ -279,7 +274,7 @@ npm start
 | Linux systemd 部署 | 自托管生产环境 | Node.js 24、PostgreSQL、systemd | 推荐 |
 | Tauri 桌面构建 | Windows 桌面用户/开发者 | Rust、Tauri CLI、Web 构建环境 | 实验性 |
 | Capacitor 移动构建 | Android/iOS 开发者 | Android SDK 或 macOS + Xcode | 实验性 |
-| Docker | - | 当前仓库没有 Dockerfile/Compose | 不支持 |
+| 历史 Windows x64 预览 | [v0.0.2 下载](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/tag/v0.0.2) | WebView2 和独立 API | 实验性 |
 
 ### 生产构建
 
@@ -333,7 +328,7 @@ Android Debug APK 的完整环境要求、平台添加、同步、构建和签�
 
 ```text
 请在当前目录分析并运行 GitHub Achievement Hub：
-1. 先检查 Node.js 版本（根项目要求 >=20.11.0，测试使用 Node 24）。
+1. 先检查 Node.js 版本（使用 Node.js 24 LTS）。
 2. 阅读 package.json、apps/api/.env.example、README.md 和 deploy/README.md。
 3. 执行 npm ci，不要删除用户文件，也不要读取或输出任何密钥。
 4. 从 apps/api/.env.example 创建本地 apps/api/.env，并要求我在真实密钥字段中自行填写值。
@@ -447,6 +442,9 @@ Swagger 文档是 API 参数和认证方式的权威入口，不在 README 中�
 
 ## 测试与质量
 
+[CI](https://github.com/yuchen0x1/GitHub-Achievement-Hub/actions/workflows/ci.yml) 对每个 PR 校验依赖、类型、测试和生产构建。可在本地运行 `npm run verify:build`，用临时 PGlite 实例验证 API、Web 与页面响应。
+
+
 ```bash
 # API 单元测试
 npm run test:unit -w @gach/api
@@ -516,6 +514,8 @@ git push origin v1.1.0
 - 根 `package.json` 的 license metadata 为 MIT，但仓库当前没有独立 `LICENSE` 文件；正式对外分发前应补齐许可证文件。
 
 ## 参与贡献
+
+[贡献指南](CONTRIBUTING.md) · [问题与资料纠错](https://github.com/yuchen0x1/GitHub-Achievement-Hub/issues/new/choose) · [私密安全报告](SECURITY.md)
 
 欢迎提交内容校正、资料来源、功能改进和测试补充。
 

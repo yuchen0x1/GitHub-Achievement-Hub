@@ -47,6 +47,22 @@ const SOURCE_STATUS_LABELS: Record<string, { zh: string; en: string }> = {
   BROKEN: { zh: '链接失效', en: 'Broken' },
 };
 
+type EvidenceGroup = 'official' | 'community' | 'caution';
+
+const EVIDENCE_GROUP_LABELS: Record<EvidenceGroup, Record<Locale, string>> = {
+  official: { zh: '官方资料', en: 'Official references' },
+  community: { zh: '社区证据', en: 'Community evidence' },
+  caution: { zh: '需要核对', en: 'Check before relying on these sources' },
+};
+
+function evidenceGroup(source: AchievementDetail['sources'][number]): EvidenceGroup {
+  if (source.status !== 'ACTIVE' || source.isDisputed) return 'caution';
+  if (source.sourceType === 'OFFICIAL_DOC' || source.sourceType === 'OFFICIAL_DISCUSSION' || source.sourceType === 'CHANGELOG') {
+    return 'official';
+  }
+  return 'community';
+}
+
 function Section({
   id,
   step,
@@ -98,6 +114,14 @@ export function DetailContent({ detail }: DetailContentProps) {
   const meta = availabilityMeta(detail.availability);
   const tiers = [...detail.tiers].sort((a, b) => a.threshold - b.threshold);
   const hasTiers = detail.hasTiers || detail.isTiered || tiers.length > 0;
+  const sourcesByGroup: Record<EvidenceGroup, AchievementDetail['sources']> = {
+    official: [],
+    community: [],
+    caution: [],
+  };
+  for (const source of detail.sources) {
+    sourcesByGroup[evidenceGroup(source)].push(source);
+  }
 
   const text = (zhText: string | null | undefined, enText: string | null | undefined) =>
     zh ? (zhText ?? '') : (enText ?? '');
@@ -484,8 +508,8 @@ export function DetailContent({ detail }: DetailContentProps) {
         title={zh ? '资料来源' : 'Sources'}
         description={
           zh
-            ? '本页每一条结论都可以在这里找到出处。点击来源名称可在新标签页打开原文。'
-            : 'Every claim on this page can be traced back to a source. Click a source title to open the original page in a new tab.'
+            ? '点击来源名称查看原文。每条资料附有来源类型、可信度和核对日期。'
+            : 'Open a reference to read it at the source. Each entry shows its type, confidence and verification date.'
         }
       >
         {detail.sources.length === 0 ? (
@@ -495,61 +519,72 @@ export function DetailContent({ detail }: DetailContentProps) {
               : 'No sources are recorded for this achievement, so its conditions and thresholds cannot be verified. Please treat them with caution.'}
           </Notice>
         ) : (
-          <ul className="space-y-3">
-            {detail.sources.map((source) => {
-              const typeMeta = SOURCE_TYPE_LABELS[source.sourceType] ?? {
-                zh: source.sourceType,
-                en: source.sourceType,
-              };
-              const statusMeta = SOURCE_STATUS_LABELS[source.status] ?? {
-                zh: source.status,
-                en: source.status,
-              };
+          <div className="space-y-6">
+            {(Object.keys(sourcesByGroup) as EvidenceGroup[]).map((group) => {
+              const sources = sourcesByGroup[group];
+              if (sources.length === 0) return null;
               return (
-                <li
-                  key={source.id}
-                  className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-start gap-1.5 text-sm font-semibold text-[var(--color-accent)] hover:underline"
-                    >
-                      <span>{source.title}</span>
-                      <ExternalLink size={13} className="mt-1 shrink-0" />
-                    </a>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="chip">{zh ? typeMeta.zh : typeMeta.en}</span>
-                      <CredibilityBadge grade={source.credibility} />
-                      <span className="chip">{zh ? statusMeta.zh : statusMeta.en}</span>
-                    </div>
-                  </div>
+                <div key={group}>
+                  <h3 className="mb-3 text-sm font-semibold">{EVIDENCE_GROUP_LABELS[group][locale]}</h3>
+                  <ul className="space-y-3">
+                    {sources.map((source) => {
+                      const typeMeta = SOURCE_TYPE_LABELS[source.sourceType] ?? {
+                        zh: source.sourceType,
+                        en: source.sourceType,
+                      };
+                      const statusMeta = SOURCE_STATUS_LABELS[source.status] ?? {
+                        zh: source.status,
+                        en: source.status,
+                      };
+                      return (
+                        <li
+                          key={source.id}
+                          className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
+                        >
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <a
+                              href={source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-start gap-1.5 text-sm font-semibold text-[var(--color-accent)] hover:underline"
+                            >
+                              <span>{source.title}</span>
+                              <ExternalLink size={13} className="mt-1 shrink-0" />
+                            </a>
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span className="chip">{zh ? typeMeta.zh : typeMeta.en}</span>
+                              <CredibilityBadge grade={source.credibility} />
+                              <span className="chip">{zh ? statusMeta.zh : statusMeta.en}</span>
+                            </div>
+                          </div>
 
-                  {source.isDisputed && (
-                    <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-danger)]/40 bg-[color-mix(in_oklab,var(--color-danger)_10%,transparent)] px-2.5 py-1 text-xs font-semibold text-[var(--color-danger)]">
-                      <AlertTriangle size={13} />
-                      {zh
-                        ? '存在争议：该来源与其他来源的结论不一致，请以多方交叉验证为准。'
-                        : 'Disputed: this source disagrees with other sources. Cross-check before relying on it.'}
-                    </p>
-                  )}
+                          {source.isDisputed && (
+                            <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-danger)]/40 bg-[color-mix(in_oklab,var(--color-danger)_10%,transparent)] px-2.5 py-1 text-xs font-semibold text-[var(--color-danger)]">
+                              <AlertTriangle size={13} />
+                              {zh
+                                ? '存在争议：该来源与其他来源的结论不一致，请以多方交叉验证为准。'
+                                : 'Disputed: this source disagrees with other sources. Cross-check before relying on it.'}
+                            </p>
+                          )}
 
-                  {source.note && (
-                    <p className="mt-2.5 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-                      {source.note}
-                    </p>
-                  )}
+                          {source.note && (
+                            <p className="mt-2.5 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                              {source.note}
+                            </p>
+                          )}
 
-                  <p className="mt-2 flex items-center gap-1.5 text-xs text-[var(--color-ink-subtle)]">
-                    <ShieldCheck size={12} />
-                    {zh ? '验证日期' : 'Verified at'}：{formatDate(source.verifiedAt)}
-                  </p>
-                </li>
+                          <p className="mt-2 flex items-center gap-1.5 text-xs text-[var(--color-ink-subtle)]">
+                            <ShieldCheck size={12} />
+                            {zh ? '验证日期' : 'Verified at'}：{formatDate(source.verifiedAt)}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               );
             })}
-          </ul>
+          </div>
         )}
 
         <Notice tone="info" className="mt-4">

@@ -133,6 +133,7 @@ else
   (cd "$build_dir/source" && \
     API_INTERNAL_URL="$GACH_API_INTERNAL_URL" \
     API_BUILD_URL="$GACH_BUILD_API_INTERNAL_URL" \
+    NEXT_DEPLOYMENT_ID="$release_name" \
     NEXT_PUBLIC_EXPORT_MODE=0 \
     "$NPM_BIN" run build:web)
   [[ -f "$build_dir/source/apps/web/.next/BUILD_ID" ]] || die "Web 构建产物不存在"

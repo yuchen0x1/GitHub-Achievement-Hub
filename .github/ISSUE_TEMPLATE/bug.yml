@@ -1,0 +1,17 @@
+name: 故障与兼容性
+description: 报告网站故障、平台兼容性或更新失败。
+body:
+  - type: input
+    id: platform
+    attributes:
+      label: 版本、系统及浏览器
+      placeholder: v0.0.5 / Windows 11 / Edge
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤、预期及实际结果
+      description: 更新失败时请注明更新前后的版本、安装方式及失败阶段。日志请先去除凭据与个人信息。
+    validations:
+      required: true

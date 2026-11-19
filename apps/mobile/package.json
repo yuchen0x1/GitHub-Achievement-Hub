@@ -1,6 +1,6 @@
 {
   "name": "@gach/mobile",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "private": true,
   "description": "GitHub Achievement Hub — Android / iOS 移动版 (Capacitor)",
   "scripts": {

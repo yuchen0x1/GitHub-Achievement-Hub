@@ -1,6 +1,6 @@
 {
   "name": "@gach/web",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "private": true,
   "description": "GitHub Achievement Hub — Web 前端 (Next.js App Router)",
   "scripts": {

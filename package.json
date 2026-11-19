@@ -1,6 +1,6 @@
 {
   "name": "github-achievement-hub",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "private": true,
   "description": "GitHub Achievement Hub — GitHub 个人成就勋章百科与获取指南平台",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=20.11.0"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "npm run build -w @gach/shared && concurrently -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
@@ -29,6 +29,8 @@
     "test:api": "npm run test -w @gach/api",
     "test:e2e": "npm run test:e2e -w @gach/api",
     "lint": "npm run lint -w @gach/api && npm run lint -w @gach/web",
+    "verify:version": "node scripts/verify-version.mjs",
+    "verify:build": "node scripts/verify-build.mjs",
     "desktop:dev": "npm run tauri:dev -w @gach/desktop",
     "desktop:build": "npm run tauri:build -w @gach/desktop",
     "mobile:sync": "npm run sync -w @gach/mobile",

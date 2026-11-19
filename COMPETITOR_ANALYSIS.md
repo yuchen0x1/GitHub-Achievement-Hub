@@ -12,7 +12,7 @@
 3. **知识库与文档框架**：导航、全文检索、目录、主题、国际化和发布流程。
 4. **搜索、反馈与交付基础设施**：缓存、查询体验、评论、可观测性和可靠发布。
 
-实际检查了 16 个项目，超过总控指令要求的 15 个。项目主页、许可证和最近更新状态以 2026-11-16 查询结果为准；星数只用于规模参考，不作为质量判断。
+2026-11-16 基线检查 16 个项目。2026-11-18 补查 14 个直接竞品、相邻产品和工程工具，合计 30 个。补查以仓库树、README、GitHub API 的许可证、默认分支提交和发行记录为依据，未运行第三方项目。
 
 ## 2. 项目证据表
 
@@ -36,6 +36,36 @@
 | [giscus/giscus](https://github.com/giscus/giscus)（MIT） | GitHub Discussions 评论模型、主题/多语言/自托管 README、缓存提交 | 2026-05-26 增加 Valkey 缓存服务 | 无数据库评论、主题和反应可作为反馈扩展 | 评估“GitHub Discussions 反馈适配器”；默认保留本地 Feedback 模型 |
 
 ## 3. 跨维度比较
+
+### 2026-11-18 补查
+
+星标、Fork、公开 Issue 数为采样时的快照。直接同类主要以 Markdown 或静态站发布，原生应用集中出现在通用框架中。在这些证据中，成就资料、账号收藏和原生多端同步的同类实现较少，因此同时研究了相邻工具和基础设施。
+
+| 项目 | 类型及主要证据 | 许可证、活动和发行 | 参考决定 |
+| --- | --- | --- | --- |
+| [christianalberto/github-profile-achievements](https://github.com/christianalberto/github-profile-achievements) | 直接。README 的状态/等级结构，HTML 的独立快速指南 | 自定义许可证元数据 NOASSERTION，19★/6 forks，11-17 提交，v1.0.0 | 参考状态分组和附带出处的快速阅读体验 |
+| [SharmARohitt/Github-Achievement](https://github.com/SharmARohitt/Github-Achievement) | 直接。README 证据分类及 HOW_TO_EARN.md | 未标注许可证，2★/0 forks，07-25 提交，无公开 Release | 区分历史、争议、未验证，文字和图片由项目自行维护 |
+| [drknzz/GitHub-Achievements](https://github.com/drknzz/GitHub-Achievements) | 直接。README 将成就、Highlights、退役勋章分组，Media 资源 | MIT，3234★/319 forks，默认分支最后提交 2023-11-22，无公开 Release | 静态清单适合长期引用，新增规则需要其他证据 |
+| [ryo-ma/github-profile-trophy](https://github.com/ryo-ma/github-profile-trophy) | 相邻。Deno 的 API、SVG 渲染入口与测试目录，README 主题和排序 | MIT，6685★/2252 forks，10-27 提交，v1.0 | 了解可分享结果，独立排名留待有可靠数据时评估 |
+| [lowlighter/metrics](https://github.com/lowlighter/metrics) | 相邻。插件、模板、README 自托管和 ARCHITECTURE.md | MIT，17464★/2318 forks，默认分支最后提交 2023-12-18，v3.34 | 了解配置可复现与 token 边界，避免引入大型生成器 |
+| [novuhq/novu](https://github.com/novuhq/novu) | 相邻。嵌入式收件箱、provider、monorepo 及单列企业目录 | MIT 与企业许可并存，40352★/4550 forks，11-18 提交，v3.20.0 | 获得内容更新提醒的设计参考，当前采用轻量站内状态 |
+| [Pagefind/pagefind](https://github.com/Pagefind/pagefind) | 技术。Rust 索引与 Web UI，支持静态站点低带宽搜索 | MIT，5568★/220 forks，11-14 提交，v1.6.0 | 静态离线图鉴扩展时评估，现有 API 继续服务在线搜索 |
+| [algolia/docsearch](https://github.com/algolia/docsearch) | 技术。React 搜索 UI、adapters 以及文档端到端测试配置 | MIT，4393★/445 forks，11-16 提交，@docsearch/react@5.1.2 | 借鉴搜索提示、无结果引导，保持现有小数据集架构 |
+| [primer/react](https://github.com/primer/react) | 技术。React 组件、e2e、示例及迁移说明 | MIT，3938★/735 forks，11-17 提交，@primer/react@38.46.0 | 保持键盘操作、状态可读、同层级组件一致 |
+| [GoogleChrome/lighthouse-ci](https://github.com/GoogleChrome/lighthouse-ci) | 技术。CI 的采集、断言和预算 | Apache-2.0，7154★/733 forks，11-17 推送，v0.16.1 | 浏览器自动化稳定后再设性能预算 |
+| [tauri-apps/plugins-workspace](https://github.com/tauri-apps/plugins-workspace) | 技术。v2 插件、示例、Android/iOS 专用权限边界 | MIT/Apache-2.0，1843★/640 forks，11-16 提交 | 保留 updater 公钥验签与签名版本检查，独立处理正式安装包 |
+| [ionic-team/capacitor](https://github.com/ionic-team/capacitor) | 技术。Android/iOS runtime 与独立原生模板，构建通过平台 SDK | MIT，17118★/1324 forks，11-17 提交，8.6.2 | 手机网页功能优先，原生壳保留在试验轨道 |
+| [slsa-framework/slsa-github-generator](https://github.com/slsa-framework/slsa-github-generator) | 技术。发布工作流、PROVENANCE_FORMAT 与验证工具 | Apache-2.0，611★/190 forks，08-07 提交，v2.1.0 | 采用 GitHub 官方 provenance 与下载后验收，不引入额外构建器 |
+| [GoogleChromeLabs/bubblewrap](https://github.com/GoogleChromeLabs/bubblewrap) | 技术。TWA 需要 PWA、Android SDK、域名关联与签名 | Apache-2.0，3172★/338 forks，11-16 推送，v1.27.0 | Android 正式交付需独立验证，当前移动 Web 覆盖主要场景 |
+
+近 30 天观察到 Pagefind 1.6、Primer 38.46、Capacitor 8.6.2 和 Lighthouse CI 0.16.1。90 至 180 天的提交仍需在下一次深度复核时按项目核对具体改动。当前采集的最新提交不能证明一个项目长期持续维护。
+
+### 研究转化
+
+- 资料可信度是相对静态清单的主要差异。本轮实现官方资料、社区证据和需核对的分组，记录保留来源类型、核对日期、可信度与原文。
+- 源码发布采用单一版本、CI 回归、GitHub Attestation 和发布后健康检查。历史 Windows 客户端采用 Tauri 更新包签名，两个信任链各自验收。 [GitHub 构建来源证明](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations)
+- 响应式 Web 与 systemd 已有核心功能，原生项目目前是实验性交付。插件、PWA、容器和浏览器商店需要可验证的使用价值与维护方。详见[平台评估](docs/MAINTENANCE.md)。
+- [升级路线图](UPGRADE_ROADMAP.md) 记录 40 项候选，包括数据迁移及恢复、来源复核、搜索、性能和多平台质量。此次优先做可验收的发布、可靠性与来源体验。
 
 | 维度 | 竞品证据 | 当前项目实际状态 | 差距与判断 |
 |---|---|---|---|

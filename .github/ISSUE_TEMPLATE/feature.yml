@@ -1,0 +1,10 @@
+name: 功能建议与资料纠错
+description: 描述使用场景，或提供可以核对的成就资料。
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 使用场景或需要纠正的内容
+      description: 资料纠错请附勋章页面、参考来源和观察日期。
+    validations:
+      required: true

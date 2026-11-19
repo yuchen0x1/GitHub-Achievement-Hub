@@ -1,9 +1,11 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
+import type { PGlite } from '@electric-sql/pglite';
+import type { PGLiteSocketServer } from '@electric-sql/pglite-socket';
 import { execFile } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { PrismaClient } from '../generated/prisma/client';
 import {
@@ -33,7 +35,7 @@ export { resolveDbSettings };
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
   private readonly settings: DbSettings = resolveDbSettings();
-  private pgliteServer: { close: () => Promise<void> } | null = null;
+  private embedded: { db: PGlite; server: PGLiteSocketServer } | null = null;
 
   constructor() {
     const settings = resolveDbSettings();
@@ -68,9 +70,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
-    if (this.pgliteServer) {
-      await this.pgliteServer.close();
-      this.pgliteServer = null;
+    const embedded = this.embedded;
+    this.embedded = null;
+    if (embedded) {
+      try {
+        await embedded.server.stop();
+      } finally {
+        await embedded.db.close();
+      }
     }
   }
 
@@ -96,7 +103,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const { PGlite } = await import('@electric-sql/pglite');
     const { PGLiteSocketServer } = await import('@electric-sql/pglite-socket');
 
-    const dir = join(process.cwd(), dataDir);
+    const dir = resolve(dataDir);
     const db = await PGlite.create({ dataDir: dir });
 
     const server = new PGLiteSocketServer({
@@ -104,8 +111,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       port,
       host: '127.0.0.1',
     });
-    await server.start();
-    this.pgliteServer = server as unknown as { close: () => Promise<void> };
+    try {
+      await server.start();
+    } catch (error) {
+      await db.close();
+      throw error;
+    }
+    this.embedded = { db, server };
     this.logger.log(`内嵌 PostgreSQL 已启动 → postgresql://127.0.0.1:${port}/postgres`);
   }
 

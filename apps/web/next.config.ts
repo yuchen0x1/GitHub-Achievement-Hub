@@ -7,6 +7,8 @@ const API_RUNTIME = process.env.API_INTERNAL_URL ?? 'http://localhost:4000/api/v
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  agentRules: false,
+  deploymentId: process.env.NEXT_OUTPUT === 'export' ? undefined : process.env.NEXT_DEPLOYMENT_ID,
   // 把构建模式暴露给客户端 bundle（客户端无法直接读取 NEXT_OUTPUT）。
   // 导出模式为 '1'，SSR 模式为 '0'；src/lib/export-mode.ts 据此判断。
   env: {

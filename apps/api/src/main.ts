@@ -99,7 +99,7 @@ async function bootstrap(): Promise<void> {
     swaggerOptions: { persistAuthorization: true },
   });
 
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port, config.get<string>('API_HOST') ?? '0.0.0.0');
 
   logger.log(`API 已启动 → http://localhost:${port}${prefix}`);
   logger.log(`API 文档 → http://localhost:${port}${prefix}/docs`);

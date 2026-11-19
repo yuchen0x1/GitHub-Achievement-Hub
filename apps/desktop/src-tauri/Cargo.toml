@@ -1,6 +1,6 @@
 [package]
 name = "github-achievement-hub"
-version = "1.0.0"
+version = "0.0.5"
 description = "GitHub Achievement Hub — 桌面端外壳 (Tauri v2)"
 authors = ["GitHub Achievement Hub"]
 license = "MIT"
