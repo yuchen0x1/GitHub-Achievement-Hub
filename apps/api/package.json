@@ -51,7 +51,7 @@
     "swagger-ui-express": "5.0.1"
   },
   "devDependencies": {
-    "@nestjs/testing": "12.4.0",
+    "@nestjs/testing": "12.5.0",
     "@types/bcryptjs": "3.0.0",
     "@types/compression": "1.8.1",
     "@types/cookie-parser": "1.4.10",
