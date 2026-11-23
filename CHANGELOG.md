@@ -2,6 +2,28 @@
 
 所有重要变更按版本记录。未发布内容放在 `Unreleased`，不会被当作已经发布的安装包能力。
 
+## v0.1.0 · 2026-11-23
+
+### Added
+
+- GitHub 账号查询现在读取公开个人主页 `?tab=achievements` 的真实徽章标记，识别徽章 slug、官方图片和 Bronze / Silver / Gold 等级。
+- 同一徽章在桌面侧栏、移动区块和成就卡片重复渲染时会自动去重；页面结构变化、上游限流或无法解析时明确降级为「数据不可用」。
+- 成就对照表显示已确认的等级，资料来源说明区分 REST API、公开主页和本站目录，避免把未知状态误判为未获得。
+- 新增公开 HTML 解析器单元测试，覆盖真实 GitHub 标记、重复徽章、非可信图片域名和结构变化。
+
+### Changed
+
+- GitHub 公开主页请求复用串行队列、最小间隔、超时和限流冷却，不调用未公开的 GitHub API 端点。
+- Web 查询页面更新数据来源、限制说明和徽章展示文案；保留现有 Radix / Tailwind / Lucide 设计系统，不引入重复组件库。
+
+### Verification
+
+- `npm run lint --workspaces --if-present`
+- API unit：11 suites / 84 tests passed
+- API e2e：1 suite / 24 tests passed
+- `npm run build`
+- `npm run verify:version`
+
 ## Unreleased
 
 ## v0.0.5 · 2026-11-18

@@ -26,6 +26,7 @@ import { IS_EXPORT } from '@/lib/export-mode';
 import { useAuthStore } from '@/lib/auth-store';
 import type { GithubProfile } from '@/lib/types';
 import { BadgeImage } from '@/components/achievement/badge-image';
+import { TierBadge } from '@/components/achievement/tier-badge';
 import { Notice } from '@/components/common/layout';
 import { formatDate, formatNumber, formatRelative } from '@/lib/utils';
 
@@ -139,13 +140,13 @@ const STATUS_META: Record<
     label: '已获得',
     color: 'var(--color-success)',
     icon: CheckCircle2,
-    description: 'GitHub 公开 API 明确返回了该徽章',
+    description: '该徽章出现在 GitHub 公开个人主页中',
   },
   UNKNOWN: {
     label: '数据不可用',
     color: 'var(--color-ink-subtle)',
     icon: CircleHelp,
-    description: 'API 未公开该用户的成就数据，无法确认是否已获得（不代表未获得）',
+    description: '公开资料没有可靠展示该用户的这枚勋章，无法确认是否已获得（不代表未获得）',
   },
   NOT_AVAILABLE: {
     label: '已无法获取',
@@ -406,11 +407,11 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 id="public-badges" className="text-base font-semibold">
-                  API 公开的徽章
+                  公开主页徽章
                 </h2>
                 <p className="mt-1 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
-                  GitHub REST API 在 <code className="font-mono text-xs">achievements</code>{' '}
-                  字段中返回的徽章，是本次查询中唯一「可确认」的部分。
+                  这些徽章来自 GitHub 公开个人主页的 <code className="font-mono text-xs">?tab=achievements</code>{' '}
+                  标记；本站不会把未展示的勋章推断为「未获得」。
                 </p>
               </div>
               <span className="chip tabular-nums">{profile.achievements.length} 枚</span>
@@ -434,6 +435,7 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
                         {badge.description}
                       </p>
                     )}
+                    {badge.tier && <TierBadge level={badge.tier} className="mt-2" />}
                   </li>
                 ))}
               </ul>
@@ -444,9 +446,9 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
                   className="mx-auto text-[var(--color-ink-subtle)]"
                   aria-hidden
                 />
-                <p className="mt-2 text-sm font-semibold">API 未返回任何公开徽章</p>
+                <p className="mt-2 text-sm font-semibold">公开主页未返回可确认徽章</p>
                 <p className="mx-auto mt-1 max-w-md text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
-                  这只说明 GitHub 没有通过公开接口暴露该账号的徽章，
+                  这只说明 GitHub 没有通过公开资料暴露该账号的徽章，
                   <strong className="text-[var(--color-ink)]">不代表该账号没有任何成就</strong>
                   。可对照下表逐条查看本站收录的勋章状态。
                 </p>
@@ -462,8 +464,8 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
                   成就对照表
                 </h2>
                 <p className="mt-1 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
-                  本站收录的 {overview.length} 枚勋章逐个对照。「数据不可用」只表示 API
-                  未公开，不代表未获得。
+                  本站收录的 {overview.length} 枚勋章逐个对照。「数据不可用」只表示公开资料
+                  未可靠展示，不代表未获得。
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
@@ -539,7 +541,7 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
                           )}
                           {row.status === 'EARNED' && (
                             <p className="mt-1 text-xs leading-relaxed text-[var(--color-ink-subtle)]">
-                              该徽章出现在 GitHub API 返回的公开徽章列表中。
+                              该徽章出现在 GitHub 公开个人主页的徽章列表中。
                             </p>
                           )}
                         </div>
@@ -580,8 +582,8 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
               为什么大量显示「数据不可用」？
             </p>
             <p className="mt-2 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
-              GitHub 只在用户资料接口返回部分公开徽章，没有提供完整的成就清单，
-              也没有开放等级数据。本站宁可显示「不可用」，也不会把未知结果说成「未获得」。
+              GitHub 的公开主页只展示当前允许公开的徽章，页面结构和可见性也可能变化。
+              本站宁可显示「不可用」，也不会把未知结果说成「未获得」。
             </p>
           </div>
 
@@ -602,7 +604,7 @@ export function GithubProfileView({ username }: GithubProfileViewProps) {
               </ul>
             ) : (
               <p className="mt-2 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
-                本次接口未返回额外的限制说明，但完整的成就与等级数据依然不对第三方开放。
+                本次接口未返回额外的限制说明；公开主页的展示范围仍可能随 GitHub 账号可见性变化。
               </p>
             )}
           </div>

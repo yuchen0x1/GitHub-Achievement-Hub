@@ -23,6 +23,28 @@ describe('GitHub upstream boundaries', () => {
     expect((await service.fetchPublicBadges('octocat')).badges).toEqual([]);
     expect(fetchMock).not.toHaveBeenCalled();
   });
+  it('skips profile HTML entirely when the feature is disabled', async () => {
+    service = new GithubApiService(config({ GITHUB_PROFILE_HTML: 'false' }));
+    await expect(service.fetchProfileHtml('octocat')).resolves.toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+  it('returns null on ordinary profile HTML failures but keeps rate limits typed', async () => {
+    fetchMock.mockRejectedValueOnce(new Error('network down'));
+    await expect(service.fetchProfileHtml('octocat')).resolves.toBeNull();
+    fetchMock.mockRejectedValueOnce(new GithubRateLimitError('0', 30));
+    await expect(service.fetchProfileHtml('octocat')).rejects.toBeInstanceOf(GithubRateLimitError);
+  });
+  it('reads the public achievements tab with a browser user agent', async () => {
+    fetchMock.mockResolvedValue(new Response(
+      '<html><img data-hovercard-type="achievement" src="https://github.githubassets.com/assets/yolo-default.png" alt="Achievement: YOLO" /></html>',
+      { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } },
+    ));
+    await expect(service.fetchProfileHtml('octocat')).resolves.toMatchObject({ html: expect.stringContaining('Achievement: YOLO') });
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://github.com/octocat?tab=achievements',
+      expect.objectContaining({ headers: expect.objectContaining({ Accept: 'text/html,application/xhtml+xml' }) }),
+    );
+  });
   it('preserves a real missing user error', async () => {
     fetchMock.mockResolvedValue(reply(404));
     await expect(service.fetchUser('missing')).rejects.toBeInstanceOf(GithubUserNotFoundError);

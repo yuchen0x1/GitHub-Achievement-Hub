@@ -13,7 +13,7 @@ import { GithubSearchForm } from './search-form-client';
 export const metadata: Metadata = {
   title: 'GitHub 成就查询',
   description:
-    '查询任意公开 GitHub 账号的公开徽章与成就展示情况。GitHub 官方 API 不提供完整的成就数据，查不到的勋章一律标注「数据不可用」而非「未获得」。',
+    '查询任意公开 GitHub 账号的公开徽章与成就展示情况。本站读取公开个人主页并明确区分已获得、数据不可用与已停止发放。',
   alternates: { canonical: '/github-profile' },
 };
 
@@ -23,7 +23,7 @@ export default function GithubProfileEntryPage() {
       <PageHeader
         eyebrow="账号查询"
         title="GitHub 成就查询"
-        description="输入任意公开的 GitHub 用户名，查看该账号通过官方 API 暴露的公开徽章，并与本站收录的勋章库逐条对照。"
+        description="输入任意公开的 GitHub 用户名，查看该账号在公开个人主页展示的徽章，并与本站收录的勋章库逐条对照。"
       />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -55,7 +55,7 @@ export default function GithubProfileEntryPage() {
             </p>
             <ul className="mt-2.5 space-y-2 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
               <li>公开资料：GitHub REST API `GET /users/:username`</li>
-              <li>公开徽章：同一接口返回的 `achievements` 字段（仅部分徽章）</li>
+              <li>公开徽章：GitHub 个人主页 `?tab=achievements` 的公开 HTML 标记</li>
               <li>勋章对照：本站数据库中的已发布勋章目录</li>
             </ul>
           </div>
@@ -85,19 +85,18 @@ export default function GithubProfileEntryPage() {
             <AlertTriangle size={18} className="mt-0.5 shrink-0 text-[var(--color-warning)]" />
             <div>
               <h2 id="api-limitations" className="text-sm font-bold text-[var(--color-ink)]">
-                重要：GitHub API 并不提供完整的个人成就数据
+                重要：公开成就数据依赖 GitHub 个人主页展示
               </h2>
               <ul className="mt-2.5 space-y-2 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
                 <li>
-                  GitHub REST API 只在 <code className="font-mono text-xs">/users/:username</code>{' '}
-                  返回<strong className="text-[var(--color-ink)]">部分公开徽章</strong>
-                  （<code className="font-mono text-xs">achievements</code> 字段）。
+                  GitHub REST API 只提供基本资料；本站额外读取公开个人主页的
+                  <code className="mx-1 font-mono text-xs">?tab=achievements</code>徽章标记。
                 </li>
                 <li>
-                  官方接口<strong className="text-[var(--color-ink)]">不提供完整的个人成就列表，也不提供等级（Default / Bronze / Silver / Gold）数据</strong>。
+                  页面展示受账号可见性、登录状态和 GitHub 页面结构影响；等级标签只在页面明确提供时显示。
                 </li>
                 <li>
-                  因此，凡是无法从 API 读取的勋章，本站一律标注
+                  因此，凡是无法从公开资料可靠读取的勋章，本站一律标注
                   <span className="mx-1 inline-flex items-center gap-1 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-sunken)] px-2 py-0.5 text-[11px] font-semibold text-[var(--color-ink-subtle)]">
                     <CircleHelp size={11} />
                     数据不可用

@@ -1,5 +1,40 @@
 # PROJECT EVOLUTION 升级交付报告
 
+## 2026-11-23 增量交付：真实公开徽章查询
+
+本轮基于 `origin/main` 的 `0075305` 创建分支 `feat/real-achievement-detection`，目标是修复账号查询的核心功能缺口：GitHub REST API 不提供完整 Profile Achievements，但公开个人主页 HTML 会展示可读取的徽章标记。
+
+### 实施结果
+
+- 新增 `apps/api/src/modules/github/achievement-scraper.ts`：解析主页侧栏 `<a>` 和成就卡片 `<details>` 两种结构，按 slug 去重，读取官方图片域名并识别 Bronze / Silver / Gold。
+- `GithubApiService` 新增公开主页抓取，复用串行队列、最小请求间隔、超时和限流冷却；通过 `GITHUB_PROFILE_HTML=false` 可在受限部署中关闭。
+- `GithubProfileService` 将主页徽章与本站目录对照，显示已确认等级；解析失败、网络出口不可用或结构变化时保持 `UNKNOWN`，不推断「未获得」。
+- Web 账号查询、共享类型、README、竞品研究、环境模板、CHANGELOG 和 Release notes 已同步；版本统一为 `0.1.0`。
+
+### 现场研究证据
+
+- GitHub Search API 复核直接同类项目：[Schweinepriester/github-profile-achievements](https://github.com/Schweinepriester/github-profile-achievements)、[drknzz/GitHub-Achievements](https://github.com/drknzz/GitHub-Achievements)、[Thinkright20/Profile-Badges](https://github.com/Thinkright20/Profile-Badges)。
+- 2026-11-23 通过公开请求核对 `torvalds`、`tj`、`octocat`、`yuchen0x1` 的 `?tab=achievements` 页面，实测获得徽章 slug、`githubassets.com` 图片和 Bronze/Silver/Gold 标签。
+- UI 生态核对：仓库已有 Radix UI、Tailwind CSS、Lucide、next-themes；本轮保持单一设计体系，没有重复引入组件库。
+
+### 验证结果
+
+| 命令 | 结果 |
+|---|---|
+| `npm run lint --workspaces --if-present` | PASS：API、Web、Desktop、Mobile、Shared |
+| `npm run test:unit -w @gach/api` | PASS：11 suites / 84 tests |
+| `npm run test:e2e` | PASS：1 suite / 24 tests |
+| `npm run build` | PASS：Shared、API、Next.js Web |
+| `npm run verify:build` | PASS：临时 PGlite + API ready + Web 页面冒烟 |
+| `npm run verify:version` | PASS：`v0.1.0` |
+| 真实上游 HTML | PASS：PowerShell 可访问；Node 运行时需配置系统代理（本机验证 `127.0.0.1:7897`） |
+
+### 未完成与风险
+
+- 尚未推送、创建 PR、合并 `main`、创建 `v0.1.0` Release；当前环境只完成了本地开发分支和验证。
+- GitHub 公开 HTML 不是稳定 API；页面结构或账号可见性变化时会降级并记录服务端 warning。生产部署应配置可用 HTTPS 代理或将 `GITHUB_PROFILE_HTML=false`。
+- 未验证真实生产 PostgreSQL/Redis、OAuth、签名桌面安装包、移动设备和跨版本升级；不把本地构建当作发布证据。
+
 报告日期：2026-11-16（Asia/Shanghai）
 升级起点：GitHub Achievement Hub 〈`main` / HEAD `d8a7951`〉；发布前已同步远端 `main` 的依赖安全修复 `7ae6d21`。
 主要交付提交：`348d785` 与发布说明提交 `3590269`，分支 `codex/project-evolution-20261116` 已推送到 `origin`。

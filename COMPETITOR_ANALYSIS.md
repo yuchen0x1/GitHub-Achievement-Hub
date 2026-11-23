@@ -1,5 +1,20 @@
 # 开源竞品与相邻技术对标
 
+## 2026-11-23 功能差距复核
+
+本轮用 GitHub Search API 复核了直接成就资料库的活跃度，并用真实公开个人主页 HTML 核对数据可得性：
+
+| 复核对象 | 现场证据 | 对本项目的结论 |
+|---|---|---|
+| [Schweinepriester/github-profile-achievements](https://github.com/Schweinepriester/github-profile-achievements) | GitHub Search API 返回约 5k stars；README 仍以静态成就清单为主 | 本项目保留其状态/等级清晰度，但增加可查询的真实用户徽章结果 |
+| [drknzz/GitHub-Achievements](https://github.com/drknzz/GitHub-Achievements) | GitHub Search API 返回约 3.2k stars；静态 README 组织完整 | 继续吸收资料分组思想，不复制图片、文案或数据 |
+| [Thinkright20/Profile-Badges](https://github.com/Thinkright20/Profile-Badges) | GitHub Search API 返回约 2.1k stars；以获取说明和图鉴为主 | 本项目差异化在来源可信度、等级进度和账号查询 |
+| `github.com/<user>?tab=achievements` | 2026-11-23 对 `torvalds`、`tj`、`octocat` 和 `yuchen0x1` 实测返回 `data-hovercard-type="achievement"`、徽章 slug、图片和 Bronze/Silver/Gold 标签 | GitHub REST API 的 `achievements` 字段并非唯一可用来源；本项目改为在服务端读取公开主页并显式降级 |
+| [shadcn/ui](https://ui.shadcn.com/) / [Radix UI](https://www.radix-ui.com/) / [Lucide](https://lucide.dev/) | 当前 Web 依赖已实际使用 Radix primitives、Tailwind CSS、`lucide-react` 和 `next-themes` | 不强行引入第二套组件库；继续用现有可访问、可主题化的基础设施 |
+| [Meilisearch](https://github.com/meilisearch/meilisearch) / [Typesense](https://github.com/typesense/typesense) | 仍是成熟搜索参考，但当前数据规模适合 Prisma 查询 | 本轮不增加外部服务；保留后续 SearchProvider 抽象路线 |
+
+本轮吸收的实际能力是「公开主页徽章解析 + 去重 + 等级识别 + 可信降级」；如果 GitHub 页面结构变化、返回登录页或触发上游限制，API 返回 `UNKNOWN`/限制说明，不把失败当成「未获得」。
+
 研究日期：2026-11-16（Asia/Shanghai）
 研究方式：通过 GitHub 仓库连接器读取仓库元数据、README、LICENSE、顶层目录、依赖文件和最近提交；重点项目同时阅读了核心目录或工作流。所有结论都标记为源码/文档证据、推断或未验证能力。没有克隆、运行或复制第三方代码。
 

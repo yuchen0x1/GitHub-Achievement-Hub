@@ -2,6 +2,25 @@
 
 按 GitHub 正式发布的版本记录，日期为首次发布日期。历史条目根据对应标签补全；补充说明不改变原标签或安装包。
 
+## v0.1.0 · 2026-11-23
+
+### GitHub 成就查询
+
+- 查询服务现在读取公开个人主页 `?tab=achievements` 的徽章标记，识别真实展示的勋章、官方图片以及 Bronze / Silver / Gold 等级。
+- 侧栏和移动区块重复渲染的徽章会去重；GitHub 页面结构变化、限流或返回不可解析内容时保留 `UNKNOWN`，不会把失败当成「未获得」。
+- 成就对照表、数据来源和 API 限制说明同步更新，明确 REST API 与公开主页 HTML 的证据边界。
+
+### 工程与验证
+
+- 新增纯函数 HTML 解析器及 9 个相关单元断言，覆盖侧栏、成就卡片、等级、重复项、不可信图片域名、关闭开关与故障降级。
+- 版本统一为 `0.1.0`（root、所有 npm workspace、Tauri、Cargo.lock）。
+- 本地验证：lint 通过；API unit 11 suites / 84 tests；API e2e 1 suite / 24 tests；生产 Web/API/shared build 通过。
+
+### 已知限制
+
+- GitHub 未承诺公开主页 HTML 是稳定 API；解析器只信任 `githubassets.com` 图片，并在结构变化时降级。
+- 本轮未宣称真实生产部署、GitHub Actions Release、签名安装包或设备升级已完成；这些仍需在推送和 CI 成功后核验。
+
 ## v0.0.5 · 2026-11-18
 
 ### 版本概述

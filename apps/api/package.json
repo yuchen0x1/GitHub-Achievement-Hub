@@ -1,6 +1,6 @@
 {
   "name": "@gach/api",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "private": true,
   "description": "GitHub Achievement Hub — REST API (NestJS + Prisma + PostgreSQL)",
   "scripts": {

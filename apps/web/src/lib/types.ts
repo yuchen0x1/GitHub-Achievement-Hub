@@ -249,6 +249,7 @@ export interface GithubProfile {
     name: string;
     description: string | null;
     imageUrl: string | null;
+    tier?: TierLevel | null;
   }[];
   apiLimitations: string[];
   achievementsOverview: {
@@ -258,6 +259,7 @@ export interface GithubProfile {
     imageUrl: string | null;
     availability: Availability;
     isTiered: boolean;
+    tier?: TierLevel | null;
     status: 'EARNED' | 'UNKNOWN' | 'NOT_AVAILABLE';
     reason?: string;
   }[];
