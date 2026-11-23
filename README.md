@@ -30,9 +30,9 @@
 
 <!-- github-release:start -->
 
-**v0.0.5** · 2026-11-18
+**v0.1.0** · 2026-11-23
 
-勋章详情按官方资料、社区证据和需要核对的来源分组。Windows 自托管开发环境支持配置绝对数据库路径。源码包附有 SHA-256、版本元数据和构建来源证明。
+GitHub 账号查询现在读取公开个人主页的真实徽章标记，识别已展示的勋章和 Bronze / Silver / Gold 等级；解析失败会保留「数据不可用」而不会误判为未获得。版本统一到 `0.1.0`，并补充解析器回归测试。
 
 [最新源码与校验文件](https://github.com/yuchen0x1/GitHub-Achievement-Hub/releases/latest) · [完整更新日志](docs/releases/release-notes.md)
 
@@ -119,7 +119,7 @@ GitHub Achievement Hub 解决的是「知道 GitHub 有成就，但不知道每�
 | 等级系统 | Default / Bronze / Silver / Gold 门槛与进度计算 | 已实现 | 无 |
 | 攻略知识库 | 12 篇攻略、分类、Markdown 正文、目录和阅读时间 | 已实现 | 无 |
 | 搜索 | 全站搜索、快速搜索、建议词 | 已实现 | 无 |
-| GitHub 账号查询 | 查询公开资料；明确标注成就数据不可用，支持限流等待和重试 | 已实现 | 可选服务端 GitHub Token；官方 API 不提供完整成就列表 |
+| GitHub 账号查询 | 查询公开资料与个人主页徽章，显示可确认等级；明确区分数据不可用、已停止发放和限流 | 已实现 | 可选服务端 GitHub Token；徽章读取依赖 GitHub 公开主页标记 |
 | 收藏与进度 | 收藏勋章、记录进度、成就墙、数据导出 | 已实现 | 需要登录 |
 | 认证 | 邮箱注册/登录、JWT、刷新令牌、CSRF 双提交校验 | 已实现 | 需要强随机密钥 |
 | GitHub OAuth | OAuth 登录与账号同步入口 | 部分实现 | `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET` |

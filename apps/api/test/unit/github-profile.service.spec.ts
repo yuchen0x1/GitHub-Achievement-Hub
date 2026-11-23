@@ -4,8 +4,20 @@ import { GithubController } from '../../src/modules/github/github.controller';
 import { GithubRateLimitError, GithubUserNotFoundError } from '../../src/modules/github/github-api.service';
 
 function setup() {
-  const api = { fetchUser: jest.fn().mockResolvedValue({ login: 'octocat' }), fetchPublicBadges: jest.fn().mockResolvedValue({ badges: [], limitations: ['Unavailable'] }) };
-  const prisma = { achievement: { findMany: jest.fn().mockResolvedValue([{ slug: 'pull-shark', nameEn: 'Pull Shark', availability: 'TIERED' }]) }, githubAccount: { updateMany: jest.fn() }, githubSyncLog: { create: jest.fn() } };
+  const api = {
+    fetchUser: jest.fn().mockResolvedValue({ login: 'octocat' }),
+    fetchPublicBadges: jest.fn().mockResolvedValue({ badges: [], limitations: ['Unavailable'] }),
+    fetchProfileHtml: jest.fn().mockResolvedValue(null),
+  };
+  const prisma = {
+    achievement: {
+      findMany: jest.fn().mockResolvedValue([
+        { slug: 'pull-shark', nameEn: 'Pull Shark', nameZh: 'Pull Shark', imageUrl: null, availability: 'TIERED', isTiered: true },
+      ]),
+    },
+    githubAccount: { updateMany: jest.fn() },
+    githubSyncLog: { create: jest.fn() },
+  };
   const cache = { get: jest.fn().mockResolvedValue(null), set: jest.fn() };
   const service = new GithubProfileService(prisma as never, api as never, cache as never);
   return { service, api, cache, prisma, controller: new GithubController(service, prisma as never) };
@@ -37,6 +49,25 @@ describe('GitHub profile truth and request coalescing', () => {
     expect((await service.syncForUser('u1', 'octocat')).status).toBe('RATE_LIMITED');
     expect(prisma.githubAccount.updateMany).not.toHaveBeenCalled();
     expect(prisma.githubSyncLog.create).toHaveBeenCalled();
+  });
+  it('confirms achievements from the public profile HTML and keeps tier metadata', async () => {
+    const { service, api } = setup();
+    api.fetchProfileHtml.mockResolvedValue({
+      html: '<a href="/octocat?achievement=pull-shark&amp;tab=achievements"><img data-hovercard-type="achievement" src="https://github.githubassets.com/assets/pull-shark-bronze.png" alt="Achievement: Pull Shark" /><span class="achievement-tier-label--bronze">x2</span></a>',
+    });
+    const result = await service.getProfile('octocat');
+    expect(result.achievements).toHaveLength(1);
+    expect(result.achievements[0]).toMatchObject({ slug: 'pull-shark', tier: 'BRONZE' });
+    expect(result.achievementsOverview[0]).toMatchObject({ status: 'EARNED', tier: 'BRONZE' });
+    expect(result.sourceNote).toContain('公开个人主页');
+  });
+  it('degrades to UNKNOWN and logs when the public page layout cannot be parsed', async () => {
+    const { service, api } = setup();
+    api.fetchProfileHtml.mockResolvedValue({ html: '<html><body>redesigned page</body></html>' });
+    const result = await service.getProfile('octocat');
+    expect(result.achievements).toEqual([]);
+    expect(result.achievementsOverview[0].status).toBe('UNKNOWN');
+    expect(result.achievementsOverview[0].reason).toContain('未能读取');
   });
   it('validation never reports an outage as a nonexistent account', async () => {
     const { controller, api } = setup();

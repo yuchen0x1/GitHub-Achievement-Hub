@@ -271,15 +271,16 @@ export interface GithubProfileResult {
   followers: number;
   following: number;
   createdAt: string | null;
-  /** GitHub API 可公开读取的成就（仅部分公开徽章），其余为不可用 */
+  /** 从 GitHub 公开个人主页读取到的成就；REST API 不提供完整列表 */
   achievements: {
     login: string;
     slug: string;
     name: string;
     description: string | null;
     imageUrl: string | null;
+    tier?: TierLevel | null;
   }[];
-  /** GitHub 官方 API 未提供完整成就数据 */
+  /** 数据来源与抓取限制说明 */
   apiLimitations: string[];
   fetchedAt: string;
 }

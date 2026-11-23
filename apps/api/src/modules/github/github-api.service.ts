@@ -32,6 +32,7 @@ export interface GithubProfileBadge {
   name: string;
   description: string | null;
   imageUrl: string | null;
+  tier?: import('@gach/shared').TierLevel | null;
 }
 
 /**
@@ -131,6 +132,38 @@ export class GithubApiService {
     };
   }
 
+  /**
+   * 读取 GitHub 公开个人主页 HTML。
+   *
+   * 官方 REST API 不返回 Profile Achievements，但这些徽章会直接渲染在
+   * 公开主页的 HTML 里（`<img data-hovercard-type="achievement">`）。
+   * 这里复用同一套串行队列 / 最小间隔 / 超时 / 限流冷却，避免对 GitHub 造成突发压力。
+   *
+   * 返回 null 表示「拿不到可信 HTML」（网络、超时、非 2xx、被拦截），
+   * 调用方必须把它当作「未知」而不是「没有成就」。
+   */
+  async fetchProfileHtml(login: string): Promise<{ html: string } | null> {
+    // 允许部署方关闭公开主页读取（例如网络出口受限或合规要求）。
+    if (!this.profileHtmlEnabled) return null;
+    const url = `https://github.com/${encodeURIComponent(login)}?tab=achievements`;
+    try {
+      const { status, body } = await this.requestText(url, {
+        headers: {
+          Accept: 'text/html,application/xhtml+xml',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'User-Agent': PROFILE_PAGE_USER_AGENT,
+        },
+      }, login);
+      if (status !== 200 || !body) return null;
+      return { html: body };
+    } catch (error) {
+      // 主页抓取是补充数据：只有明确的上游限流需要中止整次查询，
+      // 其他网络/结构错误应保留 REST 资料并降级为 UNKNOWN。
+      if (error instanceof GithubRateLimitError) throw error;
+      return null;
+    }
+  }
+
   private headers(token?: string): Record<string, string> {
     return {
       Accept: 'application/vnd.github+json',
@@ -140,13 +173,22 @@ export class GithubApiService {
     };
   }
 
+  private get profileHtmlEnabled(): boolean {
+    const raw = this.config.get<string>('GITHUB_PROFILE_HTML', 'true').toLowerCase();
+    return raw !== 'false' && raw !== '0' && raw !== 'off';
+  }
+
   private readDuration(key: string, fallback: number, min: number, max: number): number {
     const value = Number(this.config.get<string>(key, String(fallback)));
     return Number.isFinite(value) && value >= min && value <= max ? value : fallback;
   }
 
-  /** Serialize the full request (including body), with bounded queue and timeout. */
-  private async requestJson<T>(url: string, init: RequestInit, login?: string): Promise<T> {
+  /** 串行执行一次上游请求：最小间隔 + 超时 + 冷却，返回状态码与原始响应体。 */
+  private async requestText(
+    url: string,
+    init: RequestInit,
+    login?: string,
+  ): Promise<{ status: number; body: string; payload: unknown }> {
     if (this.pending >= 32) {
       throw new HttpException('GitHub 查询繁忙，请稍后重试', 503);
     }
@@ -162,13 +204,17 @@ export class GithubApiService {
       const timer = setTimeout(() => controller.abort(), this.timeoutMs);
       try {
         const res = await fetch(url, { ...init, signal: controller.signal });
+        const body = await res.text();
+        let payload: unknown = null;
+        let parseFailed = false;
+        try {
+          payload = body ? JSON.parse(body) : null;
+        } catch {
+          parseFailed = true;
+        }
         if (res.status === 404 && login) throw new GithubUserNotFoundError(login);
         // A plain 403 can be a permission failure. Inspect the documented headers
         // and secondary-rate-limit message before classifying it as quota exhaustion.
-        const payload: unknown = await res.json().catch((error: unknown) => {
-          if (res.ok) throw error;
-          return null;
-        });
         const message = payload && typeof payload === 'object' && 'message' in payload
           && typeof payload.message === 'string' ? payload.message : '';
         const remaining = res.headers.get('x-ratelimit-remaining');
@@ -182,7 +228,11 @@ export class GithubApiService {
           throw new GithubRateLimitError(remaining, seconds);
         }
         if (!res.ok) throw new HttpException('GitHub 服务暂时不可用，请稍后重试', 502);
-        return payload as T;
+        // 声明是 JSON 却解析失败时，绝不能把半个响应当成成功结果。
+        if (parseFailed && res.headers.get('content-type')?.includes('application/json')) {
+          throw new HttpException('无法读取 GitHub 响应，请稍后重试', 502);
+        }
+        return { status: res.status, body, payload };
       } catch (error) {
         if (error instanceof HttpException || error instanceof GithubUserNotFoundError) throw error;
         throw new HttpException(
@@ -196,7 +246,18 @@ export class GithubApiService {
     this.queue = task.catch(() => undefined);
     try { return await task; } finally { this.pending--; }
   }
+
+  /** Serialize the full request (including body), with bounded queue and timeout. */
+  private async requestJson<T>(url: string, init: RequestInit, login?: string): Promise<T> {
+    const { payload } = await this.requestText(url, init, login);
+    return payload as T;
+  }
 }
+
+/** 读取公开个人主页时使用常规浏览器 UA：GitHub 会拒绝明显是脚本的请求 */
+const PROFILE_PAGE_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+  '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 GitHub-Achievement-Hub/0.0';
 
 export class GithubUserNotFoundError extends Error {
   constructor(public readonly login: string) {
