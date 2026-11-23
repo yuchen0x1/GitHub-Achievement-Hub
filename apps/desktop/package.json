@@ -15,6 +15,6 @@
     "lint": "node --check scripts/gen-icons.mjs && node --check scripts/prepare-dist.mjs && node --check scripts/write-release-config.mjs && node --check src/runtime/api-base.js && node --check src/runtime/offline-cache.js"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "2.12.4"
+    "@tauri-apps/cli": "2.12.6"
   }
 }

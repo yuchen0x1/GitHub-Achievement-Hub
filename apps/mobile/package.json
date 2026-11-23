@@ -14,17 +14,17 @@
     "lint": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.config.json --noEmit"
   },
   "dependencies": {
-    "@capacitor/android": "8.6.0",
+    "@capacitor/android": "8.6.2",
     "@capacitor/app": "8.1.2",
-    "@capacitor/core": "8.6.0",
-    "@capacitor/ios": "8.6.0",
+    "@capacitor/core": "8.6.2",
+    "@capacitor/ios": "8.6.2",
     "@capacitor/keyboard": "8.0.6",
     "@capacitor/network": "8.0.1",
     "@capacitor/preferences": "8.0.1",
     "@capacitor/status-bar": "8.0.4"
   },
   "devDependencies": {
-    "@capacitor/cli": "8.6.0",
+    "@capacitor/cli": "8.6.2",
     "typescript": "5.9.3"
   }
 }
